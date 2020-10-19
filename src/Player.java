@@ -4,7 +4,9 @@
 public class Player {
     private String name; // The name of the player.
     private ArrayList<Teritory> teritories; // A list of the teritories the player occupies.
-
+    
+//Mention how many troops does each player have
+//Mention the bonus troops too    
     /**
      * A constructor that sets the player class variables.
      */
