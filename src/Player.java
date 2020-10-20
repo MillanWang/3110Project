@@ -15,19 +15,14 @@ public class Player {
      */
     public Player(String name) {
         this.name = name;
-        clearTerritory();
+        territories = new ArrayList<>();
     }
 
     public String getName() {
         return this.name;
     }
 
-    /**
-     * Clears the countries list.
-     */
-    public void clearTerritory() {
-        territories = new ArrayList<>();
-    }
+ 
 
 
     public void removeTerritory(Teritory teritory) {
