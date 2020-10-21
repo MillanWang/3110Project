@@ -37,6 +37,9 @@ public class Player {
      * this method removes the a territory from the list of territories owned by the player
      * @ param territory the territory to be removed
      **/
+    
+    //TERRITORY HAS TWO R'S IN IT
+    
     public void removeTerritory(Teritory teritory) {
         if (!(hasLost())) {
             territories.remove(teritory);
