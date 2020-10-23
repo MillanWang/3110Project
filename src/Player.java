@@ -139,7 +139,6 @@ public class Player {
      * this method handles the dead player state
      */
     private  void handleDeadPlayer() {
-        // additional implementation may be needed.
         System.out.println("THE KING IS DEAD");
     }
 
