@@ -5,15 +5,8 @@ import java.util.*;
  */
 public class Player {
     private String name; // The name of the player.
-    private List<Teritory> territories; // A list of the territories the player occupies.
-    private final Map<String, Integer> continentBonuses= new HashMap<String, Integer>() {{
-        put("Africa", 3);
-        put("Asia", 7);
-        put("Europe", 5);
-        put("North America", 5);
-        put("Oceania", 2);
-        put("South America", 2);
-    }}; // A map with the troop bonuses for every continent, by its name.
+    private List<Territory> territories; // A list of the territories the player occupies.
+    private DefaultWorldMap defaultWM;
 
 
     /**
@@ -32,18 +25,72 @@ public class Player {
     public String getName() {
         return this.name;
     }
+    private Boolean hasNorthAmerica(){
+        if (territories.contains(defaultWM.getNorthAmerica())){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
+    private Boolean hasSouthAmerica(){
+        if (territories.contains(defaultWM.getSouthAmerica())){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private Boolean hasAfrica(){
+        if (territories.contains(defaultWM.getAfrica())){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private Boolean hasAsia(){
+        if (territories.contains(defaultWM.getAsia())){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private Boolean hasEurope(){
+        if (territories.contains(defaultWM.getEurope()))
+        {
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private Boolean hasOceania(){
+        if (territories.contains(defaultWM.getOceania())){
+            return true;
+        }else{
+            return false;
+        }
+    }
     /**
      * this method removes the a territory from the list of territories owned by the player
      * @ param territory the territory to be removed
      **/
-    
+
     //TERRITORY HAS TWO R'S IN IT
-    
-    // YOU SHOULD ADD addTerritory method TOO
-    public void removeTerritory(Teritory teritory) {
+
+    public void addTerritory(Territory territory){
+        if (territory =! null) {
+            this.territories.add(territory);
+        }
+        else {
+            System.out.println(" Cannot add invalid territory");
+        }
+    }
+    public void removeTerritory(Territory territory) {
         if (!(hasLost())) {
-            territories.remove(teritory);
+            territories.remove(territory);
             if(hasLost()){
                 handleDeadPlayer();
             }
@@ -52,7 +99,23 @@ public class Player {
         }
     }
 
-     /**
+    private int decideBonus(){
+        if (hasAfrica()) {
+            return 3;
+        }else if (hasAsia()) {
+            return 7;
+        }else if (hasEurope()) {
+            return 5;
+        }else if (hasNorthAmerica()) {
+            return 5;
+        }else if (hasOceania()) {
+            return 2;
+        }else if (hasSouthAmerica()){
+            return 2;
+        }
+        return 0;
+    }
+    /**
      * TAHER'S WORK
      * @return string that contains all the territories owned by the player
      * This method would be used in the attack() stage
@@ -83,28 +146,12 @@ public class Player {
 
 
     /**
-     * this method handles the bonus troops stage of the risk game from owning all territories in a continent
-     * @ param bonus the amount of bonus troops player received
-     */
-    public int bonusTroops(String cName){ 
-        // i need more information to complete this
-        return 1;
-    }
-
-    /**
      * Calculates the number of troops the player should receive in this turn.
-     * It is based on the number of countries he occupies and any continents he fully controls.
-     * @param continents The list of continents in the game
-     * @return The number of new troops the player should receive in this turn.
+     * It is based on the number of countries he occupies and any continents he fully controls
      */
-    public int getBonusTroops(Collection<Continent> continents) {
-        int continentBonuses = 0;
-        for (Continent continent : continents) {
-            if (this.territories.containsAll(continent.getTerritories()))
-                continentBonuses += bonusTroops(continent.getName());
-
-        }
-        return this.territories.size() / 3 + continentBonuses;
+    public void  bonusTroops(){
+        Math.max(decideBonus (), (int) Math.floor(this.territories.size() /  3));
     }
+
 
 }
