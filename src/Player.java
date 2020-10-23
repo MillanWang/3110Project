@@ -40,6 +40,7 @@ public class Player {
     
     //TERRITORY HAS TWO R'S IN IT
     
+    // YOU SHOULD ADD addTerritory method TOO
     public void removeTerritory(Teritory teritory) {
         if (!(hasLost())) {
             territories.remove(teritory);
@@ -49,6 +50,19 @@ public class Player {
         }else{
             handleDeadPlayer();
         }
+    }
+
+     /**
+     * TAHER'S WORK
+     * @return string that contains all the territories owned by the player
+     * This method would be used in the attack() stage
+     */
+    public String getAllTerritories(){
+        String allTerritories=" ";
+        for (Territory t: territories){
+            allTerritories += t.getTerritoryName()+", ";
+        }
+        return allTerritories;
     }
 
     /**
