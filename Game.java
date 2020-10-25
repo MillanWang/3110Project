@@ -165,7 +165,12 @@ public class Game {
         int numPlayers = 0;
         while(true) {
             System.out.println("Choose number of players (2-6)");
-            numPlayers = input.nextInt();  //HAVE TO FIGURE OUT WHAT TO DO IF THE USER INPUTS STRING INSTEAD OF INT
+            try {
+                numPlayers = input.nextInt();  //HAVE TO FIGURE OUT WHAT TO DO IF THE USER INPUTS STRING INSTEAD OF INT
+            } catch (InputMismatchException e){
+                System.err.println("Don't enter characters or strings");
+                input.next();
+            }
             if (numPlayers < 2 || numPlayers > 6){
                 System.out.println("2-6 players only. Try again");
             } else{
