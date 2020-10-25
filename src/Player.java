@@ -75,8 +75,9 @@ public class Player {
     }
 
     /**
+     * checks if player has lost possession of all territories owned
      *
-     * @return  true ifthe player has lost all territories.
+     * @return  true if the player has lost all territories.
      */
     public boolean hasLost() {
         return territories.isEmpty();
