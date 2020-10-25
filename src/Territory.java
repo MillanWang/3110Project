@@ -37,9 +37,10 @@ public class Territory {
     }
 
     /**
-     * @param troops
+     * 
      * the number of troops that is placed on each territory
      * would change in the draft and attack phase
+     * @param troops
      */
     public void changeTroops(int troops) {
         this.troops += troops;
@@ -69,9 +70,10 @@ public class Territory {
     }
 
     /**
+     * Returns territory object of the neighbour corresponding to the given territory name
      * @param territoryName
      * @return a territory object that
-     * it's name is equal to territoryName
+     * 
      */
     public Territory getNeighbour(String territoryName) {
         for (Territory territory : neighboursList){
@@ -133,7 +135,8 @@ public class Territory {
     }
 
     /**
-     * @param defender
+     * Checks if the neighbour can be attacked from the current territory
+     * @param defender The name of the attack victim territory
      * @return true or false depends on the situation
      * true: in case the player can attack that territory
      * false: in case the player cannot attack that territory
