@@ -30,7 +30,7 @@ public class Player {
     public String getName() {
         return this.name;
     }
-    
+
 
     /**
      * Returns the territory object given the territory name
@@ -51,9 +51,9 @@ public class Player {
 
 
     /**
-     * this method removes the a territory from the list of territories owned by the player
+     * this method adds a territory to the list of territories owned by player
      *
-     * @ param territory the territory to be removed
+     * @param territory the territory to be added
      **/
 
     public void addTerritory(Territory territory) {
@@ -65,9 +65,9 @@ public class Player {
     }
 
     /**
+     * this method removes a territory from the list of territories owned by player
      *
-     *
-     * @param territory
+     * @param territory territory to be removed
      */
     public void removeTerritory(Territory territory) {
         //The current player has 1 or more territories before removal
@@ -75,7 +75,8 @@ public class Player {
     }
 
     /**
-     * @return Whether the player has lost all territories.
+     *
+     * @return  true ifthe player has lost all territories.
      */
     public boolean hasLost() {
         return territories.isEmpty();
@@ -91,6 +92,11 @@ public class Player {
     }
 
     //WHAT IF PLAYER OWNS MANY CONTINENTS? Do a running total instead of returning - Edit by Millan and changed name
+    /**
+     * calculates bonuses gotten from occupying an entire continent
+     *
+     * @return the bonus to be added to player's troops
+    */
     private int continentBonus() {
         int bonus = 0;
         if (hasAfrica()) bonus += 3;
@@ -117,6 +123,7 @@ public class Player {
 
     /**
      * TAHER'S WORK
+     * this method prints out all territories owned by player
      *
      * @return string that contains all the territories owned by the player
      * This method would be used in the attack() stage
@@ -160,6 +167,11 @@ public class Player {
         //Each territory will now have at least one troop on it
     }
 
+    /**
+     * this method starts the draft phase of the game.
+     * Player is given a certain number of troops that can be deployed to the territories player owns
+     *
+    */
     public void draftPhase(){
         bonusTroops();
         while (numTroops > 0) {
@@ -207,6 +219,8 @@ public class Player {
     /**
      * This method will only be called by the territory class to determine
      * if the player can attack neighbors
+     *
+     * @return a list of territories player can use to start an attack
      */
     public List<Territory> getAttackStarters() {
         List attackstarters = new LinkedList<Territory>();
@@ -218,12 +232,23 @@ public class Player {
         return attackstarters;
     }
 
+    /**
+     * this method prints out the list of territories player can use to start an attack
+    */
+
     public void printAttackStarters(){
         List<Territory> attackStarters = getAttackStarters();
         for (Territory territory : attackStarters){
             territory.printInfo();
         }
     }
+
+    /**
+     * this method checks if a territory owned by player can be used to start an attack
+     *
+     * @param territoryName name of the territory to be checked
+     * @return True if a territory can be used to start an attack
+     */
 
     public boolean canStartAttack(String territoryName){
         return getTerritory(territoryName).getAttackableNeighbours() != null;
