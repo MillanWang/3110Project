@@ -63,11 +63,17 @@ public class Territory {
 
     /**
      *
-     * @param index
+     * @param 
      * @return a neighbour in the neighbour list
      */
-    public Territory getNeighboursList(int index) {
-        return this.neighboursList.get(index);
+    public Territory getNeighbour(String territoryName) {
+        for (Territory t : neighboursList){
+            if (territoryName.equals(t.getTerritoryName())){
+                return t;
+            }
+        }
+        System.out.println("No territory with this name");
+        return null; //To compile
     }
 
     /**
@@ -102,13 +108,20 @@ public class Territory {
             return attackableNeighbours;
         }
     }
-    public String printAttackableNeighbours(){
-        String attackableNeighbours="{ ";
+    public void printAttackableNeighbours(){
         for (Territory territory:getAttackableNeighbours()){
-            attackableNeighbours += territory.getTerritoryName()+", ";
+            territory.printInfo();
         }
-        attackableNeighbours += " }";
-        return attackableNeighbours;
+    }
+
+    public boolean canAttack(String defender){
+        List<Territory> attackables = getAttackableNeighbours();
+        for(Territory territory: attackables){
+            if (territory.getTerritoryName().equals(defender)){
+                return true;
+            }
+        }
+        return false;
     }
 
 }
