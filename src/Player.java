@@ -30,14 +30,7 @@ public class Player {
     public String getName() {
         return this.name;
     }
-
-    public void changeNumTroops(int changeAmount){
-        numTroops += changeAmount;
-    }
-
-    public List getTerritories() {
-        return territories;
-    }
+    
 
     /**
      * Returns the territory object given the territory name
