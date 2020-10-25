@@ -30,11 +30,10 @@ public class Dice {
      * During a player's attack phase, after the attack starter and the defender are chosen,
      * this method is called.
      *
-     * @param attacker  Territory where the attack starts
-     * @param defender  The defender territory. Victim of the attack
+     * @return the number of dice rolled by the attacker on this dice fight
      *
      */
-    public void diceFight(Territory attacker, Territory defender){
+    public int diceFight(Territory attacker, Territory defender){
         int attackerDice, defenderDice;
 
         //Defender rolls 2 unless 1 troop left on territory
@@ -92,5 +91,6 @@ public class Dice {
                 defender.changeTroops(-1);
             }
         }
+        return attackerDice;
     }
 }
