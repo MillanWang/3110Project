@@ -39,11 +39,20 @@ public class Player {
         return territories;
     }
 
-    public Territory getTerritory(String territoryName) {
-        for (Territory territory : territories) {
-            if (territory.getTerritoryName().equals(territoryName)) return territory;
+    /**
+     * Returns the territory object given the territory name
+     *
+     * @param territoryName The name of the territory
+     * @return The territory object
+     */
+    public Territory getTerritory(String territoryName){
+        for (Territory t : territories){
+            if (territoryName.equals(t.getTerritoryName())){
+                return t;
+            }
         }
-        return null;
+        System.out.println("No territory with this name");
+        return null; //To compile
     }
 
 
@@ -88,6 +97,7 @@ public class Player {
         numTroops += continentBonus() + (Math.max((int) Math.floor(this.territories.size() / 3), 3));
     }
 
+    //WHAT IF PLAYER OWNS MANY CONTINENTS? Do a running total instead of returning - Edit by Millan and changed name
     private int continentBonus() {
         int bonus = 0;
         if (hasAfrica()) bonus += 3;
@@ -165,6 +175,7 @@ public class Player {
             printAllTerritories();
             System.out.println("You have " + numTroops + " troops available to give out");
             System.out.println("Select territory in which you would like to send troops to.");
+            System.out.println("Territory names are case sensitive ");
             String territoryName = input.nextLine();
 
             if(getTerritory(territoryName)==null){
