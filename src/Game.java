@@ -57,7 +57,6 @@ public class Game {
         welcomeMessage();
         System.out.println("********************************");
         makePlayers();
-        defaultWorldMap.printAllTerritories();
 
         while (!gameEnds){
             Command command = parser.getCommand();
@@ -73,12 +72,12 @@ public class Game {
         System.out.println("\n\nCurrent Player: " + currentPlayer.getName());
         currentPlayer.draftPhase();
         //ATTACK PHASE
+        attackPhase();
         System.out.println("Player " + currentPlayer.getName() + " has finished their turn");
         System.out.println("******************************************");
-        System.out.println("Here are the territories for all PLAYERS");
+        printHelp();
         players.add(currentPlayer);//Added to the back
         currentPlayer = players.pop();//Pull out the first player in line to go next
-        attackPhase();
     }
 
 
@@ -96,6 +95,7 @@ public class Game {
         } else if (command.getCommandWord().equals("help")) {
             printHelp();
         }else if (command.getCommandWord().equals("quit")){
+            System.out.println("Thank you for playing RISK!\nHave a nice day!!");
             wantToQuit = true;
         }else if (command.getCommandWord().equals("nextTurn")){
             nextTurn();
@@ -110,11 +110,11 @@ public class Game {
     private void attackPhase() {
         Scanner input = new Scanner(System.in);
         System.out.println("******************************************");
-        System.out.println("Select territory to attack from");
-        System.out.println("You can start an attack from the following territories");
+        System.out.println("Starting attack phase of turn for player " + currentPlayer.getName());
         System.out.println("******************************************");
         currentPlayer.printAttackStarters();
 
+        Territory attackStarterTerritory, defenderTerritory;
         boolean endAttack = false;
 
         while(!endAttack){
@@ -131,12 +131,11 @@ public class Game {
                 System.out.println("Starting attack");
                 //Player wants to attack. Give options of attack starters
 
-                Territory attackStarterTerritory, defenderTerritory;
-
                 //Ask for attack starter. Verify it is legit
                 while (true){
                     System.out.println("\nYou are currently able to start an attack from the following territories" );
                     currentPlayer.printAttackStarters(); //shows territories current player is neighbours with
+                    System.out.println("Choose from above territories where to start an attack from ");
 
                     String attackStarter = input.nextLine();
 
@@ -150,34 +149,75 @@ public class Game {
                     } else {
                         System.out.println("Cannot start an attack from that territory");
                     }
-
                 }//At this point we have a pointer to the attackStarterTerritory
+                List<Territory> attackableNeighbours = attackStarterTerritory.getAttackableNeighbours();
+
+                while (true){
+                    System.out.println("\nYou are currently able to attack the following territories" );
+                    attackStarterTerritory.printAttackableNeighbours(); //shows territories that the current player can attack
+
+                    String defender = input.nextLine();
+
+                    //Get input from the user
+                    //Check if input corresponds to a name of a terry that is attackable from attackStarterTerritory
 
 
+                    if (attackStarterTerritory.canAttack(defender)){
+                        //Valid defender is chosen
 
-                //Ask for attack defender. Verify it is legit
-
-                //Ask to Initiate a dice fight or go back to (choose a different attack starter) or endTurn.
-
-                //Check if the defender is killed. Takeover if so TAKEOVER METHOD
-
-                //Takeover process
-                //Get the return value from diceFight. That is minimum amount of troops necessary to send to killed defender
-                //Defender has to change it's owner
-                //Owner of the defender also has to lose ownership of the killed defender terry
-
-                String c2 = input.nextLine();
-                Territory defender = defaultWorldMap.getTerritory(c2);
-                if (c2.equals(defender.getTerritoryName())) { //if user input equals a territory to attack
-                    System.out.println("proceed to roll dice");
+                        defenderTerritory = attackStarterTerritory.getNeighbour(defender);
+                        break;
+                    } else {
+                        System.out.println("Invalid defender chosen. Try again!");
+                    }
                 }
 
-                //Dice Roll Phase
-                System.out.println("You have the option to roll 1, 2, or 3 dice");
-                System.out.println("Select how many you'd like to roll");
+                while(true){
+                    System.out.print("*************************\nAttack starting from: ");
+                    attackStarterTerritory.printInfo();
+                    System.out.print("\nAttacking: ");
+                    defenderTerritory.printInfo();
 
-                int c3 = input.nextInt();
-                dice = new Dice();
+                    System.out.println("Type \"dice\" to start a battle or \"endBattle\" to end a battle");
+                    String diceFightChoice = input.nextLine();
+
+                    if (diceFightChoice.equals("dice")){
+                        Dice dice = new Dice();
+                        int troopsMovingIn = dice.diceFight(attackStarterTerritory,defenderTerritory);
+                        if (defenderTerritory.getTroops() <=0 ){
+                            //Defender has been killed
+                            takeoverTerritory(currentPlayer, defenderTerritory, troopsMovingIn);
+                            break;
+                        } else if ( attackStarterTerritory.getTroops() <= 1){
+                            //Attacker can no longer attack from this territory
+                            System.out.println("Can no longer attack from " + attackStarterTerritory.getTerritoryName());
+                            System.out.println("Only one troop left!");
+                            break;
+                        }
+
+                    } else if (diceFightChoice.equals("endBattle")){
+                        break;
+                    } else {
+                        System.out.println("Unknown command. Try again!");
+                    }
+
+
+
+
+                    //Ask to Initiate a dice fight or go back to (choose a different attack starter) or endTurn.
+
+                    //Check if the defender is killed. Takeover if so TAKEOVER METHOD
+
+
+                    //Takeover process
+                    //Get the return value from diceFight. That is minimum amount of troops necessary to send to killed defender
+                    //Defender has to change it's owner
+                    //Owner of the defender also has to lose ownership of the killed defender terry
+
+                }
+
+
+
             } else {
                 System.out.println("Invalid command!");
             }//End check for valid command
@@ -187,6 +227,7 @@ public class Game {
 
 
     private void takeoverTerritory(Player winner,Territory killedDefender, int numTroopsMovingIn){
+        System.out.println(winner.getName() + " has taken control over " + killedDefender.getTerritoryName());
         killedDefender.setTroops(numTroopsMovingIn);
 
         winner.addTerritory(killedDefender);
@@ -255,11 +296,7 @@ public class Game {
                 }//End check for legal name
             }//End while
         }
-        int pNumber = 1;
-        for(Player p : players){
-            System.out.println("Player " + pNumber+" : " + p.getName());
-            pNumber++;
-        }
+
         Collections.shuffle(players);//Players are initialized and order is randomized.
 
         //RANDOM DISTRIBUTION OF TERRITORIES AND TROOPS
@@ -270,8 +307,11 @@ public class Game {
             players.add(players.pop()); //Sending current player to the back of the queue
         }
         //Putting troops in all player's territories
+        int pNumber = 1;
         for (Player player: players){
             player.setupPlayer(numPlayers);
+            System.out.println("Player " + pNumber+" : " + player.getName());
+            pNumber++;
         }
         currentPlayer = players.pop();//Establish the first player to go
         nextTurn();
