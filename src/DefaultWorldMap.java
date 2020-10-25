@@ -9,11 +9,9 @@ public class DefaultWorldMap {
      * This class is to represent the entire playing map in the game RISK for
      * the group project in SYSC 3110
      *
-     * Group: Static
-     * Members: J.Anyia, F.Olotu, T.Shabaan, M.Wang
-     * */
-
-
+     * @author J.Anyia, F.Olotu, T.Shabaan, M.Wang
+     * 
+     */
     //List of all territories
     private ArrayList<Territory> allTerritories;
 
@@ -270,43 +268,43 @@ public class DefaultWorldMap {
         alaska.addNeighbours(kamchatka);
         alaska.addNeighbours(northWestTerritories);
         alaska.addNeighbours(alberta);
-        
+
         northWestTerritories.addNeighbours(alaska);
         northWestTerritories.addNeighbours(alberta);
         northWestTerritories.addNeighbours(ontario);
         northWestTerritories.addNeighbours(greenland);
-        
+
         alberta.addNeighbours(alaska);
         alberta.addNeighbours(northWestTerritories);
         alberta.addNeighbours(ontario);
         alberta.addNeighbours(westUSA);
-        
+
         ontario.addNeighbours(alberta);
         ontario.addNeighbours(northWestTerritories);
         ontario.addNeighbours(westUSA);
         ontario.addNeighbours(eastUSA);
         ontario.addNeighbours(quebec);
         ontario.addNeighbours(greenland);
-        
+
         quebec.addNeighbours(ontario);
         quebec.addNeighbours(greenland);
         quebec.addNeighbours(eastUSA);
-        
+
         greenland.addNeighbours(northWestTerritories);
         greenland.addNeighbours(ontario);
         greenland.addNeighbours(quebec);
         greenland.addNeighbours(iceland);
-        
+
         westUSA.addNeighbours(alberta);
         westUSA.addNeighbours(eastUSA);
         westUSA.addNeighbours(ontario);
         westUSA.addNeighbours(centralAmerica);
-        
+
         eastUSA.addNeighbours(ontario);
         eastUSA.addNeighbours(quebec);
         eastUSA.addNeighbours(westUSA);
         eastUSA.addNeighbours(centralAmerica);
-        
+
         centralAmerica.addNeighbours(westUSA);
         centralAmerica.addNeighbours(eastUSA);
         centralAmerica.addNeighbours(venezuela);
