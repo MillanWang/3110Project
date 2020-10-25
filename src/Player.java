@@ -93,7 +93,7 @@ public class Player {
      * It is based on the number of countries he occupies and any continents he fully controls
      * and the territories / 3
      */
-    public void bonusTroops() {
+    private void bonusTroops() {
         numTroops += continentBonus() + (Math.max((int) Math.floor(this.territories.size() / 3), 3));
     }
 
@@ -128,7 +128,7 @@ public class Player {
      * @return string that contains all the territories owned by the player
      * This method would be used in the attack() stage
      */
-    public void printAllTerritories() {
+    private void printAllPlayerTerritories() {
         for (Territory t : territories) {
             t.printInfo();
         }
@@ -172,7 +172,7 @@ public class Player {
         while (numTroops > 0) {
             Scanner input = new Scanner(System.in);
             System.out.println("You currently own the following territories");
-            printAllTerritories();
+            printAllPlayerTerritories();
             System.out.println("You have " + numTroops + " troops available to give out");
             System.out.println("Select territory in which you would like to send troops to.");
             System.out.println("Territory names are case sensitive ");
