@@ -19,6 +19,7 @@ public class Player {
     public Player(String name) {
         this.name = name;
         territories = new LinkedList<>();
+        defaultWM = new DefaultWorldMap();
     }
 
     /**
@@ -28,6 +29,10 @@ public class Player {
      */
     public String getName() {
         return this.name;
+    }
+
+    public void changeNumTroops(int changeAmount){
+        numTroops += changeAmount;
     }
 
     public List getTerritories() {
@@ -100,12 +105,10 @@ public class Player {
      * @return string that contains all the territories owned by the player
      * This method would be used in the attack() stage
      */
-    public String getAllTerritories() {
-        String allTerritories = " ";
+    public void printAllTerritories() {
         for (Territory t : territories) {
-            allTerritories += t.getTerritoryName() + ", ";
+            t.printInfo();
         }
-        return allTerritories;
     }
 
     /**
@@ -156,24 +159,45 @@ public class Player {
         //Each territory will now have at least one troop on it
     }
 
-    private void draftPhase(){
-        while (numTroops != 0) {
+    public void draftPhase(){
+        bonusTroops();
+        while (numTroops > 0) {
             Scanner input = new Scanner(System.in);
+            System.out.println("You currently own the following territories");
+            printAllTerritories();
+            System.out.println("You have " + numTroops + " troops available to give out");
             System.out.println("Select territory in which you would like to send troops to.");
-            System.out.println("You currently own " + "\n" +
-                    getAllTerritories());
-            String t = input.nextLine();
-            if (t.equals(getTerritory(t).getTerritoryName())) {
+            String territoryName = input.nextLine();
+
+            if(getTerritory(territoryName)==null){
+                System.err.println("INVALID TERRITORY NAME");
+
+            }else if (territoryName.equals(getTerritory(territoryName).getTerritoryName())) {
                 System.out.println("Select amount of troops to send");
+                //Sending troops to selected territory
+
+                int troopNumber = 0;
+                while(true) {
+                    try {
+                        troopNumber = input.nextInt();
+                    } catch (InputMismatchException e) {
+                        System.err.println("Don't enter characters or strings. Numbers only");
+                        input.next();
+                    }
+
+                    if (troopNumber > 0 && troopNumber <= numTroops) {
+                        break;//User gave a valid number of troops
+                    } else{
+                        System.out.println("Number cannot be less than 1 and cannot be more than " + numTroops);
+                    }
+                }//End the ask and check for numTroops
+                //Valid number of troops is chosen
+                getTerritory(territoryName).changeTroops(troopNumber);
+                numTroops -= troopNumber;
+            } else {
+                System.out.println("Invalid territory name! Try again!");
             }
-            int troopNumber = input.nextInt();
-            if (troopNumber < 0) {
-                System.out.println("Number cannot be less than 1!");
-            }
-            getTerritory(t).changeTroops(troopNumber);
-            //currentPlayer.setNumTroops(currentPlayer.getNumTroops() - troopNumber);
-            System.out.println("You now have " + numTroops + " troops");
-        }
+        }//Completely emptied out the players troops
         System.out.println("You have run out of troops. Proceed to attack phase");
     }
 
