@@ -14,13 +14,11 @@ public class DefaultWorldMap {
      * */
 
 
+    //List of all territories
     private ArrayList<Territory> allTerritories;
 
     //These represent the continents. Important for calculating troop bonuses for complete continental control
     private ArrayList<Territory> northAmerica, southAmerica, africa, europe, asia, australia;
-
-    //Need field for the each continent. Must be able to return them
-    //Continent is going to be a new class
 
     /**
      * Constructor for the DefaultWorldMap class
@@ -119,30 +117,6 @@ public class DefaultWorldMap {
         for (Territory t: allTerritories){
             t.printInfo();
         }
-    }
-
-    /**
-     * Returns the territory object given the territory name
-     *
-     * @param territoryName The name of the territory
-     * @return The territory object
-     */
-    public Territory getTerritory(String territoryName){
-        for (Territory t : allTerritories){
-            if (territoryName.equals(t.getTerritoryName())){
-                return t;
-            }
-        }
-        System.out.println("No territory with this name");
-        return null; //To compile
-    }
-
-    
-    //Just testing some of the methods
-    public static void main(String[] args){
-        DefaultWorldMap d = new DefaultWorldMap();
-        d.printAllTerritories();
-        System.out.println(d.getAllTerritories().size());
     }
 
     /**
