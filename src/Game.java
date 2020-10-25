@@ -6,7 +6,8 @@ public class Game {
     private Player currentPlayer;
     private Dice dice;
     private int troopNumber;
-    DefaultWorldMap defaultWorldMap;
+    private DefaultWorldMap defaultWorldMap;
+    private boolean gameEnds = false;
 
     public Game(){
         defaultWorldMap = new DefaultWorldMap();
@@ -49,7 +50,6 @@ public class Game {
         makePlayers();
         defaultWorldMap.printAllTerritories();
 
-        boolean gameEnds = false;
         while (!gameEnds){
             Command command = parser.getCommand();
             gameEnds = processCommand(command);
@@ -61,9 +61,23 @@ public class Game {
      */
     private void nextTurn(){
         //START THE NEXT PLAYERS TURN Draft,Attack, end
+        System.out.println("\n\nCurrent Player: " + currentPlayer.getName());
+        currentPlayer.draftPhase();
+
+        //ATTACK PHASE
+
+        System.out.println("Player " + currentPlayer.getName() + " has finished their turn");
 
         players.add(currentPlayer);//Added to the back
         currentPlayer = players.pop();//Pull out the first player in line to go next
+    }
+
+    private void eliminatePlayer(Player loser){
+        players.remove(loser);
+        if (players.isEmpty()){
+            System.out.println(currentPlayer.getName()+ " is the ULTIMATE RULER OF THE WORLD!!!");
+            gameEnds = true;
+        }
     }
 
     /**
@@ -88,31 +102,8 @@ public class Game {
         return wantToQuit;
     }
 
+
     /*
-    private void draftPhase(){
-        while (currentPlayer.getNumTroops() != 0) {
-            Scanner input = new Scanner(System.in);
-            System.out.println("Select territory in which you would like to send troops to.");
-            System.out.println("You currently own " + "\n" +
-                    currentPlayer.getAllTerritories());
-
-            String t = input.nextLine();
-            if (t.equals(currentPlayer.getTerritory(t).getTerritoryName())) {
-                System.out.println("Select amount of troops to send");
-            }
-
-            troopNumber = input.nextInt();
-            if (troopNumber < 0) {
-                System.out.println("Number cannot be less than 1!");
-            }
-
-            currentPlayer.getTerritory(t).changeTroops(troopNumber);
-            //currentPlayer.setNumTroops(currentPlayer.getNumTroops() - troopNumber);
-            System.out.println("You now have " + currentPlayer.getNumTroops() + " troops");
-        }
-        System.out.println("You have run out of troops. Proceed to attack phase");
-    }
-
     private void attackPhase(){
         Scanner input = new Scanner (System.in);
         System.out.println("Select territory to attack from");
@@ -164,7 +155,7 @@ public class Game {
         while(true) {
             System.out.println("Choose number of players (2-6)");
             try {
-                numPlayers = input.nextInt();  //HAVE TO FIGURE OUT WHAT TO DO IF THE USER INPUTS STRING INSTEAD OF INT
+                numPlayers = input.nextInt();
             } catch (InputMismatchException e){
                 System.err.println("Don't enter characters or strings");
                 input.next();
@@ -221,11 +212,13 @@ public class Game {
             player.setupPlayer(numPlayers);
         }
         currentPlayer = players.pop();//Establish the first player to go
+        nextTurn();
     }
 
 
     public static void main(String[] args) {
         Game game = new Game();
+
 
     }
 }
