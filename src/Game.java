@@ -16,6 +16,15 @@ public class Game {
         play();
     }
 
+    private Player getPlayerFromList(String name){
+        for (Player player : players){
+            if (player.getName().equals(name)){
+                return player;
+            }
+        }
+        return null; //This will never happen. Will always be found. Only called from the takeoverTerritory method
+    }
+
     /**
      * Prints a welcome message introducing the players to the game Risk
      */
@@ -72,13 +81,7 @@ public class Game {
         currentPlayer = players.pop();//Pull out the first player in line to go next
     }
 
-    private void eliminatePlayer(Player loser){
-        players.remove(loser);
-        if (players.isEmpty()){
-            System.out.println(currentPlayer.getName()+ " is the ULTIMATE RULER OF THE WORLD!!!");
-            gameEnds = true;
-        }
-    }
+
 
     /**
      * TAHER'S WORK
@@ -103,51 +106,111 @@ public class Game {
     }
 
 
-    /*
-    private void attackPhase(){
-        Scanner input = new Scanner (System.in);
+
+    private void attackPhase() {
+        Scanner input = new Scanner(System.in);
         System.out.println("Select territory to attack from");
-        System.out.println("You currently own " + "\n" + currentPlayer.getAllTerritories());
-        String c1 = input.nextLine();
-        if(c1.equals(currentPlayer.getTerritory(c1).getTerritoryName())){ //check if user input equals a territory to attack from
-            System.out.println("Select country to attack");
-            System.out.println("You are currently able to attack " +"\n" +
-                    currentPlayer.getTerritory(c1).printAttackableNeighbours()); //shows territories currentplayer is neighbours with
+        System.out.println("You can start an attack from the following territories");
+        currentPlayer.printAttackStarters();
+
+        boolean endAttack = false;
+
+        while(!endAttack){
+            System.out.println("Type \"attack\" to start an attack or type \"skip\" to move on");
+            //Ask player to start attack or skip attack phase and move on to (NEXT TURN). Verify input
+            String attackOrSkip = input.nextLine();
+
+            if (attackOrSkip.equals("skip")){
+                endAttack = true;
+                System.out.println("Ending attack phase of turn. Moving on...");
+
+            //AttackChoiceStage begins here
+            } else if (attackOrSkip.equals("attack")){
+                System.out.println("Starting attack");
+                //Player wants to attack. Give options of attack starters
+
+                Territory attackStarterTerritory, defenderTerritory;
+
+                //Ask for attack starter. Verify it is legit
+                while (true){
+                    System.out.println("\nYou are currently able to start an attack from the following territories" );
+                    currentPlayer.printAttackStarters(); //shows territories current player is neighbours with
+
+                    String attackStarter = input.nextLine();
+
+                    if (currentPlayer.getTerritory(attackStarter)==null){
+                        System.out.println("Territory name does not exist. Try again.");
+                    } else if (currentPlayer.canStartAttack(attackStarter)){
+                        //Start attack
+                        attackStarterTerritory = currentPlayer.getTerritory(attackStarter);
+                        System.out.println("Starting attack from " + attackStarter);
+                        break;
+                    } else {
+                        System.out.println("Cannot start an attack from that territory");
+                    }
+
+                }//At this point we have a pointer to the attackStarterTerritory
+
+
+
+
+
+
+                //Ask for attack defender. Verify it is legit
+
+                //Ask to Initiate a dice fight or go back to (choose a different attack starter) or endTurn.
+
+                //Check if the defender is killed. Takeover if so TAKEOVER METHOD
+
+                //Takeover process
+                //Get the return value from diceFight. That is minimum amount of troops necessary to send to killed defender
+                //Defender has to change it's owner
+                //Owner of the defender also has to lose ownership of the killed defender terry
+
+                String c2 = input.nextLine();
+                Territory defender = defaultWorldMap.getTerritory(c2);
+                if (c2.equals(defender.getTerritoryName())) { //if user input equals a territory to attack
+                    System.out.println("proceed to roll dice");
+                }
+
+                //Dice Roll Phase
+                System.out.println("You have the option to roll 1, 2, or 3 dice");
+                System.out.println("Select how many you'd like to roll");
+
+                int c3 = input.nextInt();
+                dice = new Dice();
+            } else {
+                System.out.println("Invalid command!");
+            }//End check for valid command
+        }//End while(!endAttack)
+    }//End attackPhase()
+
+
+
+    private void takeoverTerritory(Player winner,Territory killedDefender, int numTroopsMovingIn){
+        killedDefender.setTroops(numTroopsMovingIn);
+
+        winner.addTerritory(killedDefender);
+
+        String loserName = killedDefender.getOwner();//Name of the original owner.
+        getPlayerFromList(loserName).removeTerritory(killedDefender);
+
+        killedDefender.setOwner(winner.getName());
+
+        //Check if the loser has been eliminated from the game
+        if (getPlayerFromList(loserName).hasLost()){
+            eliminatePlayer(getPlayerFromList(loserName));
         }
-        String c2 = input.nextLine();
-        Territory defender = defaultWorldMap.getTerritory(c2);
-        if (c2.equals(defender.getTerritoryName())){ //if user input equals a territory to attack
-            System.out.println("proceed to roll dice");
+    }
+
+    private void eliminatePlayer(Player loser){
+        players.remove(loser);
+        System.out.println("Rest in peace "+ loser.getName() + ", you have been eliminated");
+        if (players.isEmpty()){
+            System.out.println(currentPlayer.getName()+ " is the ULTIMATE RULER OF THE WORLD!!!");
+            gameEnds = true;
         }
-
-        //Dice Roll Phase
-        System.out.println("You have the option to roll 1, 2, or 3 dice");
-        System.out.println("Select how many you'd like to roll");
-
-        int c3 = input.nextInt();
-        dice = new Dice();
-        System.out.println(dice.diceFight(c3, defender.getTroops()));
-        */
-        /**
-         dice.roll();// roll amount of dice user inputs
-         int attackerValue = dice.rollDie();
-         System.out.println("You rolled " + attackerValue);
-         Dice dice2;
-         int defenderValue;
-         if(defender.getTroops() >= 2){
-         dice2 = new Dice(2); //roll 2 dice by default if defender's troops are >= 2
-         dice2.roll();
-         defenderValue = dice2.rollDie();
-         System.out.println("Defender rolled " + defenderValue);
-         }else{
-         dice2 =new Dice(1); //roll 1 dice by default if defender's troops are < 2
-         dice2.roll();
-         defenderValue = dice2.rollDie();
-         System.out.println("Defender rolled " + defenderValue);
-         }}
-         */
-        //Dice Fight
-
+    }
 
     private void makePlayers(){
         Scanner input = new Scanner(System.in);
