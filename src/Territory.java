@@ -1,30 +1,28 @@
 import java.util.ArrayList;
 import java.util.List;
-/**
- * Each territory should know it's name, how many troops on it, who owns it and it's neighbours.
- */
 
 public class Territory {
-    private int troops;// troops is basically the armies
-    private String territoryName;// the territory name
-    private String owner;// the owner name of the territory
-    private List<Territory> neighboursList;// a list that contains all possible neighbours to the territory
+    private int troops;
+    private String territoryName;
+    private String owner;
+    private List<Territory> neighboursList;
 
-    /**
-     * @param territoryName
-     * A constructor that will inilize the instance private variables
-     */
+
     public Territory(String territoryName){
         this.territoryName = territoryName;
         this.troops = 0;
         this.neighboursList = new ArrayList<>();
     }
 
+
     /**
      * @return troops
      */
     public int getTroops() {
         return troops;
+    }
+    public void setTroops(int troops){
+        this.troops = troops;
     }
 
     /**
@@ -33,9 +31,6 @@ public class Territory {
      */
     public void changeTroops(int troops) {
         this.troops += troops;
-        if((this.troops-troops)<0){
-            throw new IllegalArgumentException ("You can't deduct "+troops + "from the actual "+this.troops+" value");
-        }
     }
 
     /**
@@ -78,37 +73,35 @@ public class Territory {
     /**
      *
      * @param newNeighbours
-     * this method add a new neighbour to the actual Territory
      */
+    //NAME CHANGED. NOT ADDING A LIST, ADDING AN INDIVIDUAL NEIGHBOUR
     public void addNeighbours(Territory newNeighbours) {
         this.neighboursList.add(newNeighbours);
     }
 
-    /**
-     * this method will print each territory with how many troops on it and the owner name
-     */
     public void printInfo(){
         String s = territoryName + "\t\tTroops: " + troops + "\t\tOwner: " + owner;
         System.out.println(s);
     }
     /**
+     *Favour
      * This method should get the a list of neighbours owner can attack
      * */
     public List<Territory> getAttackableNeighbours(){
-        if(this.getTroops() == 1 ) return null;
+        if(this.getTroops() <= 1 ) return null; //Cannot start attack from terry with 1 troop
+
         List attackableNeighbours = new ArrayList();
         for (Territory ter : neighboursList) {
             if (!(this.owner.equals(ter.getOwner()))){
                 attackableNeighbours.add(ter);
             }
         }
-        return attackableNeighbours;
+        if (attackableNeighbours.isEmpty()){
+            return null;
+        }else {
+            return attackableNeighbours;
+        }
     }
-
-    /**
-     *
-     * @return a string that contains all the attackable neighbours
-     */
     public String printAttackableNeighbours(){
         String attackableNeighbours="{ ";
         for (Territory territory:getAttackableNeighbours()){
