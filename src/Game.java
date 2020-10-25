@@ -7,12 +7,13 @@ public class Game {
     private Dice dice;
     private int troopNumber;
     private DefaultWorldMap defaultWorldMap;
-    private boolean gameEnds = false;
+    private boolean gameEnds;
 
     public Game(){
         defaultWorldMap = new DefaultWorldMap();
         parser = new Parser();
         players = new LinkedList<Player>();
+        gameEnds = false;
         play();
     }
 
