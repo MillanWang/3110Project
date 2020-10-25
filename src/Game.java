@@ -44,9 +44,12 @@ public class Game {
      */
     private void printHelp()
     {
-        System.out.println("You don't know what to do, Right?");
+        System.out.println("******************************");
         System.out.println("Make sure to choose from the following commands.");
-        System.out.println();
+        System.out.println("showMap : Prints a list of all territories on the map with number of troops on them and owner");
+        System.out.println("nextTurn : Starts the Draft>Attack turn cycle for the next player");
+        System.out.println("quit : To end the game");
+        System.out.println("help : To show this message\n");
         System.out.println("Your command words are:");
         System.out.println("showMap, nextTurn ,quit ,help");
     }
@@ -54,9 +57,9 @@ public class Game {
     /**
      * would play the game
      */
-    public void play(){
+    private void play(){
         welcomeMessage();
-        System.out.println("********************************");
+        System.out.println("******************************");
         makePlayers();
 
         while (!gameEnds){
@@ -75,7 +78,7 @@ public class Game {
         //ATTACK PHASE
         attackPhase();
         System.out.println("Player " + currentPlayer.getName() + " has finished their turn");
-        System.out.println("******************************************");
+        System.out.println("******************************");
         printHelp();
         players.add(currentPlayer);//Added to the back
         currentPlayer = players.pop();//Pull out the first player in line to go next
@@ -96,12 +99,13 @@ public class Game {
         } else if (command.getCommandWord().equals("help")) {
             printHelp();
         }else if (command.getCommandWord().equals("quit")){
-            System.out.println("Thank you for playing RISK!\nHave a nice day!!");
+            System.out.println("Thank you for playing RISK\nHave a nice day!!");
             wantToQuit = true;
         }else if (command.getCommandWord().equals("nextTurn")){
             nextTurn();
         }else if (command.getCommandWord().equals("showMap")) {
             defaultWorldMap.printAllTerritories();
+            printHelp();
         }
         return wantToQuit;
     }
@@ -110,9 +114,9 @@ public class Game {
 
     private void attackPhase() {
         Scanner input = new Scanner(System.in);
-        System.out.println("******************************************");
+        System.out.println("******************************");
         System.out.println("Starting attack phase of turn for player " + currentPlayer.getName());
-        System.out.println("******************************************");
+        System.out.println("******************************");
         currentPlayer.printAttackStarters();
 
         Territory attackStarterTerritory, defenderTerritory;
@@ -121,14 +125,22 @@ public class Game {
         while(!endAttack){
             System.out.println("Type \"attack\" to start an attack or type \"skip\" to move on");
             //Ask player to start attack or skip attack phase and move on to (NEXT TURN). Verify input
-            String attackOrSkip = input.nextLine();
+            String attackOrSkip = "";
+            if (currentPlayer.getAttackStarters().isEmpty()) {
+                endAttack = true;
+                System.out.println("No territories can start an attack");
+                break;
+            }else {
+                attackOrSkip = input.nextLine();
+            }
 
-            if (attackOrSkip.equals("skip")){
+            if (attackOrSkip.equals("skip")) {
                 endAttack = true;
                 System.out.println("Ending attack phase of turn. Moving on...");
 
+
                 //AttackChoiceStage begins here
-            } else if (attackOrSkip.equals("attack")){
+            } else if (attackOrSkip.equals("attack") ){
                 System.out.println("Starting attack");
                 //Player wants to attack. Give options of attack starters
 
@@ -174,7 +186,7 @@ public class Game {
                 }
 
                 while(true){
-                    System.out.print("*************************\nAttack starting from: ");
+                    System.out.print("******************************\nAttack starting from: ");
                     attackStarterTerritory.printInfo();
                     System.out.print("\nAttacking: ");
                     defenderTerritory.printInfo();
@@ -184,10 +196,10 @@ public class Game {
 
                     if (diceFightChoice.equals("dice")){
                         Dice dice = new Dice();
-                        int troopsMovingIn = dice.diceFight(attackStarterTerritory,defenderTerritory);
+                        int diceWonWith = dice.diceFight(attackStarterTerritory,defenderTerritory);
                         if (defenderTerritory.getTroops() <=0 ){
                             //Defender has been killed
-                            takeoverTerritory(currentPlayer, defenderTerritory, troopsMovingIn);
+                            takeoverTerritory(currentPlayer,attackStarterTerritory, defenderTerritory, diceWonWith);
                             break;
                         } else if ( attackStarterTerritory.getTroops() <= 1){
                             //Attacker can no longer attack from this territory
@@ -201,24 +213,7 @@ public class Game {
                     } else {
                         System.out.println("Unknown command. Try again!");
                     }
-
-
-
-
-                    //Ask to Initiate a dice fight or go back to (choose a different attack starter) or endTurn.
-
-                    //Check if the defender is killed. Takeover if so TAKEOVER METHOD
-
-
-                    //Takeover process
-                    //Get the return value from diceFight. That is minimum amount of troops necessary to send to killed defender
-                    //Defender has to change it's owner
-                    //Owner of the defender also has to lose ownership of the killed defender terry
-
                 }
-
-
-
             } else {
                 System.out.println("Invalid command!");
             }//End check for valid command
@@ -227,9 +222,28 @@ public class Game {
 
 
 
-    private void takeoverTerritory(Player winner,Territory killedDefender, int numTroopsMovingIn){
+    private void takeoverTerritory(Player winner,Territory attackerWinner, Territory killedDefender, int diceWonWith){
         System.out.println(winner.getName() + " has taken control over " + killedDefender.getTerritoryName());
+
+        int numTroopsMovingIn=0;
+        Scanner input = new Scanner(System.in);
+        while(true) {//Asking user for how many troops are moving in
+            System.out.println("Select between " + diceWonWith+ " - " + (attackerWinner.getTroops()-1) + " troops to move into " + killedDefender.getTerritoryName());
+            try {
+                numTroopsMovingIn = input.nextInt();
+            } catch (InputMismatchException e) {
+                System.err.println("Don't enter characters or strings. Numbers only");
+                input.next();
+                continue;
+            }
+            if ( numTroopsMovingIn<0 || numTroopsMovingIn < diceWonWith || numTroopsMovingIn >= attackerWinner.getTroops()) {
+                System.out.println("Illegal number of troops.");
+            } else{
+                break;//Legal number troops moving in
+            }
+        }
         killedDefender.setTroops(numTroopsMovingIn);
+        attackerWinner.changeTroops(-numTroopsMovingIn);
 
         winner.addTerritory(killedDefender);
 
@@ -241,6 +255,7 @@ public class Game {
         //Check if the loser has been eliminated from the game
         if (getPlayerFromList(loserName).hasLost()){
             eliminatePlayer(getPlayerFromList(loserName));
+            gameEnds = true;
         }
     }
 
