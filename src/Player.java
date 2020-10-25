@@ -46,23 +46,7 @@ public class Player {
         return null;
     }
 
-    /**
-     * The following continent methods are used to check if the player owns all territories in a continent
-     * This will be used to determine the troop bonus for complete continent control
-     *
-     * @return True if the entire continent is owned by the player, false otherwise
-     */
-    private Boolean hasNorthAmerica() { return territories.contains(defaultWM.getNorthAmerica()); }
 
-    private Boolean hasSouthAmerica() { return territories.contains(defaultWM.getSouthAmerica()); }
-
-    private Boolean hasAfrica() { return territories.contains(defaultWM.getAfrica()); }
-
-    private Boolean hasAsia() { return territories.contains(defaultWM.getAsia()); }
-
-    private Boolean hasEurope() {return territories.contains(defaultWM.getEurope()); }
-
-    private Boolean hasAustralia() { return territories.contains(defaultWM.getAustralia()); }
 
     /**
      * this method removes the a territory from the list of territories owned by the player
@@ -78,12 +62,30 @@ public class Player {
         }
     }
 
+    /**
+     *
+     *
+     * @param territory
+     */
     public void removeTerritory(Territory territory) {
-        if (!(hasLost())) {
-            territories.remove(territory);
-        } else {
-            System.out.println("Player has already lost");
-        }
+        //The current player has 1 or more territories before removal
+        territories.remove(territory);
+    }
+
+    /**
+     * @return Whether the player has lost all territories.
+     */
+    public boolean hasLost() {
+        return territories.isEmpty();
+    }
+
+    /**
+     * Calculates the number of troops the player should receive in this turn.
+     * It is based on the number of countries he occupies and any continents he fully controls
+     * and the territories / 3
+     */
+    public void bonusTroops() {
+        numTroops += continentBonus() + (Math.max((int) Math.floor(this.territories.size() / 3), 3));
     }
 
     //WHAT IF PLAYER OWNS MANY CONTINENTS? Do a running total instead of returning - Edit by Millan and changed name
@@ -98,6 +100,18 @@ public class Player {
 
         return bonus;
     }
+    /**
+     * The following continent methods are used to check if the player owns all territories in a continent
+     * This will be used to determine the troop bonus for complete continent control
+     *
+     * @return True if the entire continent is owned by the player, false otherwise
+     */
+    private Boolean hasNorthAmerica() { return territories.contains(defaultWM.getNorthAmerica()); }
+    private Boolean hasSouthAmerica() { return territories.contains(defaultWM.getSouthAmerica()); }
+    private Boolean hasAfrica() { return territories.contains(defaultWM.getAfrica()); }
+    private Boolean hasAsia() { return territories.contains(defaultWM.getAsia()); }
+    private Boolean hasEurope() {return territories.contains(defaultWM.getEurope()); }
+    private Boolean hasAustralia() { return territories.contains(defaultWM.getAustralia()); }
 
     /**
      * TAHER'S WORK
@@ -111,22 +125,7 @@ public class Player {
         }
     }
 
-    /**
-     * @return Whether the player has lost all territories.
-     */
-    public boolean hasLost() {
-        return territories.isEmpty();
-    }
 
-
-    /**
-     * Calculates the number of troops the player should receive in this turn.
-     * It is based on the number of countries he occupies and any continents he fully controls
-     * and the territories / 3
-     */
-    public void bonusTroops() {
-        numTroops += continentBonus() + (Math.max((int) Math.floor(this.territories.size() / 3), 3));
-    }
 
     /**
      * Sets up the players territories with troops
@@ -215,4 +214,14 @@ public class Player {
         return attackstarters;
     }
 
+    public void printAttackStarters(){
+        List<Territory> attackStarters = getAttackStarters();
+        for (Territory territory : attackStarters){
+            territory.printInfo();
+        }
+    }
+
+    public boolean canStartAttack(String territoryName){
+        return getTerritory(territoryName).getAttackableNeighbours() != null;
+    }
 }
