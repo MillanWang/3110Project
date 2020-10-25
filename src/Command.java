@@ -1,15 +1,18 @@
+/**
+ * Command class get the value of the command which is of type String
+ * and it'll be used to by the Parser class.
+ */
 public class Command {
     private String commandWord;
-
     /**
-     * Create a command object.
-     * @param firstWord The first word of the command. Null if the command
+     * Create a command object. The word must be supplied, but
+     * it can be null too.
+     * @param command The word of the command. Null if the command
      *                  was not recognised.
      */
-    public Command(String firstWord)
+    public Command(String command)
     {
-        commandWord = firstWord;
-
+        commandWord = command;
     }
 
     /**
@@ -23,7 +26,7 @@ public class Command {
     }
 
     /**
-     * @return true if this command was not understood.
+     * @return true if this command was not understood or invalid.
      */
     public boolean isUnknown()
     {
