@@ -11,8 +11,9 @@ public class Dice {
     private Random random;
 
 
-    // Default Constructor : A die
-
+    /**
+     * Constructor for the dice class. Used during the attack phase
+     */
     public Dice() {
         random = new Random();
     }
@@ -46,21 +47,18 @@ public class Dice {
 
         //Asking for user to choose how many dice to roll
         Scanner input = new Scanner(System.in);
+        int attackerMaxDice = Math.min(3, attacker.getTroops()-1);
         while(true) {
             try {
-                System.out.println("Choose number of dice to roll (1 - 3)");
+                System.out.println("Choose number of dice to roll (1 - " + attackerMaxDice + ")");
                 attackerDice = input.nextInt();
-                if (attackerDice < 1 || attackerDice > 3){
-                    System.out.println("1-3 dice only. Try again");
-                } else if (attackerDice + 1 >= attacker.getTroops()){
-                    System.out.println("Can't roll that many for the given territory. Try again");
-                    input.next();
+                if (attackerDice < 1 || attackerDice > attackerMaxDice){
+                    System.out.println("Invalid dice number. Try again");
                 }else {
-                    //1 <= attackerDice <= min(3, attacker.getTroops()-1)
                     break;
                 }
             }catch (Exception e){
-                System.out.println("Please input a number between 1-3 ");
+                System.out.println("Please input a number between 1-" + attackerMaxDice);
                 input.next();
             }
         }
@@ -83,14 +81,15 @@ public class Dice {
             System.out.println("Defender rolls a " + defenderRolls.peek());
             if (attackerRolls.pop() <= defenderRolls.pop()){
                 //Defender wins
-                System.out.println("Attacker loses a troop! RIP");
+                System.out.println("Defender wins! Attacker loses a troop! RIP");
                 attacker.changeTroops(-1);
             } else {
                 //Attacker wins
-                System.out.println("Defender loses a troop! RIP");
+                System.out.println("Attacker wins! Defender loses a troop! RIP");
                 defender.changeTroops(-1);
             }
         }
         return attackerDice;
     }
+
 }
