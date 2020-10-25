@@ -88,7 +88,6 @@ public class Player {
         numTroops += continentBonus() + (Math.max((int) Math.floor(this.territories.size() / 3), 3));
     }
 
-    //WHAT IF PLAYER OWNS MANY CONTINENTS? Do a running total instead of returning - Edit by Millan and changed name
     private int continentBonus() {
         int bonus = 0;
         if (hasAfrica()) bonus += 3;
@@ -198,6 +197,7 @@ public class Player {
             }
         }//Completely emptied out the players troops
         System.out.println("You have run out of troops. Proceed to attack phase");
+        System.out.println("******************************************");
     }
 
     /**
