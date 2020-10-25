@@ -21,6 +21,7 @@ public class Territory {
     public int getTroops() {
         return troops;
     }
+
     public void setTroops(int troops){
         this.troops = troops;
     }
@@ -63,7 +64,7 @@ public class Territory {
 
     /**
      *
-     * @param 
+     * @param
      * @return a neighbour in the neighbour list
      */
     public Territory getNeighbour(String territoryName) {
@@ -86,8 +87,10 @@ public class Territory {
     }
 
     public void printInfo(){
-        String s = territoryName + "\t\tTroops: " + troops + "\t\tOwner: " + owner;
-        System.out.println(s);
+        StringBuilder sb = new StringBuilder(territoryName);
+        sb.append("                                                                     ");
+        sb.insert(25,"\tTroops: " + troops + "\t\tOwner: " + owner );
+        System.out.println(sb);
     }
     /**
      *Favour
