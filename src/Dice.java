@@ -18,8 +18,7 @@ public class Dice {
         random = new Random();
     }
 
-    /** A private function that rolls a single die. Used for safety
-     *  to avoid common error in forgetting to maps random ints (from 0 to max)
+    /** A private function that rolls a single die.
      *  to required ints (from 1 to max+1)
      * @return A number from 1 to 6.
      */
@@ -29,7 +28,10 @@ public class Dice {
 
     /**
      * During a player's attack phase, after the attack starter and the defender are chosen,
-     * this method is called.
+     * this method is called to start a diceFight.
+     *
+     * Asks user (attacker) for how many dice to roll and verifies that it is a legitimate number
+     * Defender will always roll 2 dice unless the defending territory only has 1 troop left. This will result in 1 dice
      *
      * @return the number of dice rolled by the attacker on this dice fight
      *
@@ -45,7 +47,7 @@ public class Dice {
         }
 
 
-        //Asking for user to choose how many dice to roll
+        //Asking for user to choose how many dice to roll. Verify that the number is ok for the given territories
         Scanner input = new Scanner(System.in);
         int attackerMaxDice = Math.min(3, attacker.getTroops()-1);
         while(true) {
@@ -63,10 +65,12 @@ public class Dice {
             }
         }
 
-
+        //Used to make a list of the different players different dice rolls
         LinkedList<Integer> attackerRolls = new LinkedList<>();
         LinkedList<Integer> defenderRolls = new LinkedList<>();
 
+
+        //Add dice roll values to the lists. Number of dice rolls specified above
         for (int i = 0; i<attackerDice; i++){ attackerRolls.push((Integer) rollDie());}
         Collections.sort(attackerRolls);//Sorting low to high
         Collections.reverse(attackerRolls);//Reverse to go high to low
@@ -76,6 +80,7 @@ public class Dice {
         Collections.reverse(defenderRolls);//Reverse to go high to low
 
 
+        //Pop out the dice rolls high to low to compare. Higher number wins. Ties means defender wins
         while (!attackerRolls.isEmpty() && !defenderRolls.isEmpty()){
             System.out.println("Attacker rolls a " + attackerRolls.peek());
             System.out.println("Defender rolls a " + defenderRolls.peek());
@@ -89,7 +94,8 @@ public class Dice {
                 defender.changeTroops(-1);
             }
         }
+        //If the attacker takes over the territory, the number of troops moved in has to be greater or equal to
+        //the number of dice rolled on the most recent diceFight
         return attackerDice;
     }
-
 }
