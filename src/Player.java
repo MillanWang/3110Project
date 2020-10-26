@@ -88,11 +88,12 @@ public class Player {
      * It is based on the number of countries he occupies and any continents he fully controls
      * and the territories / 3
      */
+    
     private void bonusTroops() {
         numTroops += continentBonus() + (Math.max((int) Math.floor(this.territories.size() / 3), 3));
     }
 
-    //WHAT IF PLAYER OWNS MANY CONTINENTS? Do a running total instead of returning - Edit by Millan and changed name
+    
     /**
      * calculates bonuses gotten from occupying an entire continent
      *
@@ -123,7 +124,7 @@ public class Player {
     private Boolean hasAustralia() { return territories.contains(defaultWM.getAustralia()); }
 
     /**
-     * TAHER'S WORK
+     * 
      * this method prints out all territories owned by player
      *
      * @return string that contains all the territories owned by the player
