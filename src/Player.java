@@ -6,7 +6,6 @@ import java.util.*;
 public class Player {
     private String name; // The name of the player.
     private LinkedList<Territory> territories; // A list of the territories the player occupies.
-    //^^^^^^^^^^^Switched to linked list because of the cycling of territories during setup phase. No longer requires complete shifting
     private DefaultWorldMap defaultWM;
     private int numTroops;
 
