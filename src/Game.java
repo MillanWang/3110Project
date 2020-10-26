@@ -5,18 +5,27 @@ public class Game {
     private LinkedList<Player> players;
     private Player currentPlayer;
     private Dice dice;
-    private int troopNumber;
     private DefaultWorldMap defaultWorldMap;
     private boolean gameEnds;
 
+    /**
+     * Constructor for the class game. This will start playing the game
+     */
     public Game(){
         defaultWorldMap = new DefaultWorldMap();
         parser = new Parser();
         players = new LinkedList<Player>();
         gameEnds = false;
+        dice = new Dice();
         play();
     }
 
+    /**
+     * gets the player object given the player's name
+     *
+     * @param name name set to the player by the user
+     * @return the player object corresponding to the given name
+     */
     private Player getPlayerFromList(String name){
         for (Player player : players){
             if (player.getName().equals(name)){
@@ -38,9 +47,7 @@ public class Game {
     }
 
     /**
-     * Print out some help information.
-     * Here we print a cryptic message and a list of the
-     * command words.
+     * Print out the legal commands of the game for the user
      */
     private void printHelp()
     {
@@ -55,7 +62,7 @@ public class Game {
     }
 
     /**
-     * would play the game
+     * Starts the game. The game will end when the player chooses to quit or when a winner is found
      */
     private void play(){
         welcomeMessage();
@@ -69,13 +76,12 @@ public class Game {
     }
 
     /**
-     * Ends the current player's turn and set's the current player to the next player in the list
+     * Completes the current players turn (Draft>attack cycle) and sets the current player to the next player in line
      */
     private void nextTurn(){
-        //START THE NEXT PLAYERS TURN Draft,Attack, end
+        //START THIS PLAYER'S TURN (Draft>Attack>End cycle)
         System.out.println("\n\nCurrent Player: " + currentPlayer.getName());
         currentPlayer.draftPhase();
-        //ATTACK PHASE
         attackPhase();
         System.out.println("Player " + currentPlayer.getName() + " has finished their turn");
         System.out.println("******************************");
@@ -84,12 +90,10 @@ public class Game {
         currentPlayer = players.pop();//Pull out the first player in line to go next
     }
 
-
-
     /**
-     * TAHER'S WORK
-     * @param command
-     * @return
+     * Processes the commands from the user in the main menu interface section
+     * @param command The command given by the player
+     * @return True if the player wants to end the game. False otherwise
      */
     private boolean processCommand(Command command) {
         boolean wantToQuit = false;
@@ -111,6 +115,19 @@ public class Game {
     }
 
 
+    /**
+     * The attack phase of a player's turn
+     * If player has territories that can start an attack, the player has the option to choose if they want to
+     * start the attack or move on to the next phase (ends turn for now, fortify stage in the future)
+     *
+     * If a player decides to start an attack, ask where to start the attack
+     * Once attack starter is determined, choose where to attack (the defender)
+     *
+     * Initiates a diceFight process (Dice class)
+     * This may lead to a territory being conquered by the attacker. This would be a call to takeoverTerritory
+     *
+     * The attack phase is forced to end if the current player no longer has any territories that can start an attack
+     */
 
     private void attackPhase() {
         Scanner input = new Scanner(System.in);
@@ -119,7 +136,7 @@ public class Game {
         System.out.println("******************************");
         currentPlayer.printAttackStarters();
 
-        Territory attackStarterTerritory, defenderTerritory;
+        Territory attackStarterTerritory, defenderTerritory;// Needed for diceFight
         boolean endAttack = false;
 
         while(!endAttack){
@@ -174,17 +191,15 @@ public class Game {
                     //Get input from the user
                     //Check if input corresponds to a name of a terry that is attackable from attackStarterTerritory
 
-
                     if (attackStarterTerritory.canAttack(defender)){
                         //Valid defender is chosen
-
                         defenderTerritory = attackStarterTerritory.getNeighbour(defender);
                         break;
                     } else {
                         System.out.println("Invalid defender chosen. Try again!");
                     }
                 }
-
+                //Dice fight stage
                 while(true){
                     System.out.print("******************************\nAttack starting from: ");
                     attackStarterTerritory.printInfo();
@@ -195,7 +210,6 @@ public class Game {
                     String diceFightChoice = input.nextLine();
 
                     if (diceFightChoice.equals("dice")){
-                        Dice dice = new Dice();
                         int diceWonWith = dice.diceFight(attackStarterTerritory,defenderTerritory);
                         if (defenderTerritory.getTroops() <=0 ){
                             //Defender has been killed
@@ -207,7 +221,6 @@ public class Game {
                             System.out.println("Only one troop left!");
                             break;
                         }
-
                     } else if (diceFightChoice.equals("endBattle")){
                         break;
                     } else {
@@ -221,7 +234,18 @@ public class Game {
     }//End attackPhase()
 
 
-
+    /**
+     * Switches the ownership of the killed defender territory to the player that won
+     * Moves troops from the attackWinner territory into the killedDefender territory, based on user input
+     * Number of troops moving in has to be >= number of dice rolled on most recent diceFight
+     *
+     * If the owner of the killedDefender territory lost their last territory, they will be eliminated from the game
+     *
+     * @param winner The player that conquered the territory
+     * @param attackerWinner The territory that won the attack
+     * @param killedDefender The defending territory that just lost it's last
+     * @param diceWonWith The number of dice that the winner rolled on the most recent diceFight
+     */
     private void takeoverTerritory(Player winner,Territory attackerWinner, Territory killedDefender, int diceWonWith){
         System.out.println(winner.getName() + " has taken control over " + killedDefender.getTerritoryName());
 
@@ -241,7 +265,8 @@ public class Game {
             } else{
                 break;//Legal number troops moving in
             }
-        }
+        }//A legal number of troops moving in is stored in numTroopsMovingIn
+
         killedDefender.setTroops(numTroopsMovingIn);
         attackerWinner.changeTroops(-numTroopsMovingIn);
 
@@ -259,6 +284,11 @@ public class Game {
         }
     }
 
+    /**\
+     * Eliminates player from the game given pointer to their player object
+     *
+     * @param loser The player eliminated from the game
+     */
     private void eliminatePlayer(Player loser){
         players.remove(loser);
         System.out.println("Rest in peace "+ loser.getName() + ", you have been eliminated");
@@ -268,6 +298,12 @@ public class Game {
         }
     }
 
+    /**
+     * Asks for how many players this game will have and verifies that it is 2-6
+     * Then asks user to choose unique player names for each player
+     * Randomly distributes the territories to the players
+     * Initiates process for players to distribute troops throughout their given territories
+     */
     private void makePlayers(){
         Scanner input = new Scanner(System.in);
         int numPlayers = 0;
@@ -334,6 +370,11 @@ public class Game {
     }
 
 
+    /**
+     * Creates a new game object and starts the game
+     * 
+     * @param args Formality
+     */
     public static void main(String[] args) {
         Game game = new Game();
 
