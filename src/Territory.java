@@ -9,15 +9,17 @@ public class Territory {
     private String territoryName;// the name of the territory
     private String owner;// the name of the player who owns this territory
     private List<Territory> neighboursList;//each territory should know it's neighbours
+    private String continentName;
 
     /**
      * Initializing the class states in this constructor
      * @param territoryName
      */
-    public Territory(String territoryName){
+    public Territory(String territoryName, String continentName){
         this.territoryName = territoryName;
         this.troops = 0;
         this.neighboursList = new ArrayList<>();
+        this.continentName = continentName;
     }
 
     /**
@@ -37,7 +39,7 @@ public class Territory {
     }
 
     /**
-     * 
+     *
      * the number of troops that is placed on each territory
      * would change in the draft and attack phase
      * @param troops
@@ -52,6 +54,15 @@ public class Territory {
      */
     public String getTerritoryName() {
         return territoryName;
+    }
+
+    /**
+     * Returns the continent of the current territory
+     *
+     * @return
+     */
+    public String getContinentName(){
+        return continentName;
     }
 
     /**
@@ -73,7 +84,7 @@ public class Territory {
      * Returns territory object of the neighbour corresponding to the given territory name
      * @param territoryName
      * @return a territory object that
-     * 
+     *
      */
     public Territory getNeighbour(String territoryName) {
         for (Territory territory : neighboursList){
@@ -87,10 +98,15 @@ public class Territory {
 
     /**
      * adding a new territory neighbour to the neighboursList
-     * @param newNeighbours
+     * This operation is two directional
+     *
+     * Setting one neighbour automatically sets a neighbour relationship in the other direction.
+     *
+     * @param newNeighbours The neighbour to be added.
      */
     public void addNeighbours(Territory newNeighbours) {
         this.neighboursList.add(newNeighbours);
+        newNeighbours.neighboursList.add(this);
     }
 
     /**
@@ -150,4 +166,5 @@ public class Territory {
         }
         return false;
     }
+
 }
