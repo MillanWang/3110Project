@@ -4,34 +4,34 @@ import java.util.Collections;
 /**
  * Class representing the complete map of the world in the game RISK
  */
-public class DefaultWorldMap {
+public class GenericWorldMap {
     /**
      * This class is to represent the entire playing map in the game RISK for
      * the group project in SYSC 3110
      *
      * @author J.Anyia, F.Olotu, T.Shabaan, M.Wang
-     * 
+     *
      */
     //List of all territories
     private ArrayList<Territory> allTerritories;
 
     //These represent the continents. Important for calculating troop bonuses for complete continental control
-    private ArrayList<Territory> northAmerica, southAmerica, africa, europe, asia, australia;
+    //private ArrayList<Territory> northAmerica, southAmerica, africa, europe, asia, australia;
 
     /**
      * Constructor for the DefaultWorldMap class
      * This map is modeled after the real world and
      */
-    public DefaultWorldMap() {
+    public GenericWorldMap() {
         allTerritories = new ArrayList<>();
-        northAmerica = new ArrayList<>();
+        /*northAmerica = new ArrayList<>();
         southAmerica = new ArrayList<>();
         africa = new ArrayList<>();
         europe = new ArrayList<>();
         asia = new ArrayList<>();
         australia = new ArrayList<>();
-
-        this.setupMap();
+        */
+        //this.setupMap();
     }
 
     /**
@@ -39,60 +39,26 @@ public class DefaultWorldMap {
      * This will be used to calculate complete continental control bonuses (Implemented in Milestone 3)
      *
      * @return list containing all territories in North America
-     */
+
     public ArrayList<Territory> getNorthAmerica(){
         return northAmerica;
     }
-
-    /**
-     * Returns the list consisting of all territories that make up SouthAmerica
-     * This will be used to calculate complete continental control bonuses (Implemented in Milestone 3)
-     *
-     * @return list containing all territories in South America
-     */
     public ArrayList<Territory> getSouthAmerica(){
         return southAmerica;
     }
-
-    /**
-     * Returns the list consisting of all territories that make up Africa
-     * This will be used to calculate complete continental control bonuses (Implemented in Milestone 3)
-     *
-     * @return list containing all territories in Africa
-     */
     public ArrayList<Territory> getAfrica(){
         return africa;
     }
-
-    /**
-     * Returns the list consisting of all territories that make up Europe
-     * This will be used to calculate complete continental control bonuses (Implemented in Milestone 3)
-     *
-     * @return list containing all territories in Europe
-     */
     public ArrayList<Territory> getEurope(){
         return europe;
     }
 
-    /**
-     * Returns the list consisting of all territories that make up Asia
-     * This will be used to calculate complete continental control bonuses (Implemented in Milestone 3)
-     *
-     * @return list containing all territories in Asia
-     */
     public ArrayList<Territory> getAsia(){
         return asia;
     }
-
-    /**
-     * Returns the list consisting of all territories that make up Australia
-     * This will be used to calculate complete continental control bonuses (Implemented in Milestone 3)
-     *
-     * @return list containing all territories in Australia
-     */
     public ArrayList<Territory> getAustralia(){
         return australia;
-    }
+    }*/
 
     /**
      * Returns the list consisting of all territories
@@ -123,11 +89,11 @@ public class DefaultWorldMap {
      * There are 42 total territories and 7 continents.
      *
      * This is almost 350 lines. No methods below this one
-     */
+
     private void setupMap(){
 
         //NORTH AMERICA CREATION
-        Territory alaska = new Territory("Alaska");
+        Territory alaska = new Territory("Alaska", "NorthAmerica");
         allTerritories.add(alaska);
         northAmerica.add(alaska);
         Territory northWestTerritories = new Territory("NorthwestTerritories");
@@ -486,6 +452,6 @@ public class DefaultWorldMap {
         //Territories are randomly distributed.
         //Shuffle the elements to do so
         Collections.shuffle(allTerritories);
-    }
+    }*/
 
 }
