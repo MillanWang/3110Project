@@ -5,14 +5,14 @@ public class Game {
     private LinkedList<Player> players;
     private Player currentPlayer;
     private Dice dice;
-    private DefaultWorldMap defaultWorldMap;
+    private GenericWorldMap genericWorldMap;
     private boolean gameEnds;
 
     /**
      * Constructor for the class game. This will start playing the game
      */
     public Game(){
-        defaultWorldMap = new DefaultWorldMap();
+        genericWorldMap = new GenericWorldMap();
         parser = new Parser();
         players = new LinkedList<Player>();
         gameEnds = false;
@@ -82,6 +82,11 @@ public class Game {
         //START THIS PLAYER'S TURN (Draft>Attack>End cycle)
         System.out.println("\n\nCurrent Player: " + currentPlayer.getName());
         currentPlayer.draftPhase();
+
+        //PASSING CONTINENT HASHMAP TO THE DRAFT PHASE TO GET THE CONTINENT BONUS!
+
+
+
         attackPhase();
         System.out.println("Player " + currentPlayer.getName() + " has finished their turn");
         System.out.println("******************************");
@@ -108,7 +113,7 @@ public class Game {
         }else if (command.getCommandWord().equals("nextTurn")){
             nextTurn();
         }else if (command.getCommandWord().equals("showMap")) {
-            defaultWorldMap.printAllTerritories();
+            genericWorldMap.printAllTerritories();
             printHelp();
         }
         return wantToQuit;
@@ -423,7 +428,7 @@ public class Game {
 
         //RANDOM DISTRIBUTION OF TERRITORIES AND TROOPS
         //The territory list is always randomized in the DefaultWorldMap class
-        for(Territory terry : defaultWorldMap.getAllTerritories()){
+        for(Territory terry : genericWorldMap.getAllTerritories()){
             players.peek().addTerritory(terry); //Adding current territory to current player
             terry.setOwner(players.peek().getName()); //Setting owner of territory to current player
             players.add(players.pop()); //Sending current player to the back of the queue
