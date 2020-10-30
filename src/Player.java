@@ -6,7 +6,7 @@ import java.util.*;
 public class Player {
     private String name; // The name of the player.
     private LinkedList<Territory> territories; // A list of the territories the player occupies.
-    private DefaultWorldMap defaultWM;
+    private GenericWorldMap defaultWM;
     private int numTroops;
 
 
@@ -18,7 +18,7 @@ public class Player {
     public Player(String name) {
         this.name = name;
         territories = new LinkedList<>();
-        defaultWM = new DefaultWorldMap();
+        defaultWM = new GenericWorldMap();
     }
 
     /**
@@ -87,25 +87,27 @@ public class Player {
      * It is based on the number of countries he occupies and any continents he fully controls
      * and the territories / 3
      */
-    
+
     private void bonusTroops() {
         numTroops += continentBonus() + (Math.max((int) Math.floor(this.territories.size() / 3), 3));
     }
 
-    
+
     /**
      * calculates bonuses gotten from occupying an entire continent
      *
      * @return the bonus to be added to player's troops
-    */
+     */
     private int continentBonus() {
         int bonus = 0;
+        /*
         if (hasAfrica()) bonus += 3;
         if (hasAsia()) bonus += 7;
         if (hasEurope()) bonus += 5;
         if (hasNorthAmerica()) bonus += 5;
         if (hasAustralia()) bonus += 2;
         if (hasSouthAmerica()) bonus += 2;
+        */
 
         return bonus;
     }
@@ -114,16 +116,18 @@ public class Player {
      * This will be used to determine the troop bonus for complete continent control
      *
      * @return True if the entire continent is owned by the player, false otherwise
-     */
+
     private Boolean hasNorthAmerica() { return territories.contains(defaultWM.getNorthAmerica()); }
     private Boolean hasSouthAmerica() { return territories.contains(defaultWM.getSouthAmerica()); }
     private Boolean hasAfrica() { return territories.contains(defaultWM.getAfrica()); }
     private Boolean hasAsia() { return territories.contains(defaultWM.getAsia()); }
     private Boolean hasEurope() {return territories.contains(defaultWM.getEurope()); }
     private Boolean hasAustralia() { return territories.contains(defaultWM.getAustralia()); }
+    */
+
 
     /**
-     * 
+     *
      * this method prints out all territories owned by player
      *
      * @return string that contains all the territories owned by the player
@@ -172,7 +176,7 @@ public class Player {
      * this method starts the draft phase of the game.
      * Player is given a certain number of troops that can be deployed to the territories player owns
      *
-    */
+     */
     public void draftPhase(){
         bonusTroops();
         while (numTroops > 0) {
@@ -235,7 +239,7 @@ public class Player {
 
     /**
      * this method prints out the list of territories player can use to start an attack
-    */
+     */
 
     public void printAttackStarters(){
         List<Territory> attackStarters = getAttackStarters();
