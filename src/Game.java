@@ -349,8 +349,6 @@ public class Game {
             }//End while
         }
 
-        Collections.shuffle(players);//Players are initialized and order is randomized.
-
         //RANDOM DISTRIBUTION OF TERRITORIES AND TROOPS
         //The territory list is always randomized in the DefaultWorldMap class
         for(Territory terry : defaultWorldMap.getAllTerritories()){
@@ -358,6 +356,9 @@ public class Game {
             terry.setOwner(players.peek().getName()); //Setting owner of territory to current player
             players.add(players.pop()); //Sending current player to the back of the queue
         }
+        
+        Collections.shuffle(players);//Players are initialized and order is randomized.
+
         //Putting troops in all player's territories
         int pNumber = 1;
         for (Player player: players){
