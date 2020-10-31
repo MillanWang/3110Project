@@ -6,8 +6,17 @@ import java.util.*;
 public class Player {
     private String name; // The name of the player.
     private LinkedList<Territory> territories; // A list of the territories the player occupies.
-    private GenericWorldMap defaultWM;
+    // private GenericWorldMap defaultWM;
     private int numTroops;
+    // A hash map that contains the troop bonuses for every continent.
+    private static final Map<String, Integer> CONTINENT_BONUSES = new HashMap<String, Integer>() {{
+        put("Africa", 3);
+        put("Asia", 7);
+        put("Europe", 5);
+        put("North America", 5);
+        put("Australia", 2);
+        put("South America", 2);
+    }};
 
 
     /**
@@ -18,7 +27,7 @@ public class Player {
     public Player(String name) {
         this.name = name;
         territories = new LinkedList<>();
-        defaultWM = new GenericWorldMap();
+        //defaultWM = new GenericWorldMap();
     }
 
     /**
@@ -100,14 +109,20 @@ public class Player {
      */
     private int continentBonus() {
         int bonus = 0;
-        /*
-        if (hasAfrica()) bonus += 3;
-        if (hasAsia()) bonus += 7;
-        if (hasEurope()) bonus += 5;
-        if (hasNorthAmerica()) bonus += 5;
-        if (hasAustralia()) bonus += 2;
-        if (hasSouthAmerica()) bonus += 2;
-        */
+        for (String cName : CONTINENT_BONUSES.keySet()) {
+            int count = 0;
+            for (Territory t : territories) {
+                if (cName.equals(t.getContinentName())) {
+                    count++;
+                }
+            }
+            if (cName.equals("Africa") && count == 6) bonus += CONTINENT_BONUSES.get(cName);
+            if (cName.equals("Europe") && count == 7) bonus += CONTINENT_BONUSES.get(cName);
+            if (cName.equals("Asia") && count == 12) bonus += CONTINENT_BONUSES.get(cName);
+            if (cName.equals("North America") && count == 9) bonus += CONTINENT_BONUSES.get(cName);
+            if (cName.equals("Australia") && count == 4) bonus += CONTINENT_BONUSES.get(cName);
+            if (cName.equals("South America") && count == 4) bonus += CONTINENT_BONUSES.get(cName);
+        }
 
         return bonus;
     }
@@ -116,14 +131,13 @@ public class Player {
      * This will be used to determine the troop bonus for complete continent control
      *
      * @return True if the entire continent is owned by the player, false otherwise
-
     private Boolean hasNorthAmerica() { return territories.contains(defaultWM.getNorthAmerica()); }
     private Boolean hasSouthAmerica() { return territories.contains(defaultWM.getSouthAmerica()); }
     private Boolean hasAfrica() { return territories.contains(defaultWM.getAfrica()); }
     private Boolean hasAsia() { return territories.contains(defaultWM.getAsia()); }
     private Boolean hasEurope() {return territories.contains(defaultWM.getEurope()); }
     private Boolean hasAustralia() { return territories.contains(defaultWM.getAustralia()); }
-    */
+     */
 
 
     /**
@@ -257,5 +271,10 @@ public class Player {
 
     public boolean canStartAttack(String territoryName){
         return getTerritory(territoryName).getAttackableNeighbours() != null;
+    }
+
+    public static void main(String[] args) {
+        Player pl = new Player("asint");
+        pl.bonusTroops();
     }
 }
