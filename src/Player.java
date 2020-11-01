@@ -102,6 +102,7 @@ public class Player {
     private int continentBonus() {
         int bonus = 0;
         Map continentAndTimesSeen = new HashMap<String, Integer>();
+        // the string is the continent name and the integer is how many territories from the continent the player has(counter)
         for (Territory t : territories) { // iterating through the player owned territories
             String cName = t.getContinentName(); // getting the continent the territory belongs to
 
@@ -115,7 +116,7 @@ public class Player {
             }
 
             // if the player has all the territories in the continent increment bonus
-            if(cName.equals(t.getContinentName()) && (t.getNumberOfTerritoriesInContinent() == (int)continentAndTimesSeen.get(cName))){
+            if(t.getNumberOfTerritoriesInContinent() == (int)continentAndTimesSeen.get(cName)){
                 bonus += t.getContinentControlBonus();
             }
         }
