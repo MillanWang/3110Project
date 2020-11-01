@@ -73,6 +73,25 @@ public class Player {
         //The current player has 1 or more territories before removal
         territories.remove(territory);
     }
+    
+    
+     /**
+     * This method checks the size of the player's territories
+     *
+     * @return the number of territories currently owned by player
+     */
+
+    public int territorySize(){
+        return territories.size();
+    }
+
+    /**
+     *
+     * @return number of troops player has
+     */
+    public int getNumTroops(){
+        return numTroops;
+    }
 
     /**
      * checks if player has lost possession of all territories owned
