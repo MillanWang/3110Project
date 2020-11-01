@@ -8,15 +8,7 @@ public class Player {
     private LinkedList<Territory> territories; // A list of the territories the player occupies.
     // private GenericWorldMap defaultWM;
     private int numTroops;
-    // A hash map that contains the troop bonuses for every continent.
-    private static final Map<String, Integer> CONTINENT_BONUSES = new HashMap<String, Integer>() {{
-        put("Africa", 3);
-        put("Asia", 7);
-        put("Europe", 5);
-        put("North America", 5);
-        put("Australia", 2);
-        put("South America", 2);
-    }};
+
 
 
     /**
@@ -109,21 +101,24 @@ public class Player {
      */
     private int continentBonus() {
         int bonus = 0;
-        for (String cName : CONTINENT_BONUSES.keySet()) {
-            int count = 0;
-            for (Territory t : territories) {
-                if (cName.equals(t.getContinentName())) {
-                    count++;
-                }
-            }
-            if (cName.equals("Africa") && count == 6) bonus += CONTINENT_BONUSES.get(cName);
-            if (cName.equals("Europe") && count == 7) bonus += CONTINENT_BONUSES.get(cName);
-            if (cName.equals("Asia") && count == 12) bonus += CONTINENT_BONUSES.get(cName);
-            if (cName.equals("North America") && count == 9) bonus += CONTINENT_BONUSES.get(cName);
-            if (cName.equals("Australia") && count == 4) bonus += CONTINENT_BONUSES.get(cName);
-            if (cName.equals("South America") && count == 4) bonus += CONTINENT_BONUSES.get(cName);
-        }
+        Map continentAndTimesSeen = new HashMap<String, Integer>();
+        for (Territory t : territories) { // iterating through the player owned territories
+            String cName = t.getContinentName(); // getting the continent the territory belongs to
 
+            // check if we have seen a territory that belongs to the continent previously
+            if (continentAndTimesSeen.containsKey(cName)) {
+                // if we have seen the a territory in the continent previously increment our counter
+                continentAndTimesSeen.put(cName, ((int) continentAndTimesSeen.get(cName) + 1));
+            }else{
+                // if we are yet to see the continent put it as a new key value pair
+                continentAndTimesSeen.put(cName, 1);
+            }
+
+            // if the player has all the territories in the continent increment bonus
+            if(cName.equals(t.getContinentName()) && (t.getNumberOfTerritoriesInContinent() == (int)continentAndTimesSeen.get(cName))){
+                bonus += t.getContinentControlBonus();
+            }
+        }
         return bonus;
     }
     /**
