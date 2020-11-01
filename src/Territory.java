@@ -21,8 +21,8 @@ public class Territory {
         this.troops = 0;
         this.neighboursList = new ArrayList<>();
         this.continentName = continentName;
-        this.numberOfTerritoriesInContinent = 0;
-        this.continentControlBonus = 0;
+        this.numberOfTerritoriesInContinent = 5;
+        this.continentControlBonus = 5;
     }
 
     /**
