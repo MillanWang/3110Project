@@ -10,6 +10,7 @@ public class Territory {
     private String owner;// the name of the player who owns this territory
     private List<Territory> neighboursList;//each territory should know it's neighbours
     private String continentName;
+    private int numberOfTerritoriesInContinent, continentControlBonus;
 
     /**
      * Initializing the class states in this constructor
