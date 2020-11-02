@@ -5,6 +5,41 @@ import java.util.List;
  * Territory class holds each territory name, how many troops on it, who owns it and it's neighbours.
  */
 public class Territory {
+
+    //Builder pattern for more clear constructors
+    public static class Builder{
+
+        private String territoryName, continentName;
+        private int numberOfTerritoriesInContinent, continentControlBonus;
+
+        public Builder(String territoryName){
+            this.territoryName = territoryName;
+        }
+        public Builder setContinentName(String continentName){
+            this.continentName = continentName;
+            return this;
+        }
+        public Builder setNumTerritoriesInContinent(int num){
+            this.numberOfTerritoriesInContinent = num;
+            return this;
+        }
+        public Builder setContinentControlBonus(int bonus){
+            this.continentControlBonus = continentControlBonus;
+            return this;
+        }
+
+        public Territory build(){
+            Territory terry = new Territory();
+            terry.territoryName = this.territoryName;
+            terry.continentName = this.continentName;
+            terry.numberOfTerritoriesInContinent = this.numberOfTerritoriesInContinent;
+            terry.continentControlBonus = this.continentControlBonus;
+            return terry;
+        }
+
+    }
+
+
     private int troops;//troops and armies are the same thing
     private String territoryName;// the name of the territory
     private String owner;// the name of the player who owns this territory
@@ -14,15 +49,12 @@ public class Territory {
 
     /**
      * Initializing the class states in this constructor
-     * @param territoryName
+     * Private due to builder pattern
+     *
      */
-    public Territory(String territoryName, String continentName){
-        this.territoryName = territoryName;
+    private Territory(){
         this.troops = 0;
         this.neighboursList = new ArrayList<>();
-        this.continentName = continentName;
-        this.numberOfTerritoriesInContinent = 5;
-        this.continentControlBonus = 5;
     }
 
     /**
@@ -177,5 +209,4 @@ public class Territory {
         }
         return false;
     }
-
 }
