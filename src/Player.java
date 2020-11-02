@@ -73,9 +73,9 @@ public class Player {
         //The current player has 1 or more territories before removal
         territories.remove(territory);
     }
-    
-    
-     /**
+
+
+    /**
      * This method checks the size of the player's territories
      *
      * @return the number of territories currently owned by player
@@ -128,7 +128,7 @@ public class Player {
             // check if we have seen a territory that belongs to the continent previously
             if (continentAndTimesSeen.containsKey(cName)) {
                 // if we have seen the a territory in the continent previously increment our counter
-                continentAndTimesSeen.put(cName, ((int) continentAndTimesSeen.get(cName) + 1));
+                continentAndTimesSeen.replace(cName, ((int) continentAndTimesSeen.get(cName) + 1));
             }else{
                 // if we are yet to see the continent put it as a new key value pair
                 continentAndTimesSeen.put(cName, 1);
@@ -269,7 +269,6 @@ public class Player {
     /**
      * this method prints out the list of territories player can use to start an attack
      */
-
     public void printAttackStarters(){
         List<Territory> attackStarters = getAttackStarters();
         for (Territory territory : attackStarters){
@@ -283,7 +282,6 @@ public class Player {
      * @param territoryName name of the territory to be checked
      * @return True if a territory can be used to start an attack
      */
-
     public boolean canStartAttack(String territoryName){
         return getTerritory(territoryName).getAttackableNeighbours() != null;
     }
