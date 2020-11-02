@@ -1,0 +1,306 @@
+{"territories" :[
+	{
+		"territoryName" : "Alaska",
+		"continentName" : "NorthAmerica",
+		"numberOfTerritoriesInContinent" : 9,
+		"continentControlBonus": 5,
+		"neighbours" : ["Kamchatka","NorthWestTerritories","Alberta"]
+	},
+	{
+		"territoryName" : "NorthWestTerritories",
+		"continentName" : "NorthAmerica",
+		"numberOfTerritoriesInContinent" : 9,
+		"continentControlBonus": 5,
+		"neighbours" : ["Alaska","Greenland","Alberta","Ontario"]
+	},
+	{
+		"territoryName" : "Greenland",
+		"continentName" : "NorthAmerica",
+		"numberOfTerritoriesInContinent" : 9,
+		"continentControlBonus": 5,
+		"neighbours" : ["NorthWestTerritories","Ontario","Quebec","Iceland"]
+	},
+	{
+		"territoryName" : "Alberta",
+		"continentName" : "NorthAmerica",
+		"numberOfTerritoriesInContinent" : 9,
+		"continentControlBonus": 5,
+		"neighbours" : ["Alaska","NorthWestTerritories","Ontario","WestUSA"]
+	},
+	{
+		"territoryName" : "Ontario",
+		"continentName" : "NorthAmerica",
+		"numberOfTerritoriesInContinent" : 9,
+		"continentControlBonus": 5,
+		"neighbours" : ["Alberta","NorthWestTerritories","Greenland","Quebec","WestUSA","EastUSA"]
+	},
+	{
+		"territoryName" : "Quebec",
+		"continentName" : "NorthAmerica",
+		"numberOfTerritoriesInContinent" : 9,
+		"continentControlBonus": 5,
+		"neighbours" : ["Ontario","Greenland","EastUSA"]
+	},
+	{
+		"territoryName" : "WestUSA",
+		"continentName" : "NorthAmerica",
+		"numberOfTerritoriesInContinent" : 9,
+		"continentControlBonus": 5,
+		"neighbours" : ["EastUSA","Ontario","Alberta","CentralAmerica"]
+	},
+	{
+		"territoryName" : "EastUSA",
+		"continentName" : "NorthAmerica",
+		"numberOfTerritoriesInContinent" : 9,
+		"continentControlBonus": 5,
+		"neighbours" : ["WestUSA","Ontario","Quebec","CentralAmerica"]
+	},
+	{
+		"territoryName" : "CentralAmerica",
+		"continentName" : "NorthAmerica",
+		"numberOfTerritoriesInContinent" : 9,
+		"continentControlBonus": 5,
+		"neighbours" : ["EastUSA","WestUSA","Venezuela"]
+	},
+
+
+	{
+		"territoryName" : "Venezuela",
+		"continentName" : "SouthAmerica",
+		"numberOfTerritoriesInContinent" : 4,
+		"continentControlBonus": 2,
+		"neighbours" : ["CentralAmerica","Peru","Brazil"]
+	},
+	{
+		"territoryName" : "Peru",
+		"continentName" : "SouthAmerica",
+		"numberOfTerritoriesInContinent" : 4,
+		"continentControlBonus": 2,
+		"neighbours" : ["Venezuela","Brazil","Argentina"]
+	},
+	{
+		"territoryName" : "Brazil",
+		"continentName" : "SouthAmerica",
+		"numberOfTerritoriesInContinent" : 4,
+		"continentControlBonus": 2,
+		"neighbours" : ["Venezuela","Peru","Argentina","NorthAfrica"]
+	},
+	{
+		"territoryName" : "Argentina",
+		"continentName" : "SouthAmerica",
+		"numberOfTerritoriesInContinent" : 4,
+		"continentControlBonus": 2,
+		"neighbours" : ["Peru","Brazil"]
+	},
+
+
+	{
+		"territoryName" : "NorthAfrica",
+		"continentName" : "Africa",
+		"numberOfTerritoriesInContinent" : 6,
+		"continentControlBonus": 3,
+		"neighbours" : ["Brazil","WestEurope","SouthEurope","Egypt","EastAfrica","Congo"]
+	},
+	{
+		"territoryName" : "Egypt",
+		"continentName" : "Africa",
+		"numberOfTerritoriesInContinent" : 6,
+		"continentControlBonus": 3,
+		"neighbours" : ["MiddleEast","SouthEurope","NorthAfrica","EastAfrica"]
+	},
+	{
+		"territoryName" : "Congo",
+		"continentName" : "Africa",
+		"numberOfTerritoriesInContinent" : 6,
+		"continentControlBonus": 3,
+		"neighbours" : ["NorthAfrica","EastAfrica","SouthAfrica"]
+	},
+	{
+		"territoryName" : "EastAfrica",
+		"continentName" : "Africa",
+		"numberOfTerritoriesInContinent" : 6,
+		"continentControlBonus": 3,
+		"neighbours" : ["MiddleEast","Egypt","NorthAfrica","Congo","SouthAfrica","Madagascar"]
+	},
+	{
+		"territoryName" : "SouthAfrica",
+		"continentName" : "Africa",
+		"numberOfTerritoriesInContinent" : 6,
+		"continentControlBonus": 3,
+		"neighbours" : ["Madagascar","EastAfrica","Madagascar"]
+	},
+	{
+		"territoryName" : "Madagascar",
+		"continentName" : "Africa",
+		"numberOfTerritoriesInContinent" : 6,
+		"continentControlBonus": 3,
+		"neighbours" : ["EastAfrica","SouthAfrica"]
+	},
+
+	
+	{
+		"territoryName" : "WestEurope",
+		"continentName" : "Europe",
+		"numberOfTerritoriesInContinent" : 7,
+		"continentControlBonus": 5,
+		"neighbours" : ["NorthAfrica","SouthEurope","NorthEurope","GreatBritain"]
+	},
+	{
+		"territoryName" : "GreatBritain",
+		"continentName" : "Europe",
+		"numberOfTerritoriesInContinent" : 7,
+		"continentControlBonus": 5,
+		"neighbours" : ["WestEurope","NorthEurope","Scandinavia","Iceland"]
+	},
+	{
+		"territoryName" : "Iceland",
+		"continentName" : "Europe",
+		"numberOfTerritoriesInContinent" : 7,
+		"continentControlBonus": 5,
+		"neighbours" : ["Greenland","GreatBritain","Scandinavia"]
+	},
+	{
+		"territoryName" : "Scandinavia",
+		"continentName" : "Europe",
+		"numberOfTerritoriesInContinent" : 7,
+		"continentControlBonus": 5,
+		"neighbours" : ["NorthEurope","GreatBritain","Iceland","Ukraine"]
+	},
+	{
+		"territoryName" : "Ukraine",
+		"continentName" : "Europe",
+		"numberOfTerritoriesInContinent" : 7,
+		"continentControlBonus": 5,
+		"neighbours" : ["Scandinavia","NorthEurope","SouthEurope","MiddleEast","Ural","Afghanistan"]
+	},
+	{
+		"territoryName" : "NorthEurope",
+		"continentName" : "Europe",
+		"numberOfTerritoriesInContinent" : 7,
+		"continentControlBonus": 5,
+		"neighbours" : ["Scandinavia","SouthEurope","Ukraine","GreatBritain","WestEurope"]
+	},
+	{
+		"territoryName" : "SouthEurope",
+		"continentName" : "Europe",
+		"numberOfTerritoriesInContinent" : 7,
+		"continentControlBonus": 5,
+		"neighbours" : ["NorthAfrica","Egypt","MiddleEast","Ukraine","NorthEurope","WestEurope"]
+	},
+
+
+	{
+		"territoryName" : "Ural",
+		"continentName" : "Asia",
+		"numberOfTerritoriesInContinent" : 12,
+		"continentControlBonus": 7,
+		"neighbours" : ["Ukraine","Siberia","China","Afghanistan"]
+	},
+	{
+		"territoryName" : "Siberia",
+		"continentName" : "Asia",
+		"numberOfTerritoriesInContinent" : 12,
+		"continentControlBonus": 7,
+		"neighbours" : ["Ural","China","Mongolia","Irkutsk","Yakutsk"]
+	},
+	{
+		"territoryName" : "Yakutsk",
+		"continentName" : "Asia",
+		"numberOfTerritoriesInContinent" : 12,
+		"continentControlBonus": 7,
+		"neighbours" : ["Siberia","Kamchatka","Irkutsk"]
+	},
+	{
+		"territoryName" : "Kamchatka",
+		"continentName" : "Asia",
+		"numberOfTerritoriesInContinent" : 12,
+		"continentControlBonus": 7,
+		"neighbours" : ["Alaska","Yakutsk","Irkutsk","Mongolia","Japan"]
+	},
+	{
+		"territoryName" : "Irkutsk",
+		"continentName" : "Asia",
+		"numberOfTerritoriesInContinent" : 12,
+		"continentControlBonus": 7,
+		"neighbours" : ["Siberia","Yakutsk","Kamchatka","Mongolia"]
+	},
+	{
+		"territoryName" : "Mongolia",
+		"continentName" : "Asia",
+		"numberOfTerritoriesInContinent" : 12,
+		"continentControlBonus": 7,
+		"neighbours" : ["Irkutsk","Kamchatka","Japan","China","Siberia"]
+	},
+	{
+		"territoryName" : "Japan",
+		"continentName" : "Asia",
+		"numberOfTerritoriesInContinent" : 12,
+		"continentControlBonus": 7,
+		"neighbours" : ["Mongolia","Kamchatka"]
+	},
+	{
+		"territoryName" : "China",
+		"continentName" : "Asia",
+		"numberOfTerritoriesInContinent" : 12,
+		"continentControlBonus": 7,
+		"neighbours" : ["Mongolia","Siberia","Ural","Afghanistan","Siam","India"]
+	},
+	{
+		"territoryName" : "Afghanistan",
+		"continentName" : "Asia",
+		"numberOfTerritoriesInContinent" : 12,
+		"continentControlBonus": 7,
+		"neighbours" : ["Ukraine","Ural","China","India","MiddleEast"]
+	},
+	{
+		"territoryName" : "MiddleEast",
+		"continentName" : "Asia",
+		"numberOfTerritoriesInContinent" : 12,
+		"continentControlBonus": 7,
+		"neighbours" : ["SouthEurope","Ukraine","Afghanistan","India","Egypt","EastAfrica"]
+	},
+	{
+		"territoryName" : "India",
+		"continentName" : "Asia",
+		"numberOfTerritoriesInContinent" : 12,
+		"continentControlBonus": 7,
+		"neighbours" : ["MiddleEast","Afghanistan","China","Siam"]
+	},
+	{
+		"territoryName" : "Siam",
+		"continentName" : "Asia",
+		"numberOfTerritoriesInContinent" : 12,
+		"continentControlBonus": 7,
+		"neighbours" : ["India","China","Indonesia"]
+	},
+
+
+	{
+		"territoryName" : "Indonesia",
+		"continentName" : "Australia",
+		"numberOfTerritoriesInContinent" : 4,
+		"continentControlBonus": 2,
+		"neighbours" : ["Siam","NewGuinea","WestAustralia"]
+	},
+	{
+		"territoryName" : "NewGuinea",
+		"continentName" : "Australia",
+		"numberOfTerritoriesInContinent" : 4,
+		"continentControlBonus": 2,
+		"neighbours" : ["Indonesia","EastAustralia","WestAustralia"]
+	},
+	{
+		"territoryName" : "WestAustralia",
+		"continentName" : "Australia",
+		"numberOfTerritoriesInContinent" : 4,
+		"continentControlBonus": 2,
+		"neighbours" : ["Indonesia","NewGuinea","EastAustralia"]
+	},
+	{
+		"territoryName" : "EastAustralia",
+		"continentName" : "Australia",
+		"numberOfTerritoriesInContinent" : 4,
+		"continentControlBonus": 2,
+		"neighbours" : ["NewGuinea","WestAustralia"]
+	}
+]}
