@@ -24,7 +24,7 @@ public class Territory {
             return this;
         }
         public Builder setContinentControlBonus(int bonus){
-            this.continentControlBonus = continentControlBonus;
+            this.continentControlBonus = bonus;
             return this;
         }
 
@@ -161,6 +161,13 @@ public class Territory {
         sb.append("                                                                     ");
         sb.insert(25,"\tTroops: " + troops + "\t\tOwner: " + owner );
         System.out.println(sb);
+    }
+
+    public String getInfoString(){
+        StringBuilder sb = new StringBuilder(territoryName);
+        sb.append("                                                                     ");
+        sb.insert(25,"\tTroops: " + troops + "\t\tOwner: " + owner );
+        return sb.toString();
     }
 
     /**
