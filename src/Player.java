@@ -58,7 +58,11 @@ public class Player {
         }else {
             return "Player owns no territory";
         }
-            
+
+    }
+
+    public LinkedList getTerritoriesList(){
+        return territories;
     }
 
 
@@ -203,12 +207,12 @@ public class Player {
         bonusTroops();
         while (numTroops > 0) {
             /**
-            Scanner input = new Scanner(System.in);
-            System.out.println("You currently own the following territories");
-            printAllPlayerTerritories();
-            System.out.println("You have " + numTroops + " troops available to give out");
-            System.out.println("Select territory in which you would like to send troops to.");
-            System.out.println("Territory names are case sensitive ");
+             Scanner input = new Scanner(System.in);
+             System.out.println("You currently own the following territories");
+             printAllPlayerTerritories();
+             System.out.println("You have " + numTroops + " troops available to give out");
+             System.out.println("Select territory in which you would like to send troops to.");
+             System.out.println("Territory names are case sensitive ");
              */
             String territoryName = location;
 
@@ -223,12 +227,12 @@ public class Player {
 
                 while(true) {
                     /**
-                    try {
-                        troopNumber = input.nextInt();
-                    } catch (InputMismatchException e) {
-                        System.err.println("Don't enter characters or strings. Numbers only");
-                        input.next();
-                    }*/
+                     try {
+                     troopNumber = input.nextInt();
+                     } catch (InputMismatchException e) {
+                     System.err.println("Don't enter characters or strings. Numbers only");
+                     input.next();
+                     }*/
 
                     if (troopNumber > 0 && troopNumber <= numTroops) {
                         break;//User gave a valid number of troops
