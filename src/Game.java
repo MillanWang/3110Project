@@ -85,6 +85,10 @@ public class Game {
     public String getCurrentPlayer(){
         return this.currentPlayer.getName();
     }
+    public Player getCurrentPlayerObject(){
+        return this.currentPlayer;
+    }
+
 
     /**
      * Completes the current players turn (Draft>attack cycle) and sets the current player to the next player in line
@@ -92,7 +96,7 @@ public class Game {
     private void nextTurn(){
         //START THIS PLAYER'S TURN (Draft>Attack>End cycle)
         System.out.println("\n\nCurrent Player: " + currentPlayer.getName());
-        currentPlayer.draftPhase();
+        //currentPlayer.draftPhase();
 
         //PASSING CONTINENT HASHMAP TO THE DRAFT PHASE TO GET THE CONTINENT BONUS!
 
