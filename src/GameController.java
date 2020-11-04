@@ -1,5 +1,6 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedList;
 
 public class GameController {
     private Game game;
@@ -18,6 +19,10 @@ public class GameController {
             Player player;
             
         }
+    }
+    
+    public LinkedList<Territory> getPlayersTerritoriesForDraft(){
+        return game.getCurrentPlayerObject().getTerritoriesList();
     }
 
 }
