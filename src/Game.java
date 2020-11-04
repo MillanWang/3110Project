@@ -17,7 +17,7 @@ public class Game {
         players = new LinkedList<Player>();
         gameEnds = false;
         dice = new Dice();
-        play();
+        //play(); no need for it anymore
     }
 
     /**
@@ -38,12 +38,12 @@ public class Game {
     /**
      * Prints a welcome message introducing the players to the game Risk
      */
-    private void welcomeMessage(){
-        System.out.println("Welcome to Risk\n");
-        System.out.println("The goal of the game is to take control of all territories on the map");
-        System.out.println("Players who lose all of their territories are eliminated from the game");
-        System.out.println("The last player standing is the ULTIMATE CHAMPION");
-        System.out.println("Type 'Help' if you don't know what to do.");
+    public String welcomeMessage(){
+        String gameRules = "Welcome to RISK Global Domination\n"+
+                "The goal of the game is to take control of all territories on the map.\n"+
+                "Players who lose all of their territories are eliminated from the game.\n" +
+                "The last player standing is the ULTIMATE CHAMPION";
+        return gameRules;
     }
 
     /**
@@ -60,6 +60,14 @@ public class Game {
         System.out.println("Your command words are:");
         System.out.println("showMap, nextTurn ,quit ,help");
     }
+    /**
+     * Return a message to the user if they want to quit.
+     *
+     * @return String message
+     */
+    public String quitMessage() {
+        return "Thanks for playing. Goodbye";
+    }
 
     /**
      * Starts the game. The game will end when the player chooses to quit or when a winner is found
@@ -67,12 +75,15 @@ public class Game {
     private void play(){
         welcomeMessage();
         System.out.println("******************************");
-        makePlayers();
+        //makePlayers();// It'll be called by GameView
 
         while (!gameEnds){
             Command command = parser.getCommand();
             gameEnds = processCommand(command);
         }
+    }
+    public String getCurrentPlayer(){
+        return this.currentPlayer.getName();
     }
 
     /**
@@ -375,15 +386,25 @@ public class Game {
         }
     }
 
+
+    //OLD DOCUMENTATION FOR makePlayers()
     /**
      * Asks for how many players this game will have and verifies that it is 2-6
      * Then asks user to choose unique player names for each player
      * Randomly distributes the territories to the players
      * Initiates process for players to distribute troops throughout their given territories
      */
-    private void makePlayers(){
-        Scanner input = new Scanner(System.in);
-        int numPlayers = 0;
+    // NEW DOCUMENTATION FOR makePlayers()
+    /**
+     * sitting the playerNames by getting array of strings from the view and
+     * initialize each player with it's playerName
+     * @param playerNames
+     */
+    public void makePlayers(String[] playerNames){
+        String [] namesOfPlayer = playerNames;
+        //Scanner input = new Scanner(System.in);
+        int numPlayers = playerNames.length;
+        /*
         while(true) {
             System.out.println("Choose number of players (2-6)");
             try {
@@ -398,8 +419,12 @@ public class Game {
                 break;
             }
         }
+         */
 
         for(int i = 0 ; i < numPlayers ; i++) {
+            players.add(new Player(playerNames[i]));
+        }
+            /*
             while (true){ //Loop to ensure that a proper name is selected
                 System.out.println("Set name for Player " + (i+1));
                 String currName  = input.nextLine();
@@ -419,12 +444,16 @@ public class Game {
                     if (hasDupe){
                         System.out.println("Duplicate names are not allowed. Try another name");
                     } else {
-                        players.add(new Player(currName));
-                        break;
+
+                        //players.add(new Player(currName));
+                        //break;
+
                     }
                 }//End check for legal name
             }//End while
         }
+
+         */
 
         //RANDOM DISTRIBUTION OF TERRITORIES AND TROOPS
         //The territory list is always randomized in the DefaultWorldMap class
@@ -440,11 +469,11 @@ public class Game {
         int pNumber = 1;
         for (Player player: players){
             player.setupPlayer(numPlayers);
-            System.out.println("Player " + pNumber+" : " + player.getName());
+            //System.out.println("Player " + pNumber+" : " + player.getName());
             pNumber++;
         }
         currentPlayer = players.pop();//Establish the first player to go
-        nextTurn();
+        //nextTurn();
     }
 
 
@@ -456,6 +485,6 @@ public class Game {
     public static void main(String[] args) {
         Game game = new Game();
 
-
     }
+
 }
