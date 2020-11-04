@@ -48,6 +48,18 @@ public class Player {
         return null; //To compile
     }
 
+    public String getTerritories(){
+        if (territories.size() > 0) {
+            String str = "";
+            for (Territory t : territories) {
+                str += t.getInfoString();
+            }
+            return str;
+        }else {
+            return "Player owns no territory";
+        }
+            
+    }
 
 
     /**
@@ -72,25 +84,6 @@ public class Player {
     public void removeTerritory(Territory territory) {
         //The current player has 1 or more territories before removal
         territories.remove(territory);
-    }
-
-
-    /**
-     * This method checks the size of the player's territories
-     *
-     * @return the number of territories currently owned by player
-     */
-
-    public int territorySize(){
-        return territories.size();
-    }
-
-    /**
-     *
-     * @return number of troops player has
-     */
-    public int getNumTroops(){
-        return numTroops;
     }
 
     /**
@@ -128,7 +121,7 @@ public class Player {
             // check if we have seen a territory that belongs to the continent previously
             if (continentAndTimesSeen.containsKey(cName)) {
                 // if we have seen the a territory in the continent previously increment our counter
-                continentAndTimesSeen.replace(cName, ((int) continentAndTimesSeen.get(cName) + 1));
+                continentAndTimesSeen.put(cName, ((int) continentAndTimesSeen.get(cName) + 1));
             }else{
                 // if we are yet to see the continent put it as a new key value pair
                 continentAndTimesSeen.put(cName, 1);
@@ -206,16 +199,18 @@ public class Player {
      * Player is given a certain number of troops that can be deployed to the territories player owns
      *
      */
-    public void draftPhase(){
+    public void draftPhase(String location, String troops){
         bonusTroops();
         while (numTroops > 0) {
+            /**
             Scanner input = new Scanner(System.in);
             System.out.println("You currently own the following territories");
             printAllPlayerTerritories();
             System.out.println("You have " + numTroops + " troops available to give out");
             System.out.println("Select territory in which you would like to send troops to.");
             System.out.println("Territory names are case sensitive ");
-            String territoryName = input.nextLine();
+             */
+            String territoryName = location;
 
             if(getTerritory(territoryName)==null){
                 System.err.println("INVALID TERRITORY NAME");
@@ -224,14 +219,16 @@ public class Player {
                 System.out.println("Select amount of troops to send");
                 //Sending troops to selected territory
 
-                int troopNumber = 0;
+                int troopNumber =  Integer.parseInt(troops);
+
                 while(true) {
+                    /**
                     try {
                         troopNumber = input.nextInt();
                     } catch (InputMismatchException e) {
                         System.err.println("Don't enter characters or strings. Numbers only");
                         input.next();
-                    }
+                    }*/
 
                     if (troopNumber > 0 && troopNumber <= numTroops) {
                         break;//User gave a valid number of troops
@@ -269,6 +266,7 @@ public class Player {
     /**
      * this method prints out the list of territories player can use to start an attack
      */
+
     public void printAttackStarters(){
         List<Territory> attackStarters = getAttackStarters();
         for (Territory territory : attackStarters){
@@ -282,12 +280,9 @@ public class Player {
      * @param territoryName name of the territory to be checked
      * @return True if a territory can be used to start an attack
      */
+
     public boolean canStartAttack(String territoryName){
         return getTerritory(territoryName).getAttackableNeighbours() != null;
     }
 
-    public static void main(String[] args) {
-        Player pl = new Player("asint");
-        pl.bonusTroops();
-    }
 }
