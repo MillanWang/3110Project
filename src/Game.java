@@ -5,6 +5,9 @@ public class Game {
     private LinkedList<Player> players;
     private Player currentPlayer;
     private Dice dice;
+
+
+
     private GenericWorldMap genericWorldMap;
     private boolean gameEnds;
 
@@ -33,6 +36,10 @@ public class Game {
             }
         }
         return null; //This will never happen. Will always be found. Only called from the takeoverTerritory method
+    }
+
+    public GenericWorldMap getGenericWorldMap() {
+        return genericWorldMap;
     }
 
     /**
