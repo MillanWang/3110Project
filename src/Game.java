@@ -237,10 +237,10 @@ public class Game {
                     String diceFightChoice = input.nextLine();
 
                     if (diceFightChoice.equals("dice")){
-                        int diceWonWith = diceFight(attackStarterTerritory,defenderTerritory);
+                        //int diceWonWith = diceFight(attackStarterTerritory,defenderTerritory, attackStarterTerritory.maxDiceToRoll());
                         if (defenderTerritory.getTroops() <=0 ){
                             //Defender has been killed
-                            takeoverTerritory(currentPlayer,attackStarterTerritory, defenderTerritory, diceWonWith);
+                            takeoverTerritory(currentPlayer,attackStarterTerritory, defenderTerritory, 3);//diceWonWith); Controller should know this
                             break;
                         } else if ( attackStarterTerritory.getTroops() <= 1){
                             //Attacker can no longer attack from this territory
@@ -270,16 +270,19 @@ public class Game {
      * @return the number of dice rolled by the attacker on this dice fight
      *
      */
-    public int diceFight(Territory attacker, Territory defender){
-        int attackerDice, defenderDice;
+    public String diceFight(Territory attacker, Territory defender, int attackerDice){
 
         //Defender rolls 2 unless 1 troop left on territory
+        int defenderDice;
         if(defender.getTroops() <= 1) {
             defenderDice=1;
         } else {
             defenderDice=2;
         }
 
+        /*
+
+        CONTROLLER SHOULD CALL THIS METHOD AND ONLY PROVIDE LEGAL OPTIONS FOR THE NUMBER OF DICE TO ROLL
 
         //Asking for user to choose how many dice to roll. Verify that the number is ok for the given territories
         Scanner input = new Scanner(System.in);
@@ -299,6 +302,10 @@ public class Game {
             }
         }
 
+
+        */
+
+
         //Used to make a list of the different players different dice rolls
         LinkedList<Integer> attackerRolls = new LinkedList<>();
         LinkedList<Integer> defenderRolls = new LinkedList<>();
@@ -314,23 +321,25 @@ public class Game {
         Collections.reverse(defenderRolls);//Reverse to go high to low
 
 
+        String diceFightResultMessage = "";
+
         //Pop out the dice rolls high to low to compare. Higher number wins. Ties means defender wins
         while (!attackerRolls.isEmpty() && !defenderRolls.isEmpty()){
-            System.out.println("Attacker rolls a " + attackerRolls.peek());
-            System.out.println("Defender rolls a " + defenderRolls.peek());
+            diceFightResultMessage += "Attacker rolls a " + attackerRolls.peek();
+            diceFightResultMessage += "Defender rolls a " + defenderRolls.peek();
             if (attackerRolls.pop() <= defenderRolls.pop()){
                 //Defender wins
-                System.out.println("Defender wins! Attacker loses a troop! RIP");
+                diceFightResultMessage += "Defender wins! Attacker loses a troop! RIP";
                 attacker.changeTroops(-1);
             } else {
                 //Attacker wins
-                System.out.println("Attacker wins! Defender loses a troop! RIP");
+                diceFightResultMessage += "Attacker wins! Defender loses a troop! RIP";
                 defender.changeTroops(-1);
             }
         }
         //If the attacker takes over the territory, the number of troops moved in has to be greater or equal to
         //the number of dice rolled on the most recent diceFight
-        return attackerDice;
+        return diceFightResultMessage;
     }
 
     /**
