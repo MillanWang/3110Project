@@ -138,6 +138,7 @@ public class GameView extends JFrame {
     private void addDropDownList(){
         String[] TerritoriesStrings = { "Ottawa", "Quebec", "Egypt", "China", "South Africa" };
 
+
         territoryList = new JComboBox(TerritoriesStrings);
         territoryList.setName("Select Territories");
 
@@ -148,6 +149,7 @@ public class GameView extends JFrame {
         territoryList.addActionListener(e->{
             JComboBox cb = (JComboBox)e.getSource();
             displayMessage((String)cb.getSelectedItem());
+            startAttack();
         });
 
     }
@@ -199,6 +201,30 @@ public class GameView extends JFrame {
         this.game.makePlayers(playerNames);
 
     }
+
+    public void startAttack(){
+        //game.getPlayerFromList(game.getCurrentPlayer()).stringAttackStarters()
+        String[] TerritoriesStrings = {"Ottawa", "Quebec", "Egypt", "China", "South Africa" };
+        displayMessage("You're done with drafting! Let's attack some bitches");
+        JPanel attackPanel = new JPanel();
+        attackPanel.add(new JLabel("Select country to attack from"));
+        JComboBox attackStarters = new JComboBox(TerritoriesStrings);
+        attackPanel.add(attackStarters);
+        int result = JOptionPane.showConfirmDialog(null, attackPanel, "Attack Starters", JOptionPane.OK_CANCEL_OPTION);
+
+        if (result == JOptionPane.OK_OPTION) {
+            displayMessage(TerritoriesStrings[result] + " is attacking");
+        }
+        JPanel defendPanel = new JPanel();
+        defendPanel.add(new JLabel("Select country to attack"));
+        JComboBox defenders = new JComboBox(TerritoriesStrings);
+        defendPanel.add(defenders);
+        int result2 = JOptionPane.showConfirmDialog(null, defendPanel, "Defenders", JOptionPane.OK_CANCEL_OPTION);
+        if (result2 == JOptionPane.OK_OPTION) {
+            displayMessage("Alright! Lets attack "+TerritoriesStrings[result2]);
+        }
+    }
+
 
     /**
      * Will display a message to the user. Expect message to be on of the following:
