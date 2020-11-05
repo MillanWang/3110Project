@@ -72,7 +72,7 @@ public class GameView extends JFrame {
     private void displayGame(){
         gamePanel.setVisible(true);
         addMenuItems();
-        addDropDownList();
+        setDropDownList(null);
         addMapPicture();
     }
 
@@ -123,7 +123,7 @@ public class GameView extends JFrame {
         menuItemShowTerritories = new JMenuItem("Show-Territories");
         menuItemShowTerritories.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         menuItemShowTerritories.addActionListener(e-> {
-            // displayMessage(game.);
+            displayMessage(game.getGenericWorldMap().getAllTerritoriesString());
         });
         menuBar.add(menuItemShowTerritories);
 
@@ -135,9 +135,8 @@ public class GameView extends JFrame {
     /**
      * This method would be responsible for the two drop down list at the SOUTH of the JPanel
      */
-    private void addDropDownList(){
+    private void setDropDownList(String[] arrayOfTerritoryNames){
         String[] TerritoriesStrings = { "Ottawa", "Quebec", "Egypt", "China", "South Africa" };
-
 
         territoryList = new JComboBox(TerritoriesStrings);
         territoryList.setName("Select Territories");
@@ -151,8 +150,8 @@ public class GameView extends JFrame {
             displayMessage((String)cb.getSelectedItem());
             startAttack();
         });
-
     }
+
     /**
      * This method would show the png image
      */
@@ -202,27 +201,29 @@ public class GameView extends JFrame {
 
     }
 
+    /**
+     * this method displays messages to the player, prompting what to do during the attack phase
+     */
     public void startAttack(){
         //game.getPlayerFromList(game.getCurrentPlayer()).stringAttackStarters()
-        String[] TerritoriesStrings = {"Ottawa", "Quebec", "Egypt", "China", "South Africa" };
+        String[] TerritoriesStrings = {"Ottawa", "Quebec", "Egypt", "China", "South Africa" };// need to get actual territory list
         displayMessage("You're done with drafting! Let's attack some bitches");
-        JPanel attackPanel = new JPanel();
+        JPanel attackPanel = new JPanel();//creates panel to show list of attack starters
         attackPanel.add(new JLabel("Select country to attack from"));
         JComboBox attackStarters = new JComboBox(TerritoriesStrings);
         attackPanel.add(attackStarters);
-        int result = JOptionPane.showConfirmDialog(null, attackPanel, "Attack Starters", JOptionPane.OK_CANCEL_OPTION);
+        JOptionPane.showConfirmDialog(null, attackPanel, "Attack Starters", JOptionPane.OK_CANCEL_OPTION);
+        String txt = (String) attackStarters.getItemAt(attackStarters.getSelectedIndex());// gets the territory that can start an attack
+        displayMessage(txt + " is attacking");
 
-        if (result == JOptionPane.OK_OPTION) {
-            displayMessage(TerritoriesStrings[result] + " is attacking");
-        }
         JPanel defendPanel = new JPanel();
         defendPanel.add(new JLabel("Select country to attack"));
         JComboBox defenders = new JComboBox(TerritoriesStrings);
         defendPanel.add(defenders);
-        int result2 = JOptionPane.showConfirmDialog(null, defendPanel, "Defenders", JOptionPane.OK_CANCEL_OPTION);
-        if (result2 == JOptionPane.OK_OPTION) {
-            displayMessage("Alright! Lets attack "+TerritoriesStrings[result2]);
-        }
+        JOptionPane.showConfirmDialog(null, defendPanel, "Defenders", JOptionPane.OK_CANCEL_OPTION);
+        String txt2 = (String) defenders.getItemAt(defenders.getSelectedIndex());// gets the territory to be attacked(need to work on checking if player owns territory)
+        displayMessage("Alright! Let's attack "+txt2);
+
     }
 
 
