@@ -92,7 +92,7 @@ public class Territory {
     }
 
     /**
-     * get the territory name
+     * Returns the string of the territory name
      * @return territoryName
      */
     public String getTerritoryName() {
