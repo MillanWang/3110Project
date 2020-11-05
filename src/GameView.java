@@ -7,11 +7,12 @@ import java.util.Stack;
 public class GameView extends JFrame {
     private Game game;
     private JMenuBar menuBar;
-    private JMenuItem menuItemHelp, menuItemQuit, menuItemReset, menuItemCurrentPlayer, menuItemShowTerritories;
+    private JMenuItem menuItemHelp, menuItemQuit, menuItemReset, menuItemCurrentPlayer, menuItemShowTerritories, menuItemNextTurn;
     private JPanel gamePanel,startPage;
     private JButton newGameBtn;
     private JComboBox territoryList;
     private Stack<JPanel> previousPanels;
+    private GameController controller;
     ImageIcon map;
 
     //*********Make sure to comment out play() METHOD IN THE GAME CONSTRUCTOR BEFORE RUNNING THIS CLASS!!
@@ -19,6 +20,7 @@ public class GameView extends JFrame {
         super();
         this.setLayout(new BorderLayout());
         this.game=game;
+        this.controller = new GameController(game,this);
         //previousPanels = new Stack<>();
         createStartPage();
         setTitle("RISK Global Domination");
@@ -120,12 +122,22 @@ public class GameView extends JFrame {
         });
         menuBar.add(menuItemCurrentPlayer);
 
+        //Option to show all of the territories with their owners and troops
         menuItemShowTerritories = new JMenuItem("Show-Territories");
         menuItemShowTerritories.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         menuItemShowTerritories.addActionListener(e-> {
             displayMessage(game.getGenericWorldMap().getAllTerritoriesString());
         });
         menuBar.add(menuItemShowTerritories);
+
+
+        //Menu option to start the next turn. Turns options appear in windows
+        menuItemNextTurn = new JMenuItem("Start Next Turn");
+        menuItemNextTurn.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+        menuItemNextTurn.addActionListener(e -> {
+            controller.startPlayersTurn();
+        });
+        menuBar.add(menuItemNextTurn);
 
         gamePanel.add(menuBar, BorderLayout.NORTH);
     }
