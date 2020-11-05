@@ -216,4 +216,13 @@ public class Territory {
         }
         return false;
     }
+
+    /**
+     * returns the maximum number of dice that can be rolled for this territory during a diceFight
+     *
+     * @return Max number of dice for attacker to roll
+     */
+    public int maxDiceToRoll(){
+        return Math.min(3, this.getTroops()-1);
+    }
 }
