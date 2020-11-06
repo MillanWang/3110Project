@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -54,7 +54,7 @@ public class Territory {
      */
     private Territory(){
         this.troops = 0;
-        this.neighboursList = new ArrayList<>();
+        this.neighboursList = new LinkedList<>();
     }
 
     /**
@@ -177,7 +177,7 @@ public class Territory {
     public List<Territory> getAttackableNeighbours(){
         if(this.getTroops() <= 1 ) return null; //Cannot start attack from terry with 1 troop
 
-        List attackableNeighbours = new ArrayList();
+        List attackableNeighbours = new LinkedList();
         for (Territory ter : neighboursList) {
             if (!(this.owner.equals(ter.getOwner()))){
                 attackableNeighbours.add(ter);
