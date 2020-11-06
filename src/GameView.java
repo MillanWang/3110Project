@@ -1,8 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Stack;
 
 public class GameView extends JFrame {
     private Game game;
@@ -180,10 +179,12 @@ public class GameView extends JFrame {
         panel.add(new JLabel("Please make a selection of how many players would play the game"));
         JComboBox numPlayers = new JComboBox(possiblePlayers);
         panel.add(numPlayers);
-        int results = JOptionPane.showConfirmDialog(null,panel);
-        int numberOfPlayers = Integer.parseInt((String)numPlayers.getSelectedItem());
-        System.out.println(numberOfPlayers);
-        gettingNamesOfPlayers(numberOfPlayers);
+        int results = JOptionPane.showConfirmDialog(null,panel, "Number of Players", JOptionPane.OK_CANCEL_OPTION);
+        if (results == JOptionPane.OK_OPTION) {
+            int numberOfPlayers = Integer.parseInt((String) numPlayers.getSelectedItem());
+            System.out.println(numberOfPlayers);
+            gettingNamesOfPlayers(numberOfPlayers);
+        }
     }
 
     /**
@@ -193,23 +194,73 @@ public class GameView extends JFrame {
      * @param numberOfPlayers
      */
     private void gettingNamesOfPlayers(int numberOfPlayers) {
-        String[] playerNames= new String[numberOfPlayers];
+        String[] playerNames = new String[numberOfPlayers];
         JPanel namesPanel = new JPanel();
         List<JTextField> jTextFieldList = new ArrayList<>();
-        for (int i=0; i < numberOfPlayers;i++){
+
+
+        //Creating and Adding the JTextFields and the JLabels to the namesPanel
+        for (int i = 0; i < numberOfPlayers; i++) {
             jTextFieldList.add(new JTextField(7));
-            namesPanel.add(new JLabel("Name of Player "+(i+1)));
+            namesPanel.add(new JLabel("Name of Player " + (i + 1)));
             namesPanel.add(jTextFieldList.get(i));
         }
 
-        int result = JOptionPane.showConfirmDialog(null,namesPanel, "Player Names", JOptionPane.OK_CANCEL_OPTION);
-        if (result == JOptionPane.OK_OPTION){
-            for (int i=0; i < jTextFieldList.size();i++){
-                playerNames[i]= jTextFieldList.get(i).getText();
-                System.out.println("Player "+(i+1)+":" + playerNames[i]);
+        //SET EXPERIMENTATION FOR DUPLICATE TESTING
+        //Set set = new HashSet<>();
+
+
+        int result = JOptionPane.showConfirmDialog(null, namesPanel, "Player Names", JOptionPane.OK_CANCEL_OPTION);
+
+        if (result == JOptionPane.OK_OPTION) {
+            for (int i = 0; i < jTextFieldList.size(); i++) {
+
+                //SET EXPERIMENTATION FOR DUPLICATE TESTING
+                //set.add(jTextFieldList.get(i).getText());
+                //System.out.println(set);
+
+                while (jTextFieldList.get(i).getText().trim().isEmpty() || jTextFieldList.contains(jTextFieldList.get(i).getText())) {
+                    displayMessage("Name of player: " + (1 + i) + " can't be empty OR Used before");
+                    result = JOptionPane.showConfirmDialog(null, namesPanel, "Player Names", JOptionPane.OK_CANCEL_OPTION);
+                    if (result == JOptionPane.OK_OPTION){
+                        playerNames[i] = jTextFieldList.get(i).getText();
+                    }
+                }
+                System.out.println(jTextFieldList.get(i).getText());
+                playerNames[i] = jTextFieldList.get(i).getText();
             }
+            //creating the players
+            this.game.makePlayers(playerNames);
         }
-        this.game.makePlayers(playerNames);
+    }
+
+    public String[] startDraft(int numTroops){
+        String[] draftTerritories = controller.getPlayersTerritoriesForDraft();
+
+        JPanel draftPanel = new JPanel();//creates panel to show list of draft territories
+        draftPanel.add(new JLabel("Select territory to send troops to"));
+        JComboBox draftComboBox = new JComboBox(draftTerritories);
+        draftPanel.add(draftComboBox);
+        JOptionPane.showConfirmDialog(null, draftPanel, "Draft Phase", JOptionPane.OK_CANCEL_OPTION);
+        String territoryString = (String) draftComboBox.getItemAt(draftComboBox.getSelectedIndex());// gets the territory the player chose
+
+        String[] troopNumbers = new String[numTroops];
+        for(int i = 0; i<numTroops; i++){
+            troopNumbers[i] = Integer.toString(i+1);
+        }
+
+
+
+        JPanel troopPanel = new JPanel();//creates panel to show list of draft territories
+        troopPanel.add(new JLabel("Select number of troops to send"));
+        JComboBox troopComboBox = new JComboBox(troopNumbers);
+        troopPanel.add(troopComboBox);
+        JOptionPane.showConfirmDialog(null, troopPanel, "Draft Phase", JOptionPane.OK_CANCEL_OPTION);
+        String troopString = (String) troopComboBox.getItemAt(troopComboBox.getSelectedIndex());
+
+        String[] returnValues = {territoryString,troopString};
+        return returnValues;
+
 
     }
 
@@ -218,8 +269,11 @@ public class GameView extends JFrame {
      */
     public void startAttack(){
         //game.getPlayerFromList(game.getCurrentPlayer()).stringAttackStarters()
-        String[] TerritoriesStrings = {"Ottawa", "Quebec", "Egypt", "China", "South Africa" };// need to get actual territory list
-        displayMessage("You're done with drafting! Let's attack some bitches");
+        String[] TerritoriesStrings = controller.getPlayersTerritoriesForDraft();
+
+        displayMessage("Draft stage complete, starting the attack phase for player: " + game.getCurrentPlayer());
+
+
         JPanel attackPanel = new JPanel();//creates panel to show list of attack starters
         attackPanel.add(new JLabel("Select country to attack from"));
         JComboBox attackStarters = new JComboBox(TerritoriesStrings);
