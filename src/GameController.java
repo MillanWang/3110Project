@@ -1,6 +1,7 @@
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class GameController implements ActionListener{
@@ -12,7 +13,7 @@ public class GameController implements ActionListener{
         this.gameView = gameView;
     }
 
-    public LinkedList<Territory> getPlayersTerritoriesForDraft(){
+    public String[] getPlayersTerritoriesForDraft(){
         return game.getCurrentPlayerObject().getTerritoriesList();
     }
 
@@ -24,10 +25,24 @@ public class GameController implements ActionListener{
         //Send that info to GUI to be displayed. Get option from user
         //Send user input to model. Repeat until model says that player has no more troops to send out
         //gameView.showDraftOptions();
+        gameView.displayMessage("Starting the draft phase for player: " + game.getCurrentPlayer());
+        String[] draftInfoFromView;
+        Player currentPlayer = game.getCurrentPlayerObject();
+        currentPlayer.bonusTroops();
+        System.out.println(currentPlayer.getNumTroops());
+
+        while (currentPlayer.getNumTroops() > 0){
+            draftInfoFromView = gameView.startDraft(currentPlayer.getNumTroops());
+            gameView.displayMessage(game.getCurrentPlayerObject().draftPhase(draftInfoFromView[0],draftInfoFromView[1]));
+        }
+
+        //
+
+
 
 
         //ATTACK STAGE
-
+        gameView.startAttack();
         //AttackerSelection phase.
         //Retrieve from model the possible attack starters for the current player
         //Option to quit(endTurn), or choose terry from list of possible attack starters(defenderSelection phase)
@@ -40,10 +55,13 @@ public class GameController implements ActionListener{
 
         //DiceFight phase
         //Get from attacker territory the max number of dice that can be rolled with attackStarterTerritory.maxDiceToRoll()
-
+        //Display message of the fight results
 
         //Return to main menu view. Click on the "Next Turn" Button to do the next player's turn
     }
+
+
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
