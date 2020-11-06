@@ -2,7 +2,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Collections;
 
 /**
@@ -14,14 +14,14 @@ import java.util.Collections;
 public class GenericWorldMap {
 
     //List of all territories
-    private ArrayList<Territory> allTerritories;
+    private LinkedList<Territory> allTerritories;
 
     /**
      * Constructor for the DefaultWorldMap class
      * This map is modeled after the real world and
      */
     public GenericWorldMap() {
-        allTerritories = new ArrayList<>();
+        allTerritories = new LinkedList<>();
 
 
         //Loading in the custom map from file. Need to ask for user path. SMALL EXAMPLE FOR NOW.
@@ -36,7 +36,7 @@ public class GenericWorldMap {
         ObjectMapper mapper = new ObjectMapper();
         try {
             JSONTerritoryListParser jsonTerritoryListParser = mapper.readValue(jsonText, JSONTerritoryListParser.class);
-            //^^Arraylist containing info for individual territory objects
+            //^^Linkedlist containing info for individual territory objects
 
             //Creating new territories from all elements in the list
             Territory currentTerritoryToAdd;
@@ -78,7 +78,7 @@ public class GenericWorldMap {
      *
      * @return list containing all territories in Africa
      */
-    public ArrayList<Territory> getAllTerritories(){
+    public LinkedList<Territory> getAllTerritories(){
         return allTerritories;
     }
 
