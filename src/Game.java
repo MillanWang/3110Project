@@ -161,7 +161,7 @@ public class Game {
         System.out.println("******************************");
         System.out.println("Starting attack phase of turn for player " + currentPlayer.getName());
         System.out.println("******************************");
-        currentPlayer.printAttackStarters();
+        //currentPlayer.printAttackStarters();
 
         Territory attackStarterTerritory, defenderTerritory;// Needed for diceFight
         boolean endAttack = false;
@@ -170,7 +170,7 @@ public class Game {
             System.out.println("Type \"attack\" to start an attack or type \"skip\" to move on");
             //Ask player to start attack or skip attack phase and move on to (NEXT TURN). Verify input
             String attackOrSkip = "";
-            if (currentPlayer.getAttackStarters().isEmpty()) {
+            if (currentPlayer.getAttackStarters().length == 0) {
                 endAttack = true;
                 System.out.println("No territories can start an attack");
                 break;
@@ -191,7 +191,7 @@ public class Game {
                 //Ask for attack starter. Verify it is legit
                 while (true){
                     System.out.println("\nYou are currently able to start an attack from the following territories" );
-                    currentPlayer.printAttackStarters(); //shows territories current player is neighbours with
+                    //currentPlayer.printAttackStarters(); //shows territories current player is neighbours with
                     System.out.println("Choose from above territories where to start an attack from ");
 
                     String attackStarter = input.nextLine();
