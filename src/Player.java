@@ -210,11 +210,16 @@ public class Player {
     public String[] getAttackStarters() {
         LinkedList attackstarters = new LinkedList<Territory>();
         for (Territory ter : territories) {
+
             if ((ter.getTroops() > 1) && !(ter.getAttackableNeighbours() == null)) {
                 attackstarters.add(ter);
             }
         }
+        if (attackstarters.isEmpty()) return null;
+
         return getTerritoryStringArray(attackstarters);
+
+
     }
 
     /**
