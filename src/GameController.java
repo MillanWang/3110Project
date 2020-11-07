@@ -37,12 +37,61 @@ public class GameController implements ActionListener{
         }
 
         //
+        gameView.displayMessage("Draft stage complete, starting the attack phase for player: " + game.getCurrentPlayer());
+
+
+        int endAttackStage = 0;
+        String[] attackerDefender;
+        while (true){
+            //Ensure that the player has attack starters
+            if (game.getCurrentPlayerObject().getAttackStarters() == null){
+                gameView.displayMessage(game.getCurrentPlayer() + " has no territories that can start an attack. End attack phase");
+                break;
+            }
+
+            //Getting the option from the player
+            endAttackStage = gameView.attackOrQuitOption();
+            if (endAttackStage!=0)break;//Ending attack phase
+
+            //Player wants to start an attack
+            attackerDefender = gameView.attackSelection();
+            //^^Array of {attacker, defender}
+
+            gameView.displayMessage(attackerDefender[0] + " is about to attack " + attackerDefender[1]);
+
+            int[] diceFightChoice = new int[2];
+            String diceFightResultString = "";
+            while(true){
+                //game.diceFightInfo(attackerDefender); //THIS IS A STRING[] OF THE INFO FOR THE VIEW
+                diceFightChoice = gameView.diceFightView(game.getGenericWorldMap().getTerritory(attackerDefender[0]).maxDiceToRoll());
+                if (diceFightChoice[0] != 0) break;
+
+                diceFightResultString = game.diceFight(attackerDefender, diceFightChoice[1]);
+                diceFightResultString += "\n" + game.diceFightInfo(attackerDefender);
+                gameView.displayMessage(diceFightResultString);
+
+                //DICE FIGHT
+                //Retrieve number of troops in the attacker and defender terrys. Need to show info in the view
+                //Also need to retrieve the maximum number of dice the attacker will roll
+
+                //Get the player's option for how many dice they roll
+                //Do the diceFight in the model. Get the string of the results to display by the view.
+                //Check if a player has been eliminated. If eliminated, check if player has won the game totally.
+
+                //Get from attacker territory the max number of dice that can be rolled with attackStarterTerritory.maxDiceToRoll()
+                //Display message of the fight results
+            }
+
+
+            //System.out.println(attackerDefender[0]);
+            //System.out.println(attackerDefender[1]);
+        }
 
 
 
 
         //ATTACK STAGE
-        gameView.startAttack();
+        //gameView.startAttack();
         //AttackerSelection phase.
         //Retrieve from model the possible attack starters for the current player
         //Option to quit(endTurn), or choose terry from list of possible attack starters(defenderSelection phase)
@@ -53,14 +102,15 @@ public class GameController implements ActionListener{
         //Option to go back to AttackerSelection phase or choose from a list who will be the victim of the attack
         //Get direct reference to the defender territory
 
-        //DiceFight phase
-        //Get from attacker territory the max number of dice that can be rolled with attackStarterTerritory.maxDiceToRoll()
-        //Display message of the fight results
+
 
         //Return to main menu view. Click on the "Next Turn" Button to do the next player's turn
     }
 
 
+    public String[] getNeighboursToAttack(Territory ter){
+        return ter.attackableNeighbours();
+    }
 
 
     @Override
