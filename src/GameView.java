@@ -159,7 +159,6 @@ public class GameView extends JFrame {
         territoryList.addActionListener(e->{
             JComboBox cb = (JComboBox)e.getSource();
             displayMessage((String)cb.getSelectedItem());
-            startAttack();
         });
     }
 
@@ -264,34 +263,82 @@ public class GameView extends JFrame {
 
     }
 
+    public int attackOrQuitOption(){
+        Object[] options = {"Start Attack",
+                "End Attack"};
+        int n = JOptionPane.showOptionDialog(this,
+                "Choose to start an attack or to end attack stage",
+                "Attack Stage",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options, options[0]);
+        return n;
+        //0 for starting attack
+        //1 for end attack
+        // -1 for top right X
+    }
     /**
      * this method displays messages to the player, prompting what to do during the attack phase
      */
-    public void startAttack(){
-        //game.getPlayerFromList(game.getCurrentPlayer()).stringAttackStarters()
-        String[] TerritoriesStrings = controller.getPlayersTerritoriesForDraft();
-
-        displayMessage("Draft stage complete, starting the attack phase for player: " + game.getCurrentPlayer());
-
+    public String[] attackSelection(){
+        String[] attackStartersStringArray = game.getCurrentPlayerObject().getAttackStarters();
 
         JPanel attackPanel = new JPanel();//creates panel to show list of attack starters
         attackPanel.add(new JLabel("Select country to attack from"));
-        JComboBox attackStarters = new JComboBox(TerritoriesStrings);
+        JComboBox attackStarters = new JComboBox(attackStartersStringArray);
         attackPanel.add(attackStarters);
         JOptionPane.showConfirmDialog(null, attackPanel, "Attack Starters", JOptionPane.OK_CANCEL_OPTION);
-        String txt = (String) attackStarters.getItemAt(attackStarters.getSelectedIndex());// gets the territory that can start an attack
-        displayMessage(txt + " is attacking");
+
+        String currentAttackStarter = (String) attackStarters.getItemAt(attackStarters.getSelectedIndex());// gets the territory that can start an attack
+        //displayMessage(currentAttackStarter + " is attacking"); //Kinda redundant if the player just picked this
+
+        //GETTING THE DEFENDER
+
+        String[] defenderStrings = controller.getNeighboursToAttack(game.getCurrentPlayerObject().getTerritory(currentAttackStarter));
+        //System.out.println(Arrays.toString(defenderStrings));
+
 
         JPanel defendPanel = new JPanel();
-        defendPanel.add(new JLabel("Select country to attack"));
-        JComboBox defenders = new JComboBox(TerritoriesStrings);
+        defendPanel.add(new JLabel("Select country to attack from " + currentAttackStarter));
+        JComboBox defenders = new JComboBox(defenderStrings);
         defendPanel.add(defenders);
         JOptionPane.showConfirmDialog(null, defendPanel, "Defenders", JOptionPane.OK_CANCEL_OPTION);
-        String txt2 = (String) defenders.getItemAt(defenders.getSelectedIndex());// gets the territory to be attacked(need to work on checking if player owns territory)
-        displayMessage("Alright! Let's attack "+txt2);
+        String currentDefender = (String) defenders.getItemAt(defenders.getSelectedIndex());// gets the territory to be attacked(need to work on checking if player owns territory)
+
+
+        String[] attackerDefender = {currentAttackStarter, currentDefender};
+        return attackerDefender;
 
     }
 
+    public int[] diceFightView(int maxAttackerDefender){
+        String[] diceNumbers = new String[maxAttackerDefender];
+        for(int i = 0; i<maxAttackerDefender; i++){
+            diceNumbers[i] = Integer.toString(3-i);
+        }
+        Object[] options = {"Roll",
+                "Cancel Dice Fight"};
+
+        JPanel rollPanel = new JPanel();
+        rollPanel.add(new JLabel("\nChoose how many dice to roll"));
+        JComboBox rollComboBox = new JComboBox(diceNumbers);
+        rollPanel.add(rollComboBox);
+
+        int n = JOptionPane.showOptionDialog(this,
+                rollPanel,
+                "Dice Fight Stage",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options, options[0]);
+        String rollString = (String) rollComboBox.getItemAt(rollComboBox.getSelectedIndex());
+        int[] resultRoll = {n, Integer.parseInt(rollString)};
+        return resultRoll;
+        //0 is roll
+        //1 is cancel dice fight
+        //-1 is top right red X
+    }
 
     /**
      * Will display a message to the user. Expect message to be on of the following:
