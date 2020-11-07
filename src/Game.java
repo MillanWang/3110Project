@@ -238,6 +238,16 @@ public class Game {
 
                     if (diceFightChoice.equals("dice")){
                         //int diceWonWith = diceFight(attackStarterTerritory,defenderTerritory, attackStarterTerritory.maxDiceToRoll());
+
+
+                        /**
+                         *
+                         *
+                         * PROBABLY IMPORTANT
+                         *
+                         *
+                         */
+
                         if (defenderTerritory.getTroops() <=0 ){
                             //Defender has been killed
                             takeoverTerritory(currentPlayer,attackStarterTerritory, defenderTerritory, 3);//diceWonWith); Controller should know this
@@ -270,7 +280,10 @@ public class Game {
      * @return the number of dice rolled by the attacker on this dice fight
      *
      */
-    public String diceFight(Territory attacker, Territory defender, int attackerDice){
+    public String diceFight(String[] attackerDefender, int attackerDice){
+
+        Territory attacker = genericWorldMap.getTerritory(attackerDefender[0]);
+        Territory defender = genericWorldMap.getTerritory(attackerDefender[1]);
 
         //Defender rolls 2 unless 1 troop left on territory
         int defenderDice;
@@ -279,31 +292,6 @@ public class Game {
         } else {
             defenderDice=2;
         }
-
-        /*
-
-        CONTROLLER SHOULD CALL THIS METHOD AND ONLY PROVIDE LEGAL OPTIONS FOR THE NUMBER OF DICE TO ROLL
-
-        //Asking for user to choose how many dice to roll. Verify that the number is ok for the given territories
-        Scanner input = new Scanner(System.in);
-        int attackerMaxDice = Math.min(3, attacker.getTroops()-1);
-        while(true) {
-            try {
-                System.out.println("Choose number of dice to roll (1 - " + attackerMaxDice + ")");
-                attackerDice = input.nextInt();
-                if (attackerDice < 1 || attackerDice > attackerMaxDice){
-                    System.out.println("Invalid dice number. Try again");
-                }else {
-                    break;
-                }
-            }catch (Exception e){
-                System.out.println("Please input a number between 1-" + attackerMaxDice);
-                input.next();
-            }
-        }
-
-
-        */
 
 
         //Used to make a list of the different players different dice rolls
@@ -325,21 +313,25 @@ public class Game {
 
         //Pop out the dice rolls high to low to compare. Higher number wins. Ties means defender wins
         while (!attackerRolls.isEmpty() && !defenderRolls.isEmpty()){
-            diceFightResultMessage += "Attacker rolls a " + attackerRolls.peek();
-            diceFightResultMessage += "Defender rolls a " + defenderRolls.peek();
+            diceFightResultMessage += "Attacker rolls a " + attackerRolls.peek() +"\n";
+            diceFightResultMessage += "Defender rolls a " + defenderRolls.peek() +"\n";
             if (attackerRolls.pop() <= defenderRolls.pop()){
                 //Defender wins
-                diceFightResultMessage += "Defender wins! Attacker loses a troop! RIP";
+                diceFightResultMessage += "Defender wins! Attacker loses a troop! RIP" +"\n";
                 attacker.changeTroops(-1);
             } else {
                 //Attacker wins
-                diceFightResultMessage += "Attacker wins! Defender loses a troop! RIP";
+                diceFightResultMessage += "Attacker wins! Defender loses a troop! RIP" +"\n";
                 defender.changeTroops(-1);
             }
         }
         //If the attacker takes over the territory, the number of troops moved in has to be greater or equal to
         //the number of dice rolled on the most recent diceFight
         return diceFightResultMessage;
+    }
+
+    public String diceFightInfo(String[] attackerDefender){
+        return genericWorldMap.getTerritory(attackerDefender[0]).getInfoString() + "\n" + genericWorldMap.getTerritory(attackerDefender[1]).getInfoString();
     }
 
     /**
