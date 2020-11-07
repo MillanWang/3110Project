@@ -27,6 +27,7 @@ public class GenericWorldMap {
         //Loading in the custom map from file. Need to ask for user path. SMALL EXAMPLE FOR NOW.
         String jsonText = "";
         try {
+            //jsonText = new String(Files.readAllBytes(Paths.get(".//src//TestSmallWorldMap.txt")));//Smaller map for testing
             jsonText = new String(Files.readAllBytes(Paths.get(".//src//DefaultMap.riskmap")));
         } catch (Exception e){
             System.out.println("Invalid file path");
@@ -92,6 +93,7 @@ public class GenericWorldMap {
     public void printAllTerritories(){
         for (Territory t: allTerritories){
             t.printInfo();
+            System.out.println("Neighbour count: " );
         }
     }
 
@@ -123,9 +125,9 @@ public class GenericWorldMap {
      * @param territoryName     Name of the territory
      * @return The territory object, null if there is not one currently
      */
-    private Territory getTerritory(String territoryName){
+    public Territory getTerritory(String territoryName){
         for (Territory t : allTerritories){
-            if (t.toString().equals(territoryName)){
+            if (t.getTerritoryName().equals(territoryName)){
                 return t;
             }
         }
