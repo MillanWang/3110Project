@@ -176,9 +176,9 @@ public class Territory {
      */
     public List<Territory> getAttackableNeighbours(){
         if(this.getTroops() <= 1 ) return null; //Cannot start attack from terry with 1 troop
-
         List attackableNeighbours = new LinkedList();
         for (Territory ter : neighboursList) {
+
             if (!(this.owner.equals(ter.getOwner()))){
                 attackableNeighbours.add(ter);
             }
@@ -224,5 +224,23 @@ public class Territory {
      */
     public int maxDiceToRoll(){
         return Math.min(3, this.getTroops()-1);
+    }
+
+    public String[] getNeighbourStringArray(LinkedList<Territory> territories){
+        String[] stringArray = new String[territories.size()];
+        for (int i = 0; i < territories.size() ; i++){
+            stringArray[i] = territories.get(i).getTerritoryName();
+        }
+        return stringArray;
+    }
+
+    public String[] attackableNeighbours() {
+        LinkedList attackableNeighbours = new LinkedList<Territory>();
+        for (Territory ter : neighboursList) {
+            if (!(ter.getOwner().equals(this.owner))) {
+                attackableNeighbours.add(ter);
+            }
+        }
+        return getNeighbourStringArray(attackableNeighbours);
     }
 }
