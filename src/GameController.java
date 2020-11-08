@@ -18,7 +18,11 @@ public class GameController implements ActionListener{
     }
 
     public void startPlayersTurn(){
-        System.out.println("Initiating process for next turn");
+        if (game.hasWinner()){
+            //Cannot do next turn if a winner has already been found
+            gameView.announceWinner();
+            return;
+        }
 
         //DRAFT STAGE
         //Retrieve model info to pass to view. Current player's dynamic territories list, how many troops can be sent
@@ -61,9 +65,9 @@ public class GameController implements ActionListener{
 
             int[] diceFightChoice = new int[2];
             String diceFightResultString = "";
-            while(true){
+            while(true){//A PARTICULAR DICE FIGHT AFTER ATTACKER&DEFENDER ARE SELECTED
                 //game.diceFightInfo(attackerDefender); //THIS IS A STRING[] OF THE INFO FOR THE VIEW
-                diceFightChoice = gameView.diceFightView(game.getGenericWorldMap().getTerritory(attackerDefender[0]).maxDiceToRoll());
+                diceFightChoice = gameView.diceFightView(game.getTerritory(attackerDefender[0]).maxDiceToRoll());
                 if (diceFightChoice[0] != 0) break;
 
                 diceFightResultString = game.diceFight(attackerDefender, diceFightChoice[1]);
@@ -77,34 +81,29 @@ public class GameController implements ActionListener{
                 //Get the player's option for how many dice they roll
                 //Do the diceFight in the model. Get the string of the results to display by the view.
                 //Check if a player has been eliminated. If eliminated, check if player has won the game totally.
+                if (game.getTerritory(attackerDefender[0]).getTroops() <= 1){
+                    //Attacker can no longer attack from the current selected territory
+                    gameView.displayMessage("Only one troop left! You can no longer attack from " + attackerDefender[0]);
+                    break;
+                } else if (game.getTerritory(attackerDefender[1]).getTroops() <= 0){
+                    //Defender just lost. Territory is given to the attacker. Ask how many troops to move in
+                    gameView.displayMessage(attackerDefender[1] + " has just been conquered!");
 
-                //Get from attacker territory the max number of dice that can be rolled with attackStarterTerritory.maxDiceToRoll()
-                //Display message of the fight results
+                    int incomingTroops = gameView.troopsToMoveIn(game.getTerritory(attackerDefender[0]).getTroops(), diceFightChoice[1]);
+                    if (game.takeoverTerritory(currentPlayer, game.getTerritory(attackerDefender[0]), game.getTerritory(attackerDefender[1]), incomingTroops)){
+                        //A player has been eliminated
+                        gameView.announceElimination(game.getTerritory(attackerDefender[1]).getOwner());
+
+                        if(game.hasWinner()){
+                            gameView.announceWinner();
+                            return;
+                        }
+                    }
+                    break;
+                }
             }
-
-
-            //System.out.println(attackerDefender[0]);
-            //System.out.println(attackerDefender[1]);
         }
-
-
-
-
-        //ATTACK STAGE
-        //gameView.startAttack();
-        //AttackerSelection phase.
-        //Retrieve from model the possible attack starters for the current player
-        //Option to quit(endTurn), or choose terry from list of possible attack starters(defenderSelection phase)
-        //Get a direct reference to the territory that is starting the attack
-
-        //DefenderSelection phase
-        //Retrieve from model the possible defenders. Pass those to GUI
-        //Option to go back to AttackerSelection phase or choose from a list who will be the victim of the attack
-        //Get direct reference to the defender territory
-
-
-
-        //Return to main menu view. Click on the "Next Turn" Button to do the next player's turn
+        //game.nextTurn();//Switching to the next player
     }
 
 
