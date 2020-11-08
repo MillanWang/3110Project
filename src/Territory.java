@@ -165,8 +165,10 @@ public class Territory {
 
     public String getInfoString(){
         StringBuilder sb = new StringBuilder(territoryName);
-        sb.append("                                                                     ");
-        sb.insert(25,"\tTroops: " + troops + "\t\tOwner: " + owner );
+        sb.append("      ");
+        sb.append("\tTroops: " + troops);
+        sb.append("        ");
+        sb.append("\tOwner: " + owner );
         return sb.toString();
     }
 
