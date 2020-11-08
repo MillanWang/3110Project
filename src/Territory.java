@@ -226,7 +226,7 @@ public class Territory {
         return Math.min(3, this.getTroops()-1);
     }
 
-    public String[] getNeighbourStringArray(LinkedList<Territory> territories){
+    public String[] getNeighbourStringArray(List<Territory> territories){
         String[] stringArray = new String[territories.size()];
         for (int i = 0; i < territories.size() ; i++){
             stringArray[i] = territories.get(i).getTerritoryName();
