@@ -195,48 +195,43 @@ public class GameView extends JFrame {
 
     /**
      * In this method all the players would input their names and
-     * they would be saved in an array of strings and then it'll passed to
-     * makePlayers() method in the game which will create the player object using the player names
+     * they would be saved in an arrayList of strings and then it'll be passed to
+     * makePlayers() method in the game which will create the players object using the player names
      * @param numberOfPlayers
      */
     private void gettingNamesOfPlayers(int numberOfPlayers) {
         //Instantiating the GUI components
-        LinkedList<String> playerNames = new LinkedList<String>();
+        List<String> playerNames = new ArrayList<>();
         JPanel namesPanel = new JPanel();
         JTextField jTextField = new JTextField(6);
         JLabel jLabel = new JLabel();
         namesPanel.add(jLabel);
         namesPanel.add(jTextField);
 
-        for (int i=0; i< numberOfPlayers;i++) {
-            //Showing JOption panel to get the player input
-            jLabel.setText("Enter Name of Player: "+(1+i));
-            jTextField.setText("");
-
+        for (int i = 0; i < numberOfPlayers; i++) {
+            jLabel.setText("Enter Name of Player: " + (1 + i));
             int result = JOptionPane.showConfirmDialog(null, namesPanel, "Player Names", JOptionPane.OK_OPTION);
-            if (result ==JOptionPane.OK_OPTION){
+            if (result ==JOptionPane.OK_OPTION) {
                 while (jTextField.getText().equals("") || playerNames.contains(jTextField.getText())){
                     displayMessage("Player " + (1 + i) + " name: " + jTextField.getText() + " can't be empty or the same as another player!!");
-                    break;//TO PREVENT INFINITE LOOPS
+                    jTextField.setText("");
+                    result = JOptionPane.showConfirmDialog(null, namesPanel, "Player Names", JOptionPane.OK_OPTION);
+                    if (result != JOptionPane.OK_OPTION){
+                        displayMessage("YOU HAVE TO START INPUTTING THE PLAYER NAMES AGAIN");
+                        gettingNamesOfPlayers(numberOfPlayers);
+                    }
                 }
                 playerNames.add(jTextField.getText());
+                System.out.println(jTextField.getText());
+                jTextField.setText("");
+            } else {
+                displayMessage("YOU HAVE TO START INPUTTING THE PLAYER NAMES AGAIN");
+                gettingNamesOfPlayers(numberOfPlayers);
             }
         }
         this.game.makePlayers(playerNames);
     }
 
-    public boolean checkForDuplicates(String[] array) {
-        /*List<String> list = new ArrayList<String>(Arrays.asList(array));
-        for (int i=0; i < array.length;i++){
-            if (list.get(i).equals("")){
-                list.remove(i);
-            }
-        }*/
-
-        Set<String> set = new HashSet<>(Arrays.asList(array));
-
-        return array.length != set.size();
-    }
 
     public String[] startDraft(int numTroops){
         String[] draftTerritories = controller.getPlayersTerritoriesForDraft();
