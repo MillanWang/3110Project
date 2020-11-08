@@ -147,6 +147,13 @@ public class GameView extends JFrame {
      * This method would be responsible for the two drop down list at the SOUTH of the JPanel
      */
     private void setDropDownList(String[] arrayOfTerritoryNames){
+        LinkedList<Player> players = new LinkedList<>(game.getPlayersList());
+        players.add(game.getCurrentPlayerObject());
+
+        for (Player p : players){
+
+        }
+
         String[] TerritoriesStrings = { "Ottawa", "Quebec", "Egypt", "China", "South Africa" };
 
         territoryList = new JComboBox(TerritoriesStrings);
@@ -193,44 +200,42 @@ public class GameView extends JFrame {
      * @param numberOfPlayers
      */
     private void gettingNamesOfPlayers(int numberOfPlayers) {
-        String[] playerNames = new String[numberOfPlayers];
+        //Instantiating the GUI components
+        LinkedList<String> playerNames = new LinkedList<String>();
         JPanel namesPanel = new JPanel();
-        List<JTextField> jTextFieldList = new ArrayList<>();
+        JTextField jTextField = new JTextField(6);
+        JLabel jLabel = new JLabel();
+        namesPanel.add(jLabel);
+        namesPanel.add(jTextField);
 
+        for (int i=0; i< numberOfPlayers;i++) {
+            //Showing JOption panel to get the player input
+            jLabel.setText("Enter Name of Player: "+(1+i));
+            jTextField.setText("");
 
-        //Creating and Adding the JTextFields and the JLabels to the namesPanel
-        for (int i = 0; i < numberOfPlayers; i++) {
-            jTextFieldList.add(new JTextField(7));
-            namesPanel.add(new JLabel("Name of Player " + (i + 1)));
-            namesPanel.add(jTextFieldList.get(i));
-        }
-
-        //SET EXPERIMENTATION FOR DUPLICATE TESTING
-        //Set set = new HashSet<>();
-
-
-        int result = JOptionPane.showConfirmDialog(null, namesPanel, "Player Names", JOptionPane.OK_CANCEL_OPTION);
-
-        if (result == JOptionPane.OK_OPTION) {
-            for (int i = 0; i < jTextFieldList.size(); i++) {
-
-                //SET EXPERIMENTATION FOR DUPLICATE TESTING
-                //set.add(jTextFieldList.get(i).getText());
-                //System.out.println(set);
-
-                while (jTextFieldList.get(i).getText().trim().isEmpty() || jTextFieldList.contains(jTextFieldList.get(i).getText())) {
-                    displayMessage("Name of player: " + (1 + i) + " can't be empty OR Used before");
-                    result = JOptionPane.showConfirmDialog(null, namesPanel, "Player Names", JOptionPane.OK_CANCEL_OPTION);
-                    if (result == JOptionPane.OK_OPTION){
-                        playerNames[i] = jTextFieldList.get(i).getText();
-                    }
+            int result = JOptionPane.showConfirmDialog(null, namesPanel, "Player Names", JOptionPane.OK_OPTION);
+            if (result ==JOptionPane.OK_OPTION){
+                while (jTextField.getText().equals("") || playerNames.contains(jTextField.getText())){
+                    displayMessage("Player " + (1 + i) + " name: " + jTextField.getText() + " can't be empty or the same as another player!!");
+                    break;//TO PREVENT INFINITE LOOPS
                 }
-                System.out.println(jTextFieldList.get(i).getText());
-                playerNames[i] = jTextFieldList.get(i).getText();
+                playerNames.add(jTextField.getText());
             }
-            //creating the players
-            this.game.makePlayers(playerNames);
         }
+        this.game.makePlayers(playerNames);
+    }
+
+    public boolean checkForDuplicates(String[] array) {
+        /*List<String> list = new ArrayList<String>(Arrays.asList(array));
+        for (int i=0; i < array.length;i++){
+            if (list.get(i).equals("")){
+                list.remove(i);
+            }
+        }*/
+
+        Set<String> set = new HashSet<>(Arrays.asList(array));
+
+        return array.length != set.size();
     }
 
     public String[] startDraft(int numTroops){
@@ -278,6 +283,7 @@ public class GameView extends JFrame {
         //1 for end attack
         // -1 for top right X
     }
+
     /**
      * this method displays messages to the player, prompting what to do during the attack phase
      */
@@ -315,8 +321,9 @@ public class GameView extends JFrame {
     public int[] diceFightView(int maxAttackerDefender){
         String[] diceNumbers = new String[maxAttackerDefender];
         for(int i = 0; i<maxAttackerDefender; i++){
-            diceNumbers[i] = Integer.toString(3-i);
+            diceNumbers[i] = Integer.toString(1+i);
         }
+        Collections.reverse(Arrays.asList(diceNumbers));
         Object[] options = {"Roll",
                 "Cancel Dice Fight"};
 
@@ -335,10 +342,47 @@ public class GameView extends JFrame {
         String rollString = (String) rollComboBox.getItemAt(rollComboBox.getSelectedIndex());
         int[] resultRoll = {n, Integer.parseInt(rollString)};
         return resultRoll;
+        //0 index : Clicked button
         //0 is roll
         //1 is cancel dice fight
         //-1 is top right red X
+
+        //1 index : number of dice rolled
     }
+
+    public int troopsToMoveIn(int attackerNumTroops, int diceWonWith){
+        String[] troopNumbers = new String[attackerNumTroops - diceWonWith];
+        for(int i = 0; i<attackerNumTroops-diceWonWith; i++){
+            troopNumbers[i] = Integer.toString(attackerNumTroops - 1 - i);
+        }
+        Collections.reverse(Arrays.asList(troopNumbers));
+
+        Object[] options = {"Confirm Troops Moving In"};
+
+        JPanel troopsPanel = new JPanel();
+        troopsPanel.add(new JLabel("\nChoose how many troops to move into conquered territory"));
+        JComboBox troopComboBox = new JComboBox(troopNumbers);
+        troopsPanel.add(troopComboBox);
+
+        JOptionPane.showOptionDialog(this,
+                troopsPanel,
+                "Territory Takeover!",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options, options[0]);
+        String rollString = (String) troopComboBox.getItemAt(troopComboBox.getSelectedIndex());
+        return Integer.parseInt(rollString);
+    }
+
+    public void announceElimination(String loser){
+        JOptionPane.showMessageDialog(this, loser + " has lost their last territory. Please accept defeat...", "A player has been eliminated! RIP", JOptionPane.WARNING_MESSAGE);
+    }
+
+    public void announceWinner(){
+        JOptionPane.showMessageDialog(this, game.getCurrentPlayer() + " IS THE ULTIMATE RISK CHAMPION!!!", "GAME OVER!", JOptionPane.WARNING_MESSAGE);
+    }
+
 
     /**
      * Will display a message to the user. Expect message to be on of the following:
@@ -351,7 +395,6 @@ public class GameView extends JFrame {
     }
 
     public static void main(String[] args) {
-        Game game = new Game();
-        new GameView(game);
+        new GameView(new Game());//Starts the game
     }
 }
