@@ -96,23 +96,18 @@ public class Game {
         return this.currentPlayer;
     }
 
+    public LinkedList<Player> getPlayersList(){
+        return players;
+    }
+
+    public Territory getTerritory(String territoryName){
+        return genericWorldMap.getTerritory(territoryName);
+    }
 
     /**
      * Completes the current players turn (Draft>attack cycle) and sets the current player to the next player in line
      */
-    private void nextTurn(){
-        //START THIS PLAYER'S TURN (Draft>Attack>End cycle)
-        System.out.println("\n\nCurrent Player: " + currentPlayer.getName());
-        //currentPlayer.draftPhase();
-
-        //PASSING CONTINENT HASHMAP TO THE DRAFT PHASE TO GET THE CONTINENT BONUS!
-
-
-
-        attackPhase();
-        System.out.println("Player " + currentPlayer.getName() + " has finished their turn");
-        System.out.println("******************************");
-        printHelp();
+    public void nextTurn(){
         players.add(currentPlayer);//Added to the back
         currentPlayer = players.pop();//Pull out the first player in line to go next
     }
@@ -141,6 +136,9 @@ public class Game {
         return wantToQuit;
     }
 
+    public boolean hasWinner(){
+        return players.isEmpty();
+    }
 
     /**
      * The attack phase of a player's turn
@@ -344,28 +342,9 @@ public class Game {
      * @param winner The player that conquered the territory
      * @param attackerWinner The territory that won the attack
      * @param killedDefender The defending territory that just lost it's last
-     * @param diceWonWith The number of dice that the winner rolled on the most recent diceFight
+     * @param numTroopsMovingIn Number of troops moving into the killed defender.
      */
-    private void takeoverTerritory(Player winner,Territory attackerWinner, Territory killedDefender, int diceWonWith){
-        System.out.println(winner.getName() + " has taken control over " + killedDefender.getTerritoryName());
-
-        int numTroopsMovingIn=0;
-        Scanner input = new Scanner(System.in);
-        while(true) {//Asking user for how many troops are moving in
-            System.out.println("Select between " + diceWonWith+ " - " + (attackerWinner.getTroops()-1) + " troops to move into " + killedDefender.getTerritoryName());
-            try {
-                numTroopsMovingIn = input.nextInt();
-            } catch (InputMismatchException e) {
-                System.err.println("Don't enter characters or strings. Numbers only");
-                input.next();
-                continue;
-            }
-            if ( numTroopsMovingIn<0 || numTroopsMovingIn < diceWonWith || numTroopsMovingIn >= attackerWinner.getTroops()) {
-                System.out.println("Illegal number of troops.");
-            } else{
-                break;//Legal number troops moving in
-            }
-        }//A legal number of troops moving in is stored in numTroopsMovingIn
+    public boolean takeoverTerritory(Player winner,Territory attackerWinner, Territory killedDefender, int numTroopsMovingIn){
 
         killedDefender.setTroops(numTroopsMovingIn);
         attackerWinner.changeTroops(-numTroopsMovingIn);
@@ -380,9 +359,12 @@ public class Game {
         //Check if the loser has been eliminated from the game
         if (getPlayerFromList(loserName).hasLost()){
             eliminatePlayer(getPlayerFromList(loserName));
-            gameEnds = true;
+            return true;
         }
+        return false;
     }
+
+
 
     /**\
      * Eliminates player from the game given pointer to their player object
@@ -412,60 +394,11 @@ public class Game {
      * initialize each player with it's playerName
      * @param playerNames
      */
-    public void makePlayers(String[] playerNames){
-        String [] namesOfPlayer = playerNames;
-        //Scanner input = new Scanner(System.in);
-        int numPlayers = playerNames.length;
-        /*
-        while(true) {
-            System.out.println("Choose number of players (2-6)");
-            try {
-                numPlayers = input.nextInt();
-            } catch (InputMismatchException e){
-                System.err.println("Don't enter characters or strings");
-                input.next();
-            }
-            if (numPlayers < 2 || numPlayers > 6){
-                System.out.println("2-6 players only. Try again");
-            } else{
-                break;
-            }
+    public void makePlayers(LinkedList<String> playerNames){
+
+        for(String s : playerNames) {
+            players.add(new Player(s));
         }
-         */
-
-        for(int i = 0 ; i < numPlayers ; i++) {
-            players.add(new Player(playerNames[i]));
-        }
-            /*
-            while (true){ //Loop to ensure that a proper name is selected
-                System.out.println("Set name for Player " + (i+1));
-                String currName  = input.nextLine();
-
-                //Ensure no spaces and no duplicate names
-                if (currName.contains(" ") || currName.equals("")) {
-                    System.out.println("Name cannot contain spaces and cannot be empty string");
-                } else {
-                    boolean hasDupe = false;
-                    //Checking for duplicates
-                    for (Player p : players){
-                        if (p.getName().equals(currName)){
-                            hasDupe = true;
-                            break;
-                        }
-                    }//End dupe checking for loop
-                    if (hasDupe){
-                        System.out.println("Duplicate names are not allowed. Try another name");
-                    } else {
-
-                        //players.add(new Player(currName));
-                        //break;
-
-                    }
-                }//End check for legal name
-            }//End while
-        }
-
-         */
 
         //RANDOM DISTRIBUTION OF TERRITORIES AND TROOPS
         //The territory list is always randomized in the DefaultWorldMap class
@@ -478,14 +411,10 @@ public class Game {
         Collections.shuffle(players);//Players are initialized and order is randomized.
 
         //Putting troops in all player's territories
-        int pNumber = 1;
         for (Player player: players){
-            player.setupPlayer(numPlayers);
-            //System.out.println("Player " + pNumber+" : " + player.getName());
-            pNumber++;
+            player.setupPlayer(playerNames.size());
         }
         currentPlayer = players.pop();//Establish the first player to go
-        //nextTurn();
     }
 
 
