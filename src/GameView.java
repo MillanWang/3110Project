@@ -1,7 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 
 public class GameView extends JFrame {
     private Game game;
@@ -9,22 +10,19 @@ public class GameView extends JFrame {
     private JMenuItem menuItemHelp, menuItemQuit, menuItemReset, menuItemCurrentPlayer, menuItemShowTerritories, menuItemNextTurn;
     private JPanel gamePanel,startPage;
     private JButton newGameBtn;
-    private JComboBox territoryList;
-    private Stack<JPanel> previousPanels;
     private GameController controller;
-    ImageIcon map;
+    private ImageIcon map;
 
     //*********Make sure to comment out play() METHOD IN THE GAME CONSTRUCTOR BEFORE RUNNING THIS CLASS!!
     public GameView(Game game){
-        super();
+        super("RISK: GLOBAL DOMINATION");
         this.setLayout(new BorderLayout());
         this.game=game;
         this.controller = new GameController(game,this);
-        //previousPanels = new Stack<>();
         createStartPage();
-        setTitle("RISK Global Domination");
         setSize(800, 580);
-        setResizable(false);
+        // i changed resizable to true just in case the player wants it full screen
+        setResizable(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setVisible(true);
     }
@@ -73,7 +71,6 @@ public class GameView extends JFrame {
     private void displayGame(){
         gamePanel.setVisible(true);
         addMenuItems();
-        setDropDownList(null);
         addMapPicture();
     }
 
@@ -117,7 +114,7 @@ public class GameView extends JFrame {
         menuItemCurrentPlayer = new JMenuItem("Current-Player");
         menuItemCurrentPlayer.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         menuItemCurrentPlayer.addActionListener(e-> {
-            displayMessage(game.getCurrentPlayer());
+            displayMessage((game.getCurrentPlayer()+" \n"+ game.getCurrentPlayerObject().getTerritories() ));
         });
         menuBar.add(menuItemCurrentPlayer);
 
@@ -141,33 +138,6 @@ public class GameView extends JFrame {
         gamePanel.add(menuBar, BorderLayout.NORTH);
     }
 
-
-
-    /**
-     * This method would be responsible for the two drop down list at the SOUTH of the JPanel
-     */
-    private void setDropDownList(String[] arrayOfTerritoryNames){
-        LinkedList<Player> players = new LinkedList<>(game.getPlayersList());
-        players.add(game.getCurrentPlayerObject());
-
-        for (Player p : players){
-
-        }
-
-        String[] TerritoriesStrings = { "Ottawa", "Quebec", "Egypt", "China", "South Africa" };
-
-        territoryList = new JComboBox(TerritoriesStrings);
-        territoryList.setName("Select Territories");
-
-        Dimension preferredSize = territoryList.getPreferredSize();
-        preferredSize.width = 10;
-        territoryList.setPreferredSize(preferredSize);
-        gamePanel.add(territoryList,BorderLayout.SOUTH);
-        territoryList.addActionListener(e->{
-            JComboBox cb = (JComboBox)e.getSource();
-            displayMessage((String)cb.getSelectedItem());
-        });
-    }
 
     /**
      * This method would show the png image
@@ -201,7 +171,7 @@ public class GameView extends JFrame {
      */
     private void gettingNamesOfPlayers(int numberOfPlayers) {
         //Instantiating the GUI components
-        List<String> playerNames = new ArrayList<>();
+        LinkedList<String> playerNames = new LinkedList<>();
         JPanel namesPanel = new JPanel();
         JTextField jTextField = new JTextField(6);
         JLabel jLabel = new JLabel();
@@ -240,7 +210,8 @@ public class GameView extends JFrame {
         draftPanel.add(new JLabel("Select territory to send troops to"));
         JComboBox draftComboBox = new JComboBox(draftTerritories);
         draftPanel.add(draftComboBox);
-        JOptionPane.showConfirmDialog(null, draftPanel, "Draft Phase", JOptionPane.OK_CANCEL_OPTION);
+        // JOptionPane.OK_CANCEL_OPTION was changed to  DEFAULT_OPTION
+        JOptionPane.showConfirmDialog(null, draftPanel, "Draft Phase", JOptionPane.DEFAULT_OPTION);
         String territoryString = (String) draftComboBox.getItemAt(draftComboBox.getSelectedIndex());// gets the territory the player chose
 
         String[] troopNumbers = new String[numTroops];
@@ -254,7 +225,8 @@ public class GameView extends JFrame {
         troopPanel.add(new JLabel("Select number of troops to send"));
         JComboBox troopComboBox = new JComboBox(troopNumbers);
         troopPanel.add(troopComboBox);
-        JOptionPane.showConfirmDialog(null, troopPanel, "Draft Phase", JOptionPane.OK_CANCEL_OPTION);
+        // JOptionPane.OK_CANCEL_OPTION was changed to  DEFAULT_OPTION
+        JOptionPane.showConfirmDialog(null, troopPanel, "Draft Phase", JOptionPane.DEFAULT_OPTION);
         String troopString = (String) troopComboBox.getItemAt(troopComboBox.getSelectedIndex());
 
         String[] returnValues = {territoryString,troopString};
