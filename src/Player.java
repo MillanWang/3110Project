@@ -6,7 +6,6 @@ import java.util.*;
 public class Player {
     private String name; // The name of the player.
     private LinkedList<Territory> territories; // A list of the territories the player occupies.
-    // private GenericWorldMap defaultWM;
     private int numTroops;
 
 
@@ -52,7 +51,7 @@ public class Player {
         if (territories.size() > 0) {
             String str = "";
             for (Territory t : territories) {
-                str += t.getInfoString();
+                str +="\n"+ t.getInfoString();
             }
             return str;
         }else {
@@ -148,11 +147,10 @@ public class Player {
      *
      * @return string that contains all the territories owned by the player
      * This method would be used in the attack() stage
-
     private void printAllPlayerTerritories() {
-        for (Territory t : territories) {
-            t.printInfo();
-        }
+    for (Territory t : territories) {
+    t.printInfo();
+    }
     }*/
 
 
@@ -211,29 +209,30 @@ public class Player {
      * @return a list of territories player can use to start an attack
      */
     public String[] getAttackStarters() {
-        LinkedList attackstarters = new LinkedList<Territory>();
+        LinkedList attackStarters = new LinkedList<Territory>();
         for (Territory ter : territories) {
 
             if ((ter.getTroops() > 1) && !(ter.getAttackableNeighbours() == null)) {
-                attackstarters.add(ter);
+                attackStarters.add(ter);
             }
         }
-        if (attackstarters.isEmpty()) return null;
+        if (attackStarters.isEmpty()) return null;
 
-        return getTerritoryStringArray(attackstarters);
+        for (int i = 0; i < attackStarters.size(); i ++) System.out.println(attackStarters.get(i));
+
+        return getTerritoryStringArray(attackStarters);
 
 
     }
 
     /**
      * this method prints out the list of territories player can use to start an attack
-
-    public void printAttackStarters(){
-        List<Territory> attackStarters = getAttackStarters();
-        for (Territory territory : attackStarters){
-            territory.printInfo();
-        }
-    }*/
+     public void printAttackStarters(){
+     List<Territory> attackStarters = getAttackStarters();
+     for (Territory territory : attackStarters){
+     territory.printInfo();
+     }
+     }*/
 
     /**
      * this method checks if a territory owned by player can be used to start an attack
