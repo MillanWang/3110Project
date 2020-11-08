@@ -176,6 +176,9 @@ public class Player {
             numTroops = 25;
         } else {//6 Players
             numTroops = 20;
+            //***********************************************************************************************
+            //WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+            //numTroops = 5; //THIS IS FOR TESTING!!! VERY TEDIOUS WITH A LOT OF TROOPS
         }
 
         //Approximately evenly distribute troops to each owned territory
