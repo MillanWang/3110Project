@@ -1,8 +1,5 @@
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class GameController implements ActionListener{
     private Game game;
@@ -103,7 +100,7 @@ public class GameController implements ActionListener{
                 }
             }
         }
-        //game.nextTurn();//Switching to the next player
+        game.nextTurn();//Switching to the next player
     }
 
 
