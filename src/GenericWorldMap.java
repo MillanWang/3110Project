@@ -13,124 +13,105 @@ import java.util.Collections;
  */
 public class GenericWorldMap {
 
-    //List of all territories
-    private LinkedList<Territory> allTerritories;
+ //List of all territories
+ private LinkedList<Territory> allTerritories;
 
-    /**
-     * Constructor for the DefaultWorldMap class
-     * This map is modeled after the real world and
-     */
-    public GenericWorldMap() {
-        allTerritories = new LinkedList<>();
-
-
-        //Loading in the custom map from file. Need to ask for user path. SMALL EXAMPLE FOR NOW.
-        String jsonText = "";
-        try {
-            //jsonText = new String(Files.readAllBytes(Paths.get(".//src//TestSmallWorldMap.txt")));//Smaller map for testing
-            jsonText = new String(Files.readAllBytes(Paths.get(".//src//DefaultMap.riskmap")));
-        } catch (Exception e){
-            System.out.println("Invalid file path");
-        }
+ /**
+  * Constructor for the DefaultWorldMap class
+  * This map is modeled after the real world and
+  */
+ public GenericWorldMap() {
+  allTerritories = new LinkedList<>();
 
 
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            JSONTerritoryListParser jsonTerritoryListParser = mapper.readValue(jsonText, JSONTerritoryListParser.class);
-            //^^Linkedlist containing info for individual territory objects
-
-            //Creating new territories from all elements in the list
-            Territory currentTerritoryToAdd;
-            for (JSONTerritoryParser t : jsonTerritoryListParser.getTerritories()){
-                currentTerritoryToAdd = new Territory.Builder(t.getTerritoryName())
-                                                        .setContinentName(t.getContinentName())
-                                                        .setNumTerritoriesInContinent(t.getNumberOfTerritoriesInContinent())
-                                                        .setContinentControlBonus(t.getContinentControlBonus())
-                                                        .build();
-
-                //Setting up neighbour relationships
-                // addNeighbours(terry) if neighbour currently exists. If not, relationship will be made when the terry is initialized
-                //addNeighbours is reflective so this process should always work
-
-                for (String territoryName : t.getNeighbours()){
-                    if (getTerritory(territoryName)!=null){
-                        currentTerritoryToAdd.addNeighbours(getTerritory(territoryName));
-                        //^^Adding the neighbour to the current territory
-                    }//Do nothing if neighbour does not exist yet.
-                }
-                allTerritories.add(currentTerritoryToAdd);
-            }
-
-        } catch (Exception e){
-            System.out.println(e);
-            System.out.println("Invalid map file given. Use official maps only that follow the strict JSON map making template");
-        }
+  //Loading in the custom map from file. Need to ask for user path. SMALL EXAMPLE FOR NOW.
+  String jsonText = "";
+  try {
+   jsonText = new String(Files.readAllBytes(Paths.get(".//src//DefaultMap.txt")));
+  } catch (Exception e){
+   System.out.println("Invalid file path");
+  }
 
 
-        //Randomization of the order of territories.
-        Collections.shuffle(allTerritories);
+  ObjectMapper mapper = new ObjectMapper();
+  try {
+   JSONTerritoryListParser jsonTerritoryListParser = mapper.readValue(jsonText, JSONTerritoryListParser.class);
+   //^^Linkedlist containing info for individual territory objects
 
+   //Creating new territories from all elements in the list
+   Territory currentTerritoryToAdd;
+   for (JSONTerritoryParser t : jsonTerritoryListParser.getTerritories()){
+    currentTerritoryToAdd = new Territory.Builder(t.getTerritoryName())
+            .setContinentName(t.getContinentName())
+            .setNumTerritoriesInContinent(t.getNumberOfTerritoriesInContinent())
+            .setContinentControlBonus(t.getContinentControlBonus())
+            .build();
 
+    //Setting up neighbour relationships
+    // addNeighbours(terry) if neighbour currently exists. If not, relationship will be made when the terry is initialized
+    //addNeighbours is reflective so this process should always work
+
+    for (String territoryName : t.getNeighbours()){
+     if (getTerritory(territoryName)!=null){
+      currentTerritoryToAdd.addNeighbours(getTerritory(territoryName));
+      //^^Adding the neighbour to the current territory
+     }//Do nothing if neighbour does not exist yet.
     }
+    allTerritories.add(currentTerritoryToAdd);
+   }
 
-    /**
-     * Returns the list consisting of all territories
-     * This will be used to distribute territories to players in the Game class
-     *
-     * @return list containing all territories in Africa
-     */
-    public LinkedList<Territory> getAllTerritories(){
-        return allTerritories;
-    }
+  } catch (Exception e){
+   System.out.println(e);
+   System.out.println("Invalid map file given. Use official maps only that follow the strict JSON map making template");
+  }
 
-    /**
-     * Prints out all territories with the number of troops inside and the owner
-     *
-     * Example:
-     * Ontario   Troops: 5   Owner: Player1
-     *
-     */
-    public void printAllTerritories(){
-        for (Territory t: allTerritories){
-            t.printInfo();
-            System.out.println("Neighbour count: " );
-        }
-    }
 
-    public static void main(String[] args){
-        GenericWorldMap g = new GenericWorldMap();
-        System.out.println(g.getAllTerritoriesString());
+  //Randomization of the order of territories.
+  Collections.shuffle(allTerritories);
 
-    }
-    /**
-     * Prints out all territories with the number of troops inside and the owner
-     *
-     * Example:
-     * Ontario   Troops: 5   Owner: Player1
-     *
-     */
-    public String getAllTerritoriesString(){
-        String allTerritoriesString = "";
-        for (Territory t: allTerritories){
-            allTerritoriesString += t.getInfoString() + "\n";
-        }
-        return allTerritoriesString;
-    }
 
-    /**
-     * Returns the territory with a matching name to the given string.
-     * Returns null if there is no matching name found.
-     * Only used in initial setup process
-     *
-     * @param territoryName     Name of the territory
-     * @return The territory object, null if there is not one currently
-     */
-    public Territory getTerritory(String territoryName){
-        for (Territory t : allTerritories){
-            if (t.getTerritoryName().equals(territoryName)){
-                return t;
-            }
-        }
-        return null;
-    }
+ }
+
+ /**
+  * Returns the list consisting of all territories
+  * This will be used to distribute territories to players in the Game class
+  *
+  * @return list containing all territories in Africa
+  */
+ public LinkedList<Territory> getAllTerritories(){
+  return allTerritories;
+ }
+
+
+ /**
+  * Prints out all territories with the number of troops inside and the owner
+  *
+  * Example:
+  * Ontario   Troops: 5   Owner: Player1
+  *
+  */
+ public String getAllTerritoriesString(){
+  String allTerritoriesString = "";
+  for (Territory t: allTerritories){
+   allTerritoriesString += t.getInfoString() + "\n";
+  }
+  return allTerritoriesString;
+ }
+
+ /**
+  * Returns the territory with a matching name to the given string.
+  * Returns null if there is no matching name found.
+  * Only used in initial setup process
+  *
+  * @param territoryName     Name of the territory
+  * @return The territory object, null if there is not one currently
+  */
+ public Territory getTerritory(String territoryName){
+  for (Territory t : allTerritories){
+   if (t.getTerritoryName().equals(territoryName)){
+    return t;
+   }
+  }
+  return null;
+ }
 }
