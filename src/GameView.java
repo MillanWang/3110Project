@@ -261,7 +261,7 @@ public class GameView extends JFrame {
         attackPanel.add(new JLabel("Select country to attack from"));
         JComboBox attackStarters = new JComboBox(attackStartersStringArray);
         attackPanel.add(attackStarters);
-        JOptionPane.showConfirmDialog(null, attackPanel, "Attack Starters", JOptionPane.OK_CANCEL_OPTION);
+        JOptionPane.showConfirmDialog(null, attackPanel, "Attack Starters", JOptionPane.DEFAULT_OPTION);
 
         String currentAttackStarter = (String) attackStarters.getItemAt(attackStarters.getSelectedIndex());// gets the territory that can start an attack
         //displayMessage(currentAttackStarter + " is attacking"); //Kinda redundant if the player just picked this
@@ -276,7 +276,7 @@ public class GameView extends JFrame {
         defendPanel.add(new JLabel("Select country to attack from " + currentAttackStarter));
         JComboBox defenders = new JComboBox(defenderStrings);
         defendPanel.add(defenders);
-        JOptionPane.showConfirmDialog(null, defendPanel, "Defenders", JOptionPane.OK_CANCEL_OPTION);
+        JOptionPane.showConfirmDialog(null, defendPanel, "Defenders", JOptionPane.DEFAULT_OPTION);
         String currentDefender = (String) defenders.getItemAt(defenders.getSelectedIndex());// gets the territory to be attacked(need to work on checking if player owns territory)
 
 
