@@ -12,8 +12,7 @@ import java.util.Collections;
  * Loads territory information about the map from external JSON file.
  */
 public class GenericWorldMap {
-
-    //List of all territories
+    
     private LinkedList<Territory> allTerritories;
 
     /**
@@ -22,8 +21,7 @@ public class GenericWorldMap {
      */
     public GenericWorldMap() {
         allTerritories = new LinkedList<>();
-
-
+        
         //Loading in the custom map from file. Need to ask for user path. SMALL EXAMPLE FOR NOW.
         String jsonText = "";
         try {
@@ -32,8 +30,7 @@ public class GenericWorldMap {
         } catch (Exception e){
             System.out.println("Invalid file path");
         }
-
-
+        
         ObjectMapper mapper = new ObjectMapper();
         try {
             JSONTerritoryListParser jsonTerritoryListParser = mapper.readValue(jsonText, JSONTerritoryListParser.class);
@@ -60,17 +57,13 @@ public class GenericWorldMap {
                 }
                 allTerritories.add(currentTerritoryToAdd);
             }
-
         } catch (Exception e){
             System.out.println(e);
             System.out.println("Invalid map file given. Use official maps only that follow the strict JSON map making template");
         }
 
-
         //Randomization of the order of territories.
         Collections.shuffle(allTerritories);
-
-
     }
 
     /**
@@ -85,6 +78,7 @@ public class GenericWorldMap {
 
     /**
      * Prints out all territories with the number of troops inside and the owner
+     * Mostly useful for testing new maps and ensureing that all territories are established properly
      *
      * Example:
      * Ontario   Troops: 5   Owner: Player1
@@ -96,12 +90,7 @@ public class GenericWorldMap {
             System.out.println("Neighbour count: " );
         }
     }
-
-    public static void main(String[] args){
-        GenericWorldMap g = new GenericWorldMap();
-        System.out.println(g.getAllTerritoriesString());
-
-    }
+    
     /**
      * Prints out all territories with the number of troops inside and the owner
      *
