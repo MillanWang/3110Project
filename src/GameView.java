@@ -159,7 +159,7 @@ public class GameView extends JFrame {
         JOptionPane.showConfirmDialog(null,panel, "Number of Players", JOptionPane.DEFAULT_OPTION);
 
         int numberOfPlayers = Integer.parseInt((String) numPlayers.getSelectedItem());
-        System.out.println(numberOfPlayers);
+
         gettingNamesOfPlayers(numberOfPlayers);
     }
 
@@ -194,7 +194,6 @@ public class GameView extends JFrame {
                     }
                 }
                 playerNames.add(jTextField.getText());
-                System.out.println(jTextField.getText());
                 jTextField.setText("");
             } else {
                 displayMessage("YOU HAVE TO START INPUTTING THE PLAYER NAMES AGAIN");
