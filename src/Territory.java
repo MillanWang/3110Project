@@ -6,15 +6,23 @@ import java.util.List;
  */
 public class Territory {
 
-    //Builder pattern for more clear constructors
+    /**
+     * Builder pattern to create territory classes
+     */
     public static class Builder{
 
         private String territoryName, continentName;
         private int numberOfTerritoriesInContinent, continentControlBonus;
 
+        /**
+         * Constructor for the Builder
+         *
+         * @param territoryName Name of the territory
+         */
         public Builder(String territoryName){
             this.territoryName = territoryName;
         }
+
         public Builder setContinentName(String continentName){
             this.continentName = continentName;
             return this;
@@ -36,7 +44,6 @@ public class Territory {
             terry.continentControlBonus = this.continentControlBonus;
             return terry;
         }
-
     }
 
 
@@ -50,7 +57,6 @@ public class Territory {
     /**
      * Initializing the class states in this constructor
      * Private due to builder pattern
-     *
      */
     private Territory(){
         this.troops = 0;
@@ -58,7 +64,7 @@ public class Territory {
     }
 
     /**
-     * this method would return the number of troops owned by this territory
+     * Getter method for troops
      * @return troops
      */
     public int getTroops() {
@@ -66,33 +72,44 @@ public class Territory {
     }
 
     /**
-     * this method would set the number of troops owned by this territory
-     * @param troops
+     * Sets the number of troops
+     *
+     * @param troops The new number of troops to be added to the troops field
      */
     public void setTroops(int troops){
         this.troops = troops;
     }
 
     /**
+     * Changes the number of troops in the troops field
      *
-     * the number of troops that is placed on each territory
-     * would change in the draft and attack phase
-     * @param troops
+     * @param troops The number of troops to be added to the troops field
      */
     public void changeTroops(int troops) {
         this.troops += troops;
     }
 
+    /**
+     * Getter method for numberOfTerritoriesInContinent
+     *
+     * @return field value numberOfTerritoriesInContinent
+     */
     public int getNumberOfTerritoriesInContinent() {
         return numberOfTerritoriesInContinent;
     }
 
+    /**
+     * Getter method for the continent control bonus field
+     *
+     * @return field value continentControlBonus
+     */
     public int getContinentControlBonus() {
         return continentControlBonus;
     }
 
     /**
-     * Returns the string of the territory name
+     * Returns the string of this territory's name
+     *
      * @return territoryName
      */
     public String getTerritoryName() {
@@ -109,35 +126,23 @@ public class Territory {
     }
 
     /**
-     * @return the owner's name
+     * Getter method for the owner
+     *
+     * @return the owner string
      */
     public String getOwner() {
         return owner;
     }
 
     /**
-     * setting the name of the owner
-     * @param owner
+     * Setter for the owner field
+     *
+     * @param owner The name of the owner of this territory
      */
     public void setOwner(String owner) {
         this.owner = owner;
     }
 
-    /**
-     * Returns territory object of the neighbour corresponding to the given territory name
-     * @param territoryName
-     * @return a territory object that
-     *
-     */
-    public Territory getNeighbour(String territoryName) {
-        for (Territory territory : neighboursList){
-            if (territoryName.equals(territory.getTerritoryName())){
-                return territory;
-            }
-        }
-        System.out.println("No territory with this name");
-        return null;
-    }
 
     /**
      * adding a new territory neighbour to the neighboursList
@@ -163,6 +168,14 @@ public class Territory {
         System.out.println(sb);
     }
 
+    /**
+     * Returns a string of the territory name, number of troops, and the owner
+     *
+     * Example
+     * Ontario   Troops: 5   Owner: Player1
+     *
+     * @return String of the territory's info
+     */
     public String getInfoString(){
         StringBuilder sb = new StringBuilder(territoryName);
         sb.append("      ");
@@ -174,7 +187,8 @@ public class Territory {
 
     /**
      * This method should return a list of territories that can be attacked
-     * @return a list of territories
+     *
+     * @return a list of attackable territories. Null if no attackable neighbours
      */
     public List<Territory> getAttackableNeighbours(){
         if(this.getTroops() <= 1 ) return null; //Cannot start attack from terry with 1 troop
@@ -193,33 +207,6 @@ public class Territory {
     }
 
     /**
-     * this method print the information of each
-     * possible attackable neighbours (territory)
-     */
-    public void printAttackableNeighbours(){
-        for (Territory territory:getAttackableNeighbours()){
-            territory.printInfo();
-        }
-    }
-
-    /**
-     * Checks if the neighbour can be attacked from the current territory
-     * @param defender The name of the attack victim territory
-     * @return true or false depends on the situation
-     * true: in case the player can attack that territory
-     * false: in case the player cannot attack that territory
-     */
-    public boolean canAttack(String defender){
-        List<Territory> attackables = getAttackableNeighbours();
-        for(Territory territory: attackables){
-            if (territory.getTerritoryName().equals(defender)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * returns the maximum number of dice that can be rolled for this territory during a diceFight
      *
      * @return Max number of dice for attacker to roll
@@ -228,6 +215,12 @@ public class Territory {
         return Math.min(3, this.getTroops()-1);
     }
 
+    /**
+     * Returns a String array of the given list of territories
+     *
+     * @param territories List of territories to be converted
+     * @return String array of all territories in the parameter list
+     */
     public String[] getNeighbourStringArray(List<Territory> territories){
         String[] stringArray = new String[territories.size()];
         for (int i = 0; i < territories.size() ; i++){
@@ -236,6 +229,11 @@ public class Territory {
         return stringArray;
     }
 
+    /**
+     * Returns a string array of all attackable neighbour territories
+     *
+     * @return String array of attackable neighbour territories
+     */
     public String[] attackableNeighbours() {
         LinkedList attackableNeighbours = new LinkedList<Territory>();
         for (Territory ter : neighboursList) {
