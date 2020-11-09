@@ -23,7 +23,7 @@ public class GameController {
     }
 
     /**
-     * Starts the draft,attack sequence for the current player.
+     * Starts the draft,attack,(Fortify on next milestone),endTurn sequence for the current player.
      *
      */
     public void startPlayersTurn(){
@@ -40,20 +40,21 @@ public class GameController {
         currentPlayer.bonusTroops();
         System.out.println(currentPlayer.getNumTroops());
 
+        //Keep asking player to send troops to territories until there are no more troops to send
         while (currentPlayer.getNumTroops() > 0){
             draftInfoFromView = gameView.startDraft(currentPlayer.getNumTroops());
             gameView.displayMessage(game.getCurrentPlayerObject().draftPhase(draftInfoFromView[0],draftInfoFromView[1]));
         }
 
-        //
+        //Draft complete. Move on to attack
         gameView.displayMessage("Draft stage complete, starting the attack phase for player: " + game.getCurrentPlayer());
 
 
         //ATTACK
 
-        int endAttackStage = 0;
-        String[] attackerDefender;
-        while (true){
+        int endAttackStage = 0; //Non zero when player hits "End Attack" or window X
+        String[] attackerDefender; //{AttackingTerritoryName , DefenderTerritoryName}
+        while (true){//Continue attacking until player decides to stop, or no more territories can start the attack
             //Ensure that the player has attack starters
             if (game.getCurrentPlayerObject().getAttackStarters() == null){
                 gameView.displayMessage(game.getCurrentPlayer() + " has no territories that can start an attack. End attack phase");
@@ -72,43 +73,43 @@ public class GameController {
 
             gameView.displayMessage(attackerDefender[0] + " is about to attack " + attackerDefender[1]);
 
-            int[] diceFightChoice = new int[2];
+            int[] diceFightChoice;//{diceFightOrBackToAttackSelection, numDiceRolls}
             String diceFightResultString = "";
+
+
             while(true){//A PARTICULAR DICE FIGHT AFTER ATTACKER&DEFENDER ARE SELECTED
-                //game.diceFightInfo(attackerDefender); //THIS IS A STRING[] OF THE INFO FOR THE VIEW
+
                 diceFightChoice = gameView.diceFightView(game.getTerritory(attackerDefender[0]).maxDiceToRoll());
-                if (diceFightChoice[0] != 0) break;
+                if (diceFightChoice[0] != 0) break;//Player wants to end current diceFight.
 
                 diceFightResultString = game.diceFight(attackerDefender, diceFightChoice[1]);
                 diceFightResultString += "\n" + game.diceFightInfo(attackerDefender);
-                gameView.displayMessage(diceFightResultString);
+                gameView.displayMessage(diceFightResultString);//Telling the player the rolls and results of the dice fight
 
-                //DICE FIGHT
-                //Retrieve number of troops in the attacker and defender terrys. Need to show info in the view
-                //Also need to retrieve the maximum number of dice the attacker will roll
-
-                //Get the player's option for how many dice they roll
-                //Do the diceFight in the model. Get the string of the results to display by the view.
-                //Check if a player has been eliminated. If eliminated, check if player has won the game totally.
+                //Checking if another dice fight can happen or not.
                 if (game.getTerritory(attackerDefender[0]).getTroops() <= 1){
-                    //Attacker can no longer attack from the current selected territory
+                    //Attacker can no longer dice fight from the current selected territory
                     gameView.displayMessage("Only one troop left! You can no longer attack from " + attackerDefender[0]);
                     break;
                 } else if (game.getTerritory(attackerDefender[1]).getTroops() <= 0){
                     //Defender just lost. Territory is given to the attacker. Ask how many troops to move in
                     gameView.displayMessage(attackerDefender[1] + " has just been conquered!");
 
+                    //Asking user for how many troops to move into newly conquered territory
                     int incomingTroops = gameView.troopsToMoveIn(game.getTerritory(attackerDefender[0]).getTroops(), diceFightChoice[1]);
+
+                    //Checking if the defender owner is eliminated
                     if (game.takeoverTerritory(currentPlayer, game.getTerritory(attackerDefender[0]), game.getTerritory(attackerDefender[1]), incomingTroops)){
                         //A player has been eliminated
                         gameView.announceElimination(game.getTerritory(attackerDefender[1]).getOwner());
 
+                        //Checking if the player has won. If so,
                         if(game.hasWinner()){
                             gameView.announceWinner();
                             return;
                         }
                     }
-                    break;
+                    break;//No more dice fight for this attackDefender pair after territory takeover
                 }
             }
         }
@@ -116,6 +117,12 @@ public class GameController {
     }
 
 
+    /**
+     * Getting the attackable neighbours string array for the specified territory
+     * 
+     * @param ter The territory object starting the attack
+     * @return  String array of names of territories that can be attacked from ter
+     */
     public String[] getNeighboursToAttack(Territory ter){
         return ter.attackableNeighbours();
     }
