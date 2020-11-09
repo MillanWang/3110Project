@@ -30,6 +30,9 @@ public class Game {
         return null; //This will never happen. Will always be found. Only called from the takeoverTerritory method
     }
 
+    /**
+     * @return genericWorldMap field
+     */
     public GenericWorldMap getGenericWorldMap() {
         return genericWorldMap;
     }
@@ -58,7 +61,6 @@ public class Game {
 
     /**
      * @return the name of the current player
-     *
      */
     public String getCurrentPlayer(){
         return this.currentPlayer.getName();
@@ -66,7 +68,6 @@ public class Game {
 
     /**
      * @return the player object of the current player
-     *
      */
     public Player getCurrentPlayerObject(){
         return this.currentPlayer;
@@ -74,7 +75,6 @@ public class Game {
 
     /**
      * @return a linked list of the all the players not including the current player
-     *
      */
     public LinkedList<Player> getPlayersList(){
         return players;
@@ -85,7 +85,6 @@ public class Game {
      *
      * @param territoryName name of the territory
      * @return the name of the current player
-     *
      */
     public Territory getTerritory(String territoryName){
         return genericWorldMap.getTerritory(territoryName);
@@ -103,7 +102,7 @@ public class Game {
      * @return the true if the game has a winner
      * false if there is no winner yet
      *
-    */
+     */
     public boolean hasWinner(){
         return players.isEmpty();
     }
@@ -248,8 +247,4 @@ public class Game {
         }
         currentPlayer = players.pop();//Establish the first player to go
     }
-
-
-
-
 }
