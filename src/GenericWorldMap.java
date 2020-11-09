@@ -43,8 +43,6 @@ public class GenericWorldMap {
             System.out.println("Invalid file path");
         }
 
-        System.out.println(jsonText);
-
         ObjectMapper mapper = new ObjectMapper();
         try {
             JSONTerritoryListParser jsonTerritoryListParser = mapper.readValue(jsonText, JSONTerritoryListParser.class);
