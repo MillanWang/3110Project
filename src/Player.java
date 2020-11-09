@@ -7,7 +7,7 @@ public class Player {
     private String name; // The name of the player.
     private LinkedList<Territory> territories; // A list of the territories the player occupies.
     private int numTroops;
-    
+
     /**
      * A constructor that sets the player class variables.
      *
@@ -152,7 +152,7 @@ public class Player {
     public int getNumTroops() {
         return numTroops;
     }
-    
+
     /**
      * Sets up the players territories with troops
      * Number of troops is determined by the number of players
@@ -172,6 +172,7 @@ public class Player {
             numTroops = 25;
         } else {//6 Players
             numTroops = 20;
+            //numTroops = 5;//SMALLER TESTING VALUE
         }
 
         //Approximately evenly distribute troops to each owned territory
