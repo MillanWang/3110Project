@@ -12,7 +12,7 @@ import java.util.Collections;
  * Loads territory information about the map from external JSON file.
  */
 public class GenericWorldMap {
-    
+
     private LinkedList<Territory> allTerritories;
 
     /**
@@ -21,7 +21,7 @@ public class GenericWorldMap {
      */
     public GenericWorldMap() {
         allTerritories = new LinkedList<>();
-        
+
         //Loading in the custom map from file. Need to ask for user path. SMALL EXAMPLE FOR NOW.
         String jsonText = "";
         try {
@@ -30,7 +30,7 @@ public class GenericWorldMap {
         } catch (Exception e){
             System.out.println("Invalid file path");
         }
-        
+
         ObjectMapper mapper = new ObjectMapper();
         try {
             JSONTerritoryListParser jsonTerritoryListParser = mapper.readValue(jsonText, JSONTerritoryListParser.class);
@@ -45,10 +45,6 @@ public class GenericWorldMap {
                                                         .setContinentControlBonus(t.getContinentControlBonus())
                                                         .build();
 
-                //Setting up neighbour relationships
-                // addNeighbours(terry) if neighbour currently exists. If not, relationship will be made when the terry is initialized
-                //addNeighbours is reflective so this process should always work
-
                 for (String territoryName : t.getNeighbours()){
                     if (getTerritory(territoryName)!=null){
                         currentTerritoryToAdd.addNeighbours(getTerritory(territoryName));
@@ -61,7 +57,6 @@ public class GenericWorldMap {
             System.out.println(e);
             System.out.println("Invalid map file given. Use official maps only that follow the strict JSON map making template");
         }
-
         //Randomization of the order of territories.
         Collections.shuffle(allTerritories);
     }
@@ -90,7 +85,7 @@ public class GenericWorldMap {
             System.out.println("Neighbour count: " );
         }
     }
-    
+
     /**
      * Prints out all territories with the number of troops inside and the owner
      *
