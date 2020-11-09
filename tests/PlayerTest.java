@@ -9,37 +9,9 @@ public class PlayerTest extends TestCase {
     public void setUp() throws Exception {
         playerA = new Player("Mo");
     }
-    @org.junit.Test
-    public void testGetName() {
-        assertTrue(playerA.getName().equals("Mo"));
-    }
 
-    @org.junit.Test
-    public void testGetTerritory() {
-        Territory territoryA = new Territory.Builder("Congo").setContinentName("Africa")
-                .setNumTerritoriesInContinent(2).setContinentControlBonus(7).build();
-        playerA.addTerritory(territoryA);
-        assertEquals(null, playerA.getTerritory("Ontario"));
-        assertEquals(territoryA, playerA.getTerritory("Congo"));
-
-    }
-
-    @org.junit.Test
-    public void testGetTerritories() {
-        Territory territoryA = new Territory.Builder("Congo").setContinentName("Africa")
-                .setNumTerritoriesInContinent(2).setContinentControlBonus(7).build();
-        territoryA.setOwner("Mo");
-        territoryA.changeTroops(2);
-
-        assertEquals("Player owns no territory", playerA.getTerritories());
-
-        playerA.addTerritory(territoryA);
-        String info = territoryA.getInfoString();
-        assertTrue(info.contains("Congo")); // territory name check
-        assertTrue(info.contains("Mo")); // territory owner check
-        assertTrue(info.contains("2")); // number of troops check
-    }
-
+    
+  
     @org.junit.Test
     // tests addTerritory, removeTerritory and getTerritoriesList
     public void testAddRemoveGetTerritories() {
