@@ -190,6 +190,7 @@ public class GameView extends JFrame {
                     if (result != JOptionPane.OK_OPTION){
                         displayMessage("YOU HAVE TO START INPUTTING THE PLAYER NAMES AGAIN");
                         gettingNamesOfPlayers(numberOfPlayers);
+                        return;
                     }
                 }
                 playerNames.add(jTextField.getText());
@@ -198,6 +199,7 @@ public class GameView extends JFrame {
             } else {
                 displayMessage("YOU HAVE TO START INPUTTING THE PLAYER NAMES AGAIN");
                 gettingNamesOfPlayers(numberOfPlayers);
+                return;
             }
         }
         this.game.makePlayers(playerNames);
