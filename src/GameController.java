@@ -38,7 +38,6 @@ public class GameController {
         String[] draftInfoFromView;
         Player currentPlayer = game.getCurrentPlayerObject();
         currentPlayer.bonusTroops();
-        System.out.println(currentPlayer.getNumTroops());
 
         //Keep asking player to send troops to territories until there are no more troops to send
         while (currentPlayer.getNumTroops() > 0){
@@ -99,9 +98,10 @@ public class GameController {
                     int incomingTroops = gameView.troopsToMoveIn(game.getTerritory(attackerDefender[0]).getTroops(), diceFightChoice[1]);
 
                     //Checking if the defender owner is eliminated
+                    String loserName = game.getTerritory(attackerDefender[1]).getOwner();
                     if (game.takeoverTerritory(currentPlayer, game.getTerritory(attackerDefender[0]), game.getTerritory(attackerDefender[1]), incomingTroops)){
                         //A player has been eliminated
-                        gameView.announceElimination(game.getTerritory(attackerDefender[1]).getOwner());
+                        gameView.announceElimination(loserName);
 
                         //Checking if the player has won. If so,
                         if(game.hasWinner()){
@@ -119,7 +119,7 @@ public class GameController {
 
     /**
      * Getting the attackable neighbours string array for the specified territory
-     * 
+     *
      * @param ter The territory object starting the attack
      * @return  String array of names of territories that can be attacked from ter
      */
