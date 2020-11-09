@@ -47,6 +47,11 @@ public class Player {
         return null; //To compile
     }
 
+    /**
+     * Returns the description of player owned territories
+     *
+     * @return The description of all player owned territory
+     */
     public String getTerritories(){
         if (territories.size() > 0) {
             String str = "";
@@ -60,6 +65,11 @@ public class Player {
 
     }
 
+    /**
+     * Returns the  of player owned territories
+     *
+     * @return The description of all player owned territory
+     */
     public String[] getTerritoriesList(){ return getTerritoryStringArray(territories); }
 
 
@@ -136,23 +146,15 @@ public class Player {
         return bonus;
     }
 
+    /**
+     * returns the number of troops the player can send
+     * to player owned territories
+     *
+     * @return the number of troops player has to draft
+     */
     public int getNumTroops() {
         return numTroops;
     }
-
-
-    /**
-     *
-     * this method prints out all territories owned by player
-     *
-     * @return string that contains all the territories owned by the player
-     * This method would be used in the attack() stage
-    private void printAllPlayerTerritories() {
-    for (Territory t : territories) {
-    t.printInfo();
-    }
-    }*/
-
 
 
     /**
@@ -174,9 +176,6 @@ public class Player {
             numTroops = 25;
         } else {//6 Players
             numTroops = 20;
-            //***********************************************************************************************
-            //WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
-            //numTroops = 5; //THIS IS FOR TESTING!!! VERY TEDIOUS WITH A LOT OF TROOPS
         }
 
         //Approximately evenly distribute troops to each owned territory
@@ -218,33 +217,16 @@ public class Player {
         }
         if (attackStarters.isEmpty()) return null;
 
-        for (int i = 0; i < attackStarters.size(); i ++) System.out.println(attackStarters.get(i));
-
         return getTerritoryStringArray(attackStarters);
 
-
     }
 
     /**
-     * this method prints out the list of territories player can use to start an attack
-     public void printAttackStarters(){
-     List<Territory> attackStarters = getAttackStarters();
-     for (Territory territory : attackStarters){
-     territory.printInfo();
-     }
-     }*/
-
-    /**
-     * this method checks if a territory owned by player can be used to start an attack
+     * This returns a string array containing the names of the territories
      *
-     * @param territoryName name of the territory to be checked
-     * @return True if a territory can be used to start an attack
+     * @param territories linked list of territories
+     * @return String array containing territory names
      */
-
-    public boolean canStartAttack(String territoryName){
-        return getTerritory(territoryName).getAttackableNeighbours() != null;
-    }
-
     public String[] getTerritoryStringArray(LinkedList<Territory> territories){
         String[] stringArray = new String[territories.size()];
         for (int i = 0; i < territories.size() ; i++){
