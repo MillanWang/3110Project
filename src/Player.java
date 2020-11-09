@@ -7,9 +7,7 @@ public class Player {
     private String name; // The name of the player.
     private LinkedList<Territory> territories; // A list of the territories the player occupies.
     private int numTroops;
-
-
-
+    
     /**
      * A constructor that sets the player class variables.
      *
@@ -18,7 +16,6 @@ public class Player {
     public Player(String name) {
         this.name = name;
         territories = new LinkedList<>();
-        //defaultWM = new GenericWorldMap();
     }
 
     /**
@@ -155,8 +152,7 @@ public class Player {
     public int getNumTroops() {
         return numTroops;
     }
-
-
+    
     /**
      * Sets up the players territories with troops
      * Number of troops is determined by the number of players
@@ -194,7 +190,6 @@ public class Player {
      *
      */
     public String draftPhase(String territoryName, String troops){
-        //bonusTroops();
         getTerritory(territoryName).changeTroops(Integer.parseInt(troops));
         numTroops -= Integer.parseInt(troops);
 
