@@ -1,31 +1,39 @@
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-public class GameController implements ActionListener{
+public class GameController {
     private Game game;
     private GameView gameView;
 
+    /**
+     * Constructor for the GameController class
+     *
+     * @param gameModel the model. Game class
+     * @param gameView the view. GameView class
+     */
     public GameController(Game gameModel,  GameView gameView) {
         this.game = gameModel;
         this.gameView = gameView;
     }
 
+    /**
+     * Getting a string array of all of the players territories. Used during the draft phase in the view
+     *
+     * @return String array of all the territories that the current player has
+     */
     public String[] getPlayersTerritoriesForDraft(){
         return game.getCurrentPlayerObject().getTerritoriesList();
     }
 
+    /**
+     * Starts the draft,attack sequence for the current player.
+     *
+     */
     public void startPlayersTurn(){
         if (game.hasWinner()){
             //Cannot do next turn if a winner has already been found
             gameView.announceWinner();
-            return;
+            return;//Immediately get out the method.
         }
 
-        //DRAFT STAGE
-        //Retrieve model info to pass to view. Current player's dynamic territories list, how many troops can be sent
-        //Send that info to GUI to be displayed. Get option from user
-        //Send user input to model. Repeat until model says that player has no more troops to send out
-        //gameView.showDraftOptions();
+        //DRAFT
         gameView.displayMessage("Starting the draft phase for player: " + game.getCurrentPlayer());
         String[] draftInfoFromView;
         Player currentPlayer = game.getCurrentPlayerObject();
@@ -41,6 +49,8 @@ public class GameController implements ActionListener{
         gameView.displayMessage("Draft stage complete, starting the attack phase for player: " + game.getCurrentPlayer());
 
 
+        //ATTACK
+
         int endAttackStage = 0;
         String[] attackerDefender;
         while (true){
@@ -48,11 +58,13 @@ public class GameController implements ActionListener{
             if (game.getCurrentPlayerObject().getAttackStarters() == null){
                 gameView.displayMessage(game.getCurrentPlayer() + " has no territories that can start an attack. End attack phase");
                 break;
+                //End turn and move on if no attack starters
             }
 
             //Getting the option from the player
             endAttackStage = gameView.attackOrQuitOption();
-            if (endAttackStage!=0)break;//Ending attack phase
+
+            if (endAttackStage!=0)break;//Player chooses to end attack. Moving on to next phase
 
             //Player wants to start an attack
             attackerDefender = gameView.attackSelection();
@@ -106,11 +118,5 @@ public class GameController implements ActionListener{
 
     public String[] getNeighboursToAttack(Territory ter){
         return ter.attackableNeighbours();
-    }
-
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
     }
 }
