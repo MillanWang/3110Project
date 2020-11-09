@@ -13,7 +13,11 @@ public class GameView extends JFrame {
     private GameController controller;
     private ImageIcon map;
 
-    //*********Make sure to comment out play() METHOD IN THE GAME CONSTRUCTOR BEFORE RUNNING THIS CLASS!!
+    /**
+     * Constructor for the GameView class
+     *
+     * @param game The game object. Model for the game
+     */
     public GameView(Game game){
         super("RISK: GLOBAL DOMINATION");
         this.setLayout(new BorderLayout());
@@ -28,9 +32,7 @@ public class GameView extends JFrame {
     }
 
     /**
-     * Still working on this method
-     * It's almost finished but the only problem is when the user click on Start a New Game,
-     * we'll not see the Map picture and the JmenuItem, but instead nothing would happen.
+     * Creates red start page before starting the game
      */
     private void createStartPage() {
         gamePanel = new JPanel(new BorderLayout());
@@ -44,11 +46,11 @@ public class GameView extends JFrame {
         newGameBtn.setFont(new Font("Monospaced", Font.BOLD, 20));
         newGameBtn.setBackground(Color.WHITE);
         newGameBtn.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-        //newGameBtn.setForeground(Color.WHITE);
+
         newGameBtn.addActionListener(e-> {
             displayGame();
             gamePanel.remove(startPage);
-            sittingNumberOfPlayer();
+            settingNumberOfPlayer();
         });
 
         // Adding game title
@@ -61,12 +63,10 @@ public class GameView extends JFrame {
         startPage.add(title);
         startPage.add(newGameBtn);
         gamePanel.add(startPage,BorderLayout.CENTER);
-
-        //previousPanels.add(startPage);
     }
 
     /**
-     * adding the gamePanel to the jframe window and calling the addMenuItems method
+     * Displays the game GUI
      */
     private void displayGame(){
         gamePanel.setVisible(true);
@@ -75,8 +75,8 @@ public class GameView extends JFrame {
     }
 
     /**
-     * Create a menu that will allow the user to choose if they want help or quit, know the currentPlayerTurn,
-     * endTurn and showTerritory.
+     * Create a menu bar at the top of the window that will allow the user to choose if they want
+     * help, to quit, to get the current Player info, endTurn, and showTerritory.
      */
     private void addMenuItems() {
         // Create menu bar
@@ -95,7 +95,6 @@ public class GameView extends JFrame {
         menuItemReset.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         menuItemReset.addActionListener(e -> {
             dispose();//causes the JFrame window to be destroyed and cleaned up by the operating system
-            //game.main(null);
             new GameView(new Game());
         });
         menuBar.add(menuItemReset);
@@ -107,14 +106,13 @@ public class GameView extends JFrame {
             displayMessage(game.quitMessage());
             dispose();
         });
-        //menuItemQuit.setAccelerator(KeyStroke.getKeyStroke('q')); // can activate quit by pressing q
         menuBar.add(menuItemQuit);
 
         // Add show Turn button
         menuItemCurrentPlayer = new JMenuItem("Current-Player");
         menuItemCurrentPlayer.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         menuItemCurrentPlayer.addActionListener(e-> {
-            displayMessage((game.getCurrentPlayer()+" \n"+ game.getCurrentPlayerObject().getTerritories() ));
+            displayMessage("Current player: " + game.getCurrentPlayer()+" \n"+ game.getCurrentPlayerObject().getTerritories());
         });
         menuBar.add(menuItemCurrentPlayer);
 
@@ -140,7 +138,7 @@ public class GameView extends JFrame {
 
 
     /**
-     * This method would show the png image
+     * Sets the map image in the GUI
      */
     private void addMapPicture(){
         map = new ImageIcon(getClass().getResource("DefaultWorldMap.jpg"));
@@ -149,25 +147,28 @@ public class GameView extends JFrame {
         pack();
     }
 
-    private void sittingNumberOfPlayer(){
+    /**
+     * Setting the number of players in the game
+     */
+    private void settingNumberOfPlayer(){
         String[] possiblePlayers = { "2","3","4","5","6" };
         JPanel panel = new JPanel();
         panel.add(new JLabel("Please make a selection of how many players would play the game"));
         JComboBox numPlayers = new JComboBox(possiblePlayers);
         panel.add(numPlayers);
-        int results = JOptionPane.showConfirmDialog(null,panel, "Number of Players", JOptionPane.OK_CANCEL_OPTION);
-        if (results == JOptionPane.OK_OPTION) {
-            int numberOfPlayers = Integer.parseInt((String) numPlayers.getSelectedItem());
-            System.out.println(numberOfPlayers);
-            gettingNamesOfPlayers(numberOfPlayers);
-        }
+        JOptionPane.showConfirmDialog(null,panel, "Number of Players", JOptionPane.DEFAULT_OPTION);
+
+        int numberOfPlayers = Integer.parseInt((String) numPlayers.getSelectedItem());
+        System.out.println(numberOfPlayers);
+        gettingNamesOfPlayers(numberOfPlayers);
     }
 
     /**
      * In this method all the players would input their names and
      * they would be saved in an arrayList of strings and then it'll be passed to
      * makePlayers() method in the game which will create the players object using the player names
-     * @param numberOfPlayers
+     *
+     * @param numberOfPlayers The number of players in the game
      */
     private void gettingNamesOfPlayers(int numberOfPlayers) {
         //Instantiating the GUI components
@@ -202,7 +203,12 @@ public class GameView extends JFrame {
         this.game.makePlayers(playerNames);
     }
 
-
+    /**
+     * Draft phase for a particular territory. Send troops to the selected territory
+     *
+     * @param numTroops The maximum number of troops that can be sent
+     * @return StringArray {nameOfSelectedTerritory, numberOfTroopsMovingIn}
+     */
     public String[] startDraft(int numTroops){
         String[] draftTerritories = controller.getPlayersTerritoriesForDraft();
 
@@ -210,7 +216,6 @@ public class GameView extends JFrame {
         draftPanel.add(new JLabel("Select territory to send troops to"));
         JComboBox draftComboBox = new JComboBox(draftTerritories);
         draftPanel.add(draftComboBox);
-        // JOptionPane.OK_CANCEL_OPTION was changed to  DEFAULT_OPTION
         JOptionPane.showConfirmDialog(null, draftPanel, "Draft Phase", JOptionPane.DEFAULT_OPTION);
         String territoryString = (String) draftComboBox.getItemAt(draftComboBox.getSelectedIndex());// gets the territory the player chose
 
@@ -219,22 +224,22 @@ public class GameView extends JFrame {
             troopNumbers[i] = Integer.toString(i+1);
         }
 
-
-
         JPanel troopPanel = new JPanel();//creates panel to show list of draft territories
         troopPanel.add(new JLabel("Select number of troops to send"));
         JComboBox troopComboBox = new JComboBox(troopNumbers);
         troopPanel.add(troopComboBox);
-        // JOptionPane.OK_CANCEL_OPTION was changed to  DEFAULT_OPTION
         JOptionPane.showConfirmDialog(null, troopPanel, "Draft Phase", JOptionPane.DEFAULT_OPTION);
         String troopString = (String) troopComboBox.getItemAt(troopComboBox.getSelectedIndex());
 
         String[] returnValues = {territoryString,troopString};
         return returnValues;
-
-
     }
 
+    /**
+     * Asks the player if they want to start an attack or move on to the next phase (ENDS TURN IN MILESTONE 2)
+     *
+     * @return Players choice. Start attack or to move on
+     */
     public int attackOrQuitOption(){
         Object[] options = {"Start Attack",
                 "End Attack"};
@@ -252,7 +257,9 @@ public class GameView extends JFrame {
     }
 
     /**
-     * this method displays messages to the player, prompting what to do during the attack phase
+     * Asks the player to select the attackStarterTerritory and the defender for an attack
+     *
+     * @return StringArray of {attackStarterTerritoryName, defenderTerritoryName}
      */
     public String[] attackSelection(){
         String[] attackStartersStringArray = game.getCurrentPlayerObject().getAttackStarters();
@@ -263,28 +270,30 @@ public class GameView extends JFrame {
         attackPanel.add(attackStarters);
         JOptionPane.showConfirmDialog(null, attackPanel, "Attack Starters", JOptionPane.DEFAULT_OPTION);
 
-        String currentAttackStarter = (String) attackStarters.getItemAt(attackStarters.getSelectedIndex());// gets the territory that can start an attack
-        //displayMessage(currentAttackStarter + " is attacking"); //Kinda redundant if the player just picked this
+        String currentAttackStarter = (String) attackStarters.getItemAt(attackStarters.getSelectedIndex());
+        // gets the territory that can start an attack
 
         //GETTING THE DEFENDER
-
         String[] defenderStrings = controller.getNeighboursToAttack(game.getCurrentPlayerObject().getTerritory(currentAttackStarter));
-        //System.out.println(Arrays.toString(defenderStrings));
-
 
         JPanel defendPanel = new JPanel();
         defendPanel.add(new JLabel("Select country to attack from " + currentAttackStarter));
         JComboBox defenders = new JComboBox(defenderStrings);
         defendPanel.add(defenders);
         JOptionPane.showConfirmDialog(null, defendPanel, "Defenders", JOptionPane.DEFAULT_OPTION);
-        String currentDefender = (String) defenders.getItemAt(defenders.getSelectedIndex());// gets the territory to be attacked(need to work on checking if player owns territory)
-
+        String currentDefender = (String) defenders.getItemAt(defenders.getSelectedIndex());
+        // gets the territory to be attacked
 
         String[] attackerDefender = {currentAttackStarter, currentDefender};
         return attackerDefender;
-
     }
 
+    /**
+     * Asks the user if they want to roll dice or cancel.
+     *
+     * @param maxAttackerDefender Maximum number of dice that can be rolled by the attacker
+     * @return int array of {PlayersOptionForRollOrCancel, NumberOfDiceRolledByAttacker}
+     */
     public int[] diceFightView(int maxAttackerDefender){
         String[] diceNumbers = new String[maxAttackerDefender];
         for(int i = 0; i<maxAttackerDefender; i++){
@@ -310,13 +319,17 @@ public class GameView extends JFrame {
         int[] resultRoll = {n, Integer.parseInt(rollString)};
         return resultRoll;
         //0 index : Clicked button
-        //0 is roll
-        //1 is cancel dice fight
-        //-1 is top right red X
-
+            //0 is roll, 1 is cancel dice fight, -1 is top right red X
         //1 index : number of dice rolled
     }
 
+    /**
+     * Asks the user how many troops to move into the newly conquered territory
+     *
+     * @param attackerNumTroops  The number of troops in the attacker's territory
+     * @param diceWonWith   The number of dice rolled on the most recent win
+     * @return The number of troops moving into the conquered territory
+     */
     public int troopsToMoveIn(int attackerNumTroops, int diceWonWith){
         String[] troopNumbers = new String[attackerNumTroops - diceWonWith];
         for(int i = 0; i<attackerNumTroops-diceWonWith; i++){
@@ -342,10 +355,17 @@ public class GameView extends JFrame {
         return Integer.parseInt(rollString);
     }
 
+    /**
+     * Makes message box for when a player has been eliminated from the game.
+     * @param loser The name of the eliminated player from the game
+     */
     public void announceElimination(String loser){
         JOptionPane.showMessageDialog(this, loser + " has lost their last territory. Please accept defeat...", "A player has been eliminated! RIP", JOptionPane.WARNING_MESSAGE);
     }
 
+    /**
+     * Message dialog box announcing the winner
+     */
     public void announceWinner(){
         JOptionPane.showMessageDialog(this, game.getCurrentPlayer() + " IS THE ULTIMATE RISK CHAMPION!!!", "GAME OVER!", JOptionPane.WARNING_MESSAGE);
     }
@@ -361,6 +381,10 @@ public class GameView extends JFrame {
         JOptionPane.showMessageDialog(this, message);
     }
 
+    /**
+     * Main method of the game. Run to start the GUI
+     * @param args
+     */
     public static void main(String[] args) {
         new GameView(new Game());//Starts the game
     }
