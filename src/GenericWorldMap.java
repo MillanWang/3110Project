@@ -1,7 +1,8 @@
 import org.codehaus.jackson.map.ObjectMapper;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Collections;
 
@@ -25,11 +26,24 @@ public class GenericWorldMap {
         //Loading in the custom map from file. Need to ask for user path. SMALL EXAMPLE FOR NOW.
         String jsonText = "";
         try {
-            //jsonText = new String(Files.readAllBytes(Paths.get(".//src//TestSmallWorldMap.txt")));//Smaller map for testing
-            jsonText = new String(Files.readAllBytes(Paths.get(".//src//DefaultMap.txt")));
+            //InputStream in = getClass().getResourceAsStream("/TestSmallWorldMap.txt"); //SMALLER MAP FOR EASIER TESTING
+            InputStream in = getClass().getResourceAsStream("/DefaultMap.txt");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            StringBuilder sb = new StringBuilder();
+            String line = reader.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                line = reader.readLine();
+            }
+            jsonText = sb.toString();
+
         } catch (Exception e){
             System.out.println("Invalid file path");
         }
+
+        System.out.println(jsonText);
 
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -40,10 +54,10 @@ public class GenericWorldMap {
             Territory currentTerritoryToAdd;
             for (JSONTerritoryParser t : jsonTerritoryListParser.getTerritories()){
                 currentTerritoryToAdd = new Territory.Builder(t.getTerritoryName())
-                                                        .setContinentName(t.getContinentName())
-                                                        .setNumTerritoriesInContinent(t.getNumberOfTerritoriesInContinent())
-                                                        .setContinentControlBonus(t.getContinentControlBonus())
-                                                        .build();
+                        .setContinentName(t.getContinentName())
+                        .setNumTerritoriesInContinent(t.getNumberOfTerritoriesInContinent())
+                        .setContinentControlBonus(t.getContinentControlBonus())
+                        .build();
 
                 for (String territoryName : t.getNeighbours()){
                     if (getTerritory(territoryName)!=null){
@@ -69,21 +83,6 @@ public class GenericWorldMap {
      */
     public LinkedList<Territory> getAllTerritories(){
         return allTerritories;
-    }
-
-    /**
-     * Prints out all territories with the number of troops inside and the owner
-     * Mostly useful for testing new maps and ensureing that all territories are established properly
-     *
-     * Example:
-     * Ontario   Troops: 5   Owner: Player1
-     *
-     */
-    public void printAllTerritories(){
-        for (Territory t: allTerritories){
-            t.printInfo();
-            System.out.println("Neighbour count: " );
-        }
     }
 
     /**
@@ -116,5 +115,20 @@ public class GenericWorldMap {
             }
         }
         return null;
+    }
+
+    /**
+     * Prints out all territories with the number of troops inside and the owner
+     * Mostly useful for testing new maps and ensureing that all territories are established properly
+     *
+     * Example:
+     * Ontario   Troops: 5   Owner: Player1
+     *
+     */
+    public void printAllTerritories(){
+        for (Territory t: allTerritories){
+            t.printInfo();
+            System.out.println("Neighbour count: " );
+        }
     }
 }
