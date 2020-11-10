@@ -5,13 +5,13 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 public class GameView extends JFrame {
-    private Game game;
-    private JMenuBar menuBar;
-    private JMenuItem menuItemHelp, menuItemQuit, menuItemReset, menuItemCurrentPlayer, menuItemShowTerritories, menuItemNextTurn;
-    private JPanel gamePanel,startPage;
-    private JButton newGameBtn;
-    private GameController controller;
-    private ImageIcon map;
+    private Game game;// the model of the game
+    private JMenuBar menuBar;//the menu bar for the game
+    private JMenuItem menuItemHelp, menuItemQuit, menuItemReset, menuItemCurrentPlayer, menuItemShowTerritories, menuItemNextTurn;// the menuItems for the game
+    private JPanel gamePanel,startPage;// the two JPanels that will be used in the game
+    private JButton newGameBtn;// the first button will be appeard to the player
+    private GameController controller;// the controller of the game
+    private ImageIcon map;// will store the path for the map picture
 
     /**
      * Constructor for the GameView class
@@ -46,7 +46,7 @@ public class GameView extends JFrame {
         newGameBtn.setFont(new Font("Monospaced", Font.BOLD, 20));
         newGameBtn.setBackground(Color.WHITE);
         newGameBtn.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-
+        // when the user click the button, then these methods would be called and the startPage would be removed
         newGameBtn.addActionListener(e-> {
             displayGame();
             gamePanel.remove(startPage);
@@ -95,7 +95,7 @@ public class GameView extends JFrame {
         menuItemReset.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         menuItemReset.addActionListener(e -> {
             dispose();//causes the JFrame window to be destroyed and cleaned up by the operating system
-            new GameView(new Game());
+            new GameView(new Game());//create a new GameVew, so new window
         });
         menuBar.add(menuItemReset);
 
@@ -178,7 +178,7 @@ public class GameView extends JFrame {
         JLabel jLabel = new JLabel();
         namesPanel.add(jLabel);
         namesPanel.add(jTextField);
-
+        // checking for any invalid names as empty strings or duplicates
         for (int i = 0; i < numberOfPlayers; i++) {
             jLabel.setText("Enter Name of Player: " + (1 + i));
             int result = JOptionPane.showConfirmDialog(null, namesPanel, "Player Names", JOptionPane.OK_OPTION);
@@ -201,7 +201,7 @@ public class GameView extends JFrame {
                 return;
             }
         }
-        this.game.makePlayers(playerNames);
+        this.game.makePlayers(playerNames);//calling the makePlayers method and create the player in the Model
     }
 
     /**
