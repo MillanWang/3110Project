@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 
+//This class is used to get specific information found in the JSON files
+
 public class JSONTerritoryParser {
     private String territoryName;
     private String continentName;
