@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 
+//This classes are for creating territory objects and are madw with JSON files
+
 public class JSONTerritoryListParser {
     private ArrayList<JSONTerritoryParser> territories;
 
