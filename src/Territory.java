@@ -119,7 +119,7 @@ public class Territory {
     /**
      * Returns the continent of the current territory
      *
-     * @return
+     * @return the name of the Continent
      */
     public String getContinentName(){
         return continentName;
