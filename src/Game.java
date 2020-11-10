@@ -44,7 +44,8 @@ public class Game {
         String gameRules = "Welcome to RISK Global Domination\n"+
                 "The goal of the game is to take control of all territories on the map.\n"+
                 "Players who lose all of their territories are eliminated from the game.\n" +
-                "The last player standing is the ULTIMATE CHAMPION";
+                "The last player standing is the ULTIMATE CHAMPION.\n" +
+                "To start the draft phase, click on the Start Next Turn JMenu Item (Top Right).";
         return gameRules;
     }
 
