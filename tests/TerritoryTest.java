@@ -22,19 +22,6 @@ public class TerritoryTest {
     }
 
 
-    /**
-     * ensures neighbours are properly added
-     */
-    @Test
-    public void addNeighbours() {
-        territory = new Territory.Builder("Congo").setContinentName("Africa")
-                .setNumTerritoriesInContinent(2).setContinentControlBonus(7).build();
-        Territory territory1 = territory = new Territory.Builder("Egypt").setContinentName("Africa")
-                .setNumTerritoriesInContinent(2).setContinentControlBonus(7).build();
-        territory.addNeighbours(territory1);
-        assertEquals(territory1, territory.getNeighbour("Egypt"));
-    }
-
 
     /**
      * checks for the key info that a territory has in the returned string namely; territoty name,
@@ -69,21 +56,6 @@ public class TerritoryTest {
     }
 
 
-    /**
-     * tests if a particular territory can attack others
-     */
-    @Test
-    public void canAttack() {
-        territory = new Territory.Builder("Congo")
-                .setNumTerritoriesInContinent(4).setContinentControlBonus(7).build();
-        territory.setOwner("Josh");
-        territory.changeTroops(5);
-        Territory territory1 = new Territory.Builder("Egypt").setContinentName("Africa")
-                .setNumTerritoriesInContinent(4).setContinentControlBonus(7).build();
-        territory1.setOwner("Kyle");
-        territory.addNeighbours(territory1);
-        assertTrue(territory.canAttack("Egypt"));
-    }
 
     /**
      * ensures the correct maximum dice roll is returned
