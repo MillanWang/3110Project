@@ -7,6 +7,8 @@ import java.util.Scanner;
  * Dice class deals with the dice rolling process during battles in the attack stage of a turn
  * Important for the diceFight section of an attack
  *
+ * TEST COMMENT
+ *
  */
 public class Dice {
     private Random random;
