@@ -33,6 +33,9 @@ public class GameController {
             return;//Immediately get out the method.
         }
 
+        //If the current player is an AI player, handle turn in different method
+        if (game.getCurrentPlayerObject() instanceof AIPlayer) startAIPlayersTurn();
+
         //DRAFT
         gameView.displayMessage("Starting the draft phase for player: " + game.getCurrentPlayer());
         String[] draftInfoFromView;
@@ -41,7 +44,7 @@ public class GameController {
 
         //Keep asking player to send troops to territories until there are no more troops to send
         while (currentPlayer.getNumTroops() > 0){
-            draftInfoFromView = gameView.startDraft(currentPlayer.getNumTroops());
+            draftInfoFromView = gameView.startDraft(currentPlayer.getNumTroops());//ONLY FOR HUMANS
             gameView.displayMessage(game.getCurrentPlayerObject().draftPhase(draftInfoFromView[0],draftInfoFromView[1]));
         }
 
@@ -114,6 +117,15 @@ public class GameController {
             }
         }
         game.nextTurn();//Switching to the next player
+    }
+
+    /**
+     * Processes and handles an AI player's turn.
+     * This will only be called by the startPlayersTurn() method if the current player is an AI
+     *
+     */
+    private void startAIPlayersTurn(){
+        //BIG WORK IN PROGRESS
     }
 
 
