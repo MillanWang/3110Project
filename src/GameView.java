@@ -325,6 +325,31 @@ public class GameView extends JFrame {
     }
 
     /**
+     * Asks the defender of the current dice fight how many dice to roll
+     *
+     * @param territory Defending territory object
+     * @return The choice of the player
+     */
+    public int defenderDiceRoll(Territory territory){
+
+        String[] diceNumbers = territory.getTroops()>=2 ? new String[2] : new String[1];
+        //Options of 1 and 2 when there are more than 1 troops on the terry
+        //Can only roll 1 dice if there is only one troop on the terry
+
+        for(int i = 0; i<diceNumbers.length; i++){
+            diceNumbers[i] = Integer.toString(i+1);
+        }
+        Collections.reverse(Arrays.asList(diceNumbers));//This makes 2 first option
+
+        JPanel dicePanel = new JPanel();//creates panel to show list of draft territories
+        dicePanel.add(new JLabel("Player: " + territory.getOwner() + " choose number of dice to roll for defending " + territory.getTerritoryName()));
+        JComboBox troopComboBox = new JComboBox(diceNumbers);
+        dicePanel.add(troopComboBox);
+        JOptionPane.showConfirmDialog(null, dicePanel, "Draft Phase", JOptionPane.DEFAULT_OPTION);
+        return  Integer.parseInt((String) troopComboBox.getItemAt(troopComboBox.getSelectedIndex()));
+    }
+
+    /**
      * Asks the user how many troops to move into the newly conquered territory
      *
      * @param attackerNumTroops  The number of troops in the attacker's territory

@@ -26,15 +26,18 @@ public class GameController {
      * Starts the draft,attack,(Fortify on next milestone),endTurn sequence for the current player.
      *
      */
-    public void startPlayersTurn(){
-        if (game.hasWinner()){
+    public void startPlayersTurn() {
+        if (game.hasWinner()) {
             //Cannot do next turn if a winner has already been found
             gameView.announceWinner();
             return;//Immediately get out the method.
         }
 
         //If the current player is an AI player, handle turn in different method
-        if (game.getCurrentPlayerObject() instanceof AIPlayer) startAIPlayersTurn();
+        if (game.getCurrentPlayerObject() instanceof AIPlayer){
+            startAIPlayersTurn();
+        return;
+        }
 
         //DRAFT
         gameView.displayMessage("Starting the draft phase for player: " + game.getCurrentPlayer());
@@ -84,7 +87,20 @@ public class GameController {
                 diceFightChoice = gameView.diceFightView(game.getTerritory(attackerDefender[0]).maxDiceToRoll());
                 if (diceFightChoice[0] != 0) break;//Player wants to end current diceFight.
 
-                diceFightResultString = game.diceFight(attackerDefender, diceFightChoice[1]);
+
+                int defenderDiceFightChoice=0;
+                if (game.getPlayerFromList(game.getTerritory(attackerDefender[1]).getOwner()) instanceof AIPlayer){
+                    //Always roll 2 unless down to last troop. Roll 1
+                    defenderDiceFightChoice= (game.getTerritory(attackerDefender[1]).getTroops() >=2) ? 2 : 1;
+                } else {
+                    //Human player is the defender. Ask for how many dice to roll
+                    defenderDiceFightChoice = gameView.defenderDiceRoll(game.getTerritory(attackerDefender[1]));
+                }
+                //GOTTA ASK DEFENDER HOW MANY DICE TO ROLL IF DEFENDER IS HUMAN
+                //AI DEFENDERS AUTO ROLL 2 UNLESS FORCED TO ROLL 1
+
+
+                diceFightResultString = game.diceFight(attackerDefender, diceFightChoice[1], defenderDiceFightChoice);
                 diceFightResultString += "\n" + game.diceFightInfo(attackerDefender);
                 gameView.displayMessage(diceFightResultString);//Telling the player the rolls and results of the dice fight
 
@@ -126,6 +142,9 @@ public class GameController {
      */
     private void startAIPlayersTurn(){
         //BIG WORK IN PROGRESS
+
+
+        game.nextTurn();//Switching to the next player
     }
 
 

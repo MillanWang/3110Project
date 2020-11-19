@@ -21,7 +21,7 @@ public class Game {
      * @param name name set to the player by the user
      * @return the player object corresponding to the given name
      */
-    private Player getPlayerFromList(String name){
+    public Player getPlayerFromList(String name){
         for (Player player : players){
             if (player.getName().equals(name)){
                 return player;
@@ -119,18 +119,10 @@ public class Game {
      * @return the number of dice rolled by the attacker on this dice fight
      *
      */
-    public String diceFight(String[] attackerDefender, int attackerDice){
+    public String diceFight(String[] attackerDefender, int attackerDice, int defenderDice){
 
         Territory attacker = genericWorldMap.getTerritory(attackerDefender[0]);
         Territory defender = genericWorldMap.getTerritory(attackerDefender[1]);
-
-        //Defender rolls 2 unless 1 troop left on territory
-        int defenderDice;
-        if(defender.getTroops() <= 1) {
-            defenderDice=1;
-        } else {
-            defenderDice=2;
-        }
 
 
         //Used to make a list of the different players different dice rolls
