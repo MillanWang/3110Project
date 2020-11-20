@@ -128,7 +128,12 @@ public class GameController {
      *
      */
     private void startAIPlayersTurn(){
-        //BIG WORK IN PROGRESS
+        // Draft phase
+        gameView.displayMessage(game.getCurrentPlayerObject().aiDraftPhase());
+
+        // Attack phase
+
+        // Fortify
 
 
         game.nextTurn();//Switching to the next player

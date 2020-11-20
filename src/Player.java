@@ -230,4 +230,8 @@ public class Player {
         }
         return stringArray;
     }
+
+    public String aiDraftPhase() {
+        return"";
+    }
 }
