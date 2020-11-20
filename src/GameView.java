@@ -26,7 +26,7 @@ public class GameView extends JFrame {
         createStartPage();
         setSize(800, 580);
         // i changed resizable to true just in case the player wants it full screen
-        setResizable(true);
+        setResizable(false);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setVisible(true);
     }
@@ -37,6 +37,7 @@ public class GameView extends JFrame {
     private void createStartPage() {
         gamePanel = new JPanel(new BorderLayout());
         add(gamePanel);
+        
         startPage = new JPanel();
         startPage.setLayout(null);
         startPage.setBackground(new Color(204, 0, 24));
@@ -201,6 +202,7 @@ public class GameView extends JFrame {
                 return;
             }
         }
+
         this.game.makePlayers(playerNames);//calling the makePlayers method and create the player in the Model
     }
 
