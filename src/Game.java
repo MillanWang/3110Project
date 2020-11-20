@@ -221,7 +221,11 @@ public class Game {
     public void makePlayers(LinkedList<String> playerNames){
 
         for(String s : playerNames) {
-            players.add(new Player(s));
+            if(s.contains("[B0T]")){
+                players.add(new AIPlayer(s));
+            }else {
+                players.add(new Player(s));
+            }
         }
 
         //RANDOM DISTRIBUTION OF TERRITORIES AND TROOPS

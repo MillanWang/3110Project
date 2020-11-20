@@ -180,6 +180,8 @@ public class GameView extends JFrame {
         JLabel jLabel = new JLabel();
         namesPanel.add(jLabel);
         namesPanel.add(jTextField);
+        JCheckBox aiPlayer = new JCheckBox("Make Player AI ?");
+        namesPanel.add(aiPlayer);
         // checking for any invalid names as empty strings or duplicates
         for (int i = 0; i < numberOfPlayers; i++) {
             jLabel.setText("Enter Name of Player: " + (1 + i));
@@ -195,7 +197,11 @@ public class GameView extends JFrame {
                         return;
                     }
                 }
-                playerNames.add(jTextField.getText());
+                if(aiPlayer.isSelected()) {
+                    playerNames.add(jTextField.getText() + "[B0T]");
+                }else{
+                    playerNames.add(jTextField.getText());
+                }
                 jTextField.setText("");
             } else {
                 displayMessage("YOU HAVE TO START INPUTTING THE PLAYER NAMES AGAIN");
