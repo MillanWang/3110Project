@@ -179,7 +179,7 @@ public class GameView extends JFrame {
         JLabel jLabel = new JLabel();
         namesPanel.add(jLabel);
         namesPanel.add(jTextField);
-        JCheckBox aiPlayer = new JCheckBox("AI  OR NAH");
+        JCheckBox aiPlayer = new JCheckBox("Make Player AI ?");
         namesPanel.add(aiPlayer);
         // checking for any invalid names as empty strings or duplicates
         for (int i = 0; i < numberOfPlayers; i++) {
