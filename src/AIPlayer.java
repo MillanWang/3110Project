@@ -85,8 +85,8 @@ public class AIPlayer extends Player{
 
     /**
      * Selects the receiver for the fortify, given the giver territory
-     * Reciever is whoever has the most attackable neighbours. This is the most vulnerable to attack
-     * AI uses the fortify step defensively
+     * Receiver is whoever has the most attackable neighbours. This is the most vulnerable to attack
+     *
      *
      * @param giver The fortify giver territory
      * @return The fortify receiver territory
