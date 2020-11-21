@@ -35,18 +35,27 @@ public class GameController {
 
         //If the current player is an AI player, handle turn in different method
         if (game.getCurrentPlayerObject() instanceof AIPlayer){
-            startAIPlayersTurn();
+            startAIPlayersTurn((AIPlayer) game.getCurrentPlayerObject());
+            game.nextTurn();//Switching to the next player
             return;
         }
 
         Player currentPlayer = game.getCurrentPlayerObject();
         humanPlayerDraft(currentPlayer);
         humanPlayerAttack(currentPlayer);
-        if (!game.hasWinner()) humanPlayerFortify(currentPlayer);
+        if (!game.hasWinner()){
+            humanPlayerFortify(currentPlayer);
+            gameView.displayMessage(currentPlayer.getName() + " has finished their turn!");
+        }
 
         game.nextTurn();//Switching to the next player
     }
 
+    /**
+     * Starts the draft phase for a human player
+     *
+     * @param currentPlayer The current player
+     */
     private void humanPlayerDraft(Player currentPlayer){
         gameView.displayMessage("Starting the draft phase for player: " + game.getCurrentPlayer());
         String[] draftInfoFromView;
@@ -63,6 +72,11 @@ public class GameController {
         gameView.displayMessage("Draft stage complete, starting the attack phase for player: " + game.getCurrentPlayer());
     }
 
+    /**
+     * Starts the attack phase for a human player
+     *
+     * @param currentPlayer The current player
+     */
     private void humanPlayerAttack(Player currentPlayer){
         int endAttackStage = 0; //Non zero when player hits "End Attack" or window X
         String[] attackerDefender; //{AttackingTerritoryName , DefenderTerritoryName}
@@ -128,6 +142,11 @@ public class GameController {
         }
     }
 
+    /**
+     * Starts the fortify phase for a human player
+     *
+     * @param currentPlayer The current player
+     */
     private void humanPlayerFortify(Player currentPlayer){
         gameView.displayMessage("Attack stage complete, starting the Fortify stage for player: " + game.getCurrentPlayer());
         //Ask player to choose any one of their owned terrys
@@ -135,14 +154,17 @@ public class GameController {
         if (!results[0].equals("0")) return; //Player decides to skip fortify. Ends turn
 
         //Once selection is made, get the fortifiable terry list
+
+        //Player chooses one of the fortifiable territories
         String fortified = gameView.chooseFortified(currentPlayer.getFortifiableTerritories(game.getTerritory(results[1])));
 
         System.out.println(results[1] + "    FORTIFIES   " + fortified);
 
-        //Player chooses one of the fortifiables, then chooses how many troops to send over
+        int movedTroops = gameView.numTroopsToFortify(game.getTerritory(results[1]).getTroops() - 1 );
         //Max troops to send is numTroops on fortifyStarter-1
         //Adjust the troop numbers appropriately
-
+        game.getTerritory(results[1]).changeTroops(-movedTroops);
+        game.getTerritory(fortified).changeTroops(movedTroops);
     }
 
     /**
@@ -150,16 +172,16 @@ public class GameController {
      * This will only be called by the startPlayersTurn() method if the current player is an AI
      *
      */
-    private void startAIPlayersTurn(){
+    private void startAIPlayersTurn(AIPlayer aiPlayer){
         // Draft phase
         gameView.displayMessage(((AIPlayer)game.getCurrentPlayerObject()).aiDraftPhase());
 
         // Attack phase
 
         // Fortify
+        //Need to check if the AI wants to fortify or not
 
 
-        game.nextTurn();//Switching to the next player
     }
 
     private int getDefenderDiceRoll(String[] attackerDefender){

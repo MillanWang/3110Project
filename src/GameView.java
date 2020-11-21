@@ -404,6 +404,11 @@ public class GameView extends JFrame {
         JOptionPane.showMessageDialog(this, game.getCurrentPlayer() + " IS THE ULTIMATE RISK CHAMPION!!!", "GAME OVER!", JOptionPane.WARNING_MESSAGE);
     }
 
+    /**
+     * Starts the fortify phase of the current players turn. Choose the territory to start the fortify or to end turn
+     *
+     * @return String array {Player's choice to end attack or fortify, the chosen territory to start the fortify}
+     */
     public String[] startFortify(){
         String[] fortifyStarterTerritories = controller.getPlayersTerritories();
 
@@ -426,6 +431,12 @@ public class GameView extends JFrame {
         return results;
     }
 
+    /**
+     * During fortify phase, choose who to receive troops
+     *
+     * @param territories String array of territories that can receive troops in the fortify stage
+     * @return The chosen territory to receive troops
+     */
     public String chooseFortified(String[] territories){
 
         JPanel fortifyPanel = new JPanel();//creates panel to show list of attack starters
@@ -435,6 +446,28 @@ public class GameView extends JFrame {
         JOptionPane.showConfirmDialog(null, fortifyPanel, "Fortifiables", JOptionPane.DEFAULT_OPTION);
 
         return (String) fortifiables.getItemAt(fortifiables.getSelectedIndex());
+    }
+
+    /**
+     * Asks the player how many troops to move from the fortify starter to the fortified territory
+     *
+     * @param maxTroopsToMove maximum number of troops that can be moved
+     * @return selected number of troops to move
+     */
+    public int numTroopsToFortify(int maxTroopsToMove){
+
+        String[] troopNumbers = new String[maxTroopsToMove];
+        for(int i = 0; i<maxTroopsToMove; i++){
+            troopNumbers[i] = Integer.toString(i+1);
+        }
+
+        JPanel troopPanel = new JPanel();//creates panel to show list of draft territories
+        troopPanel.add(new JLabel("Select number of troops to send"));
+        JComboBox troopComboBox = new JComboBox(troopNumbers);
+        troopPanel.add(troopComboBox);
+        JOptionPane.showConfirmDialog(null, troopPanel, "Fortify Phase", JOptionPane.DEFAULT_OPTION);
+
+        return Integer.parseInt( (String) troopComboBox.getItemAt(troopComboBox.getSelectedIndex()));
     }
 
     /**
