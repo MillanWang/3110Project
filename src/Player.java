@@ -49,7 +49,7 @@ public class Player {
      *
      * @return The description of all player owned territory
      */
-    public String getTerritories(){
+    public String getTerritoriesString(){
         if (territories.size() > 0) {
             String str = "";
             for (Territory t : territories) {
@@ -61,6 +61,8 @@ public class Player {
         }
 
     }
+
+    public LinkedList<Territory> getTerritories(){ return territories;}
 
     /**
      * Returns the  of player owned territories
@@ -221,7 +223,7 @@ public class Player {
      *
      * @param rootTerritory The territory that supplies the fortified troops
      */
-    public String[] getFortifiableTerritories(Territory rootTerritory){
+    public LinkedList<Territory> getFortifiableTerritories(Territory rootTerritory){
 
         LinkedList<Territory> fortifiables = new LinkedList<>();
         fortifiables.add(rootTerritory);
@@ -237,7 +239,7 @@ public class Player {
             current++;
         }
         fortifiables.pop();//Removes the rootTerritory. Cannot fortify to self. Always at front of list
-        return getTerritoryStringArray(fortifiables);
+        return fortifiables;
     }
 
 
@@ -247,7 +249,7 @@ public class Player {
      * @param territories linked list of territories
      * @return String array containing territory names
      */
-    public String[] getTerritoryStringArray(LinkedList<Territory> territories){
+    public static String[] getTerritoryStringArray(LinkedList<Territory> territories){
         String[] stringArray = new String[territories.size()];
         for (int i = 0; i < territories.size() ; i++){
             stringArray[i] = territories.get(i).getTerritoryName();
@@ -255,5 +257,4 @@ public class Player {
         return stringArray;
     }
 
-    //public String aiDraftPhase() {return"";}
 }

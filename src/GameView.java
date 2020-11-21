@@ -113,7 +113,7 @@ public class GameView extends JFrame {
         menuItemCurrentPlayer = new JMenuItem("Current-Player");
         menuItemCurrentPlayer.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         menuItemCurrentPlayer.addActionListener(e-> {
-            displayMessage("Current player: " + game.getCurrentPlayer()+" \n"+ game.getCurrentPlayerObject().getTerritories());
+            displayMessage("Current player: " + game.getCurrentPlayer()+" \n"+ game.getCurrentPlayerObject().getTerritoriesString());
         });
         menuBar.add(menuItemCurrentPlayer);
 
@@ -184,6 +184,7 @@ public class GameView extends JFrame {
         // checking for any invalid names as empty strings or duplicates
         for (int i = 0; i < numberOfPlayers; i++) {
             jLabel.setText("Enter Name of Player: " + (1 + i));
+            aiPlayer.setSelected(false);
             int result = JOptionPane.showConfirmDialog(null, namesPanel, "Player Names", JOptionPane.OK_OPTION);
             if (result ==JOptionPane.OK_OPTION) {
                 while (jTextField.getText().equals("") || playerNames.contains(jTextField.getText())){

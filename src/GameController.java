@@ -156,7 +156,7 @@ public class GameController {
         //Once selection is made, get the fortifiable terry list
 
         //Player chooses one of the fortifiable territories
-        String fortified = gameView.chooseFortified(currentPlayer.getFortifiableTerritories(game.getTerritory(results[1])));
+        String fortified = gameView.chooseFortified(Player.getTerritoryStringArray(currentPlayer.getFortifiableTerritories(game.getTerritory(results[1]))));
 
         System.out.println(results[1] + "    FORTIFIES   " + fortified);
 
@@ -174,13 +174,21 @@ public class GameController {
      */
     private void startAIPlayersTurn(AIPlayer aiPlayer){
         // Draft phase
-        gameView.displayMessage(((AIPlayer)game.getCurrentPlayerObject()).aiDraftPhase());
+        gameView.displayMessage(aiPlayer.aiDraftPhase());
 
         // Attack phase
 
         // Fortify
         //Need to check if the AI wants to fortify or not
-
+        //if (aiPlayer.wantToFortify()){
+        if (true){
+            Territory giver = aiPlayer.findFortifyGiver();
+            Territory receiver = aiPlayer.findFortifyReceiver(giver);
+            int movedTroops = Math.floorDiv(giver.getTroops(), 3);
+            giver.changeTroops(-movedTroops);
+            receiver.changeTroops(movedTroops);
+            gameView.displayMessage("Fortify phase complete: " + movedTroops + " troops moved from " + giver.getTerritoryName() + " to " + receiver.getTerritoryName());
+        }
 
     }
 
