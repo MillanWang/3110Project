@@ -214,8 +214,32 @@ public class Player {
         if (attackStarters.isEmpty()) return null;
 
         return getTerritoryStringArray(attackStarters);
-
     }
+
+    /**
+     * Returns a LIST/STRINGARRAY of territories that can be fortified from the given territory
+     *
+     * @param rootTerritory The territory that supplies the fortified troops
+     */
+    public String[] getFortifiableTerritories(Territory rootTerritory){
+
+        LinkedList<Territory> fortifiables = new LinkedList<>();
+        fortifiables.add(rootTerritory);
+        int current = 0;
+
+        while(current < fortifiables.size()){
+            for (Territory t : fortifiables.get(current).getNeighboursList()){
+                if (t.getOwner().equals(rootTerritory.getOwner()) && !fortifiables.contains(t)){
+                    //Only add to fortifiables if owners match and not in list already
+                    fortifiables.add(t);
+                }
+            }
+            current++;
+        }
+        fortifiables.pop();//Removes the rootTerritory. Cannot fortify to self. Always at front of list
+        return getTerritoryStringArray(fortifiables);
+    }
+
 
     /**
      * This returns a string array containing the names of the territories
@@ -231,7 +255,5 @@ public class Player {
         return stringArray;
     }
 
-    public String aiDraftPhase() {
-        return"";
-    }
+    //public String aiDraftPhase() {return"";}
 }

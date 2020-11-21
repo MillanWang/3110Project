@@ -20,7 +20,7 @@ public class AIPlayer extends Player{
      *
      * @return String containing the full result of the AIPlayers Draft
      */
-    @Override
+    //@Override
     public String aiDraftPhase(){
         String str = "";
         Random r = new Random();

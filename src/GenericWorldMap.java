@@ -26,8 +26,8 @@ public class GenericWorldMap {
         //Loading in the custom map from file. Need to ask for user path. SMALL EXAMPLE FOR NOW.
         String jsonText = "";
         try {
-            //InputStream in = getClass().getResourceAsStream("/TestSmallWorldMap.txt"); //SMALLER MAP FOR EASIER TESTING
-            InputStream in = getClass().getResourceAsStream("/DefaultMap.txt");
+            InputStream in = getClass().getResourceAsStream("/TestSmallWorldMap.txt"); //SMALLER MAP FOR EASIER TESTING
+            //InputStream in = getClass().getResourceAsStream("/DefaultMap.txt");
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             StringBuilder sb = new StringBuilder();
             String line = reader.readLine();

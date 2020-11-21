@@ -1,0 +1,48 @@
+{"territories" :[
+	{
+		"territoryName" : "Antarctica",
+		"continentName" : "up",
+		"numberOfTerritoriesInContinent" : 5,
+		"continentControlBonus": 2,
+		"neighbours" : ["Bolivia","Canada","Denmark"]
+	},
+	{
+		"territoryName" : "Bolivia",
+		"continentName" : "up",
+		"numberOfTerritoriesInContinent" : 5,
+		"continentControlBonus": 2,
+		"neighbours" : ["Antarctica","Canada","Denmark"]
+	},
+	{
+
+		"territoryName" : "Canada",
+		"continentName" : "up",
+		"numberOfTerritoriesInContinent" : 5,
+		"continentControlBonus": 2,
+		"neighbours" : ["Antarctica","Bolivia","Denmark","Eritrea","France"]
+	},
+	{
+
+		"territoryName" : "Denmark",
+		"continentName" : "up",
+		"numberOfTerritoriesInContinent" : 5,
+		"continentControlBonus": 2,
+		"neighbours" : ["Antarctica","Bolivia","Canada","Eritrea","France"]
+	},
+	{
+
+		"territoryName" : "Eritrea",
+		"continentName" : "up",
+		"numberOfTerritoriesInContinent" : 5,
+		"continentControlBonus": 2,
+		"neighbours" : ["Canada","Denmark","France"]
+	},
+	{
+
+		"territoryName" : "France",
+		"continentName" : "down",
+		"numberOfTerritoriesInContinent" : 1,
+		"continentControlBonus": 3,
+		"neighbours" : ["Canada","Denmark","Eritrea"]
+	}
+]}

@@ -143,6 +143,13 @@ public class Territory {
         this.owner = owner;
     }
 
+    /**
+     * Getter method for the neighboursList field
+     * @return neighboursList field
+     */
+    public List<Territory> getNeighboursList() {
+        return neighboursList;
+    }
 
     /**
      * adding a new territory neighbour to the neighboursList

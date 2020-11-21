@@ -219,7 +219,7 @@ public class GameView extends JFrame {
      * @return StringArray {nameOfSelectedTerritory, numberOfTroopsMovingIn}
      */
     public String[] startDraft(int numTroops){
-        String[] draftTerritories = controller.getPlayersTerritoriesForDraft();
+        String[] draftTerritories = controller.getPlayersTerritories();
 
         JPanel draftPanel = new JPanel();//creates panel to show list of draft territories
         draftPanel.add(new JLabel("Select territory to send troops to"));
@@ -404,6 +404,38 @@ public class GameView extends JFrame {
         JOptionPane.showMessageDialog(this, game.getCurrentPlayer() + " IS THE ULTIMATE RISK CHAMPION!!!", "GAME OVER!", JOptionPane.WARNING_MESSAGE);
     }
 
+    public String[] startFortify(){
+        String[] fortifyStarterTerritories = controller.getPlayersTerritories();
+
+        Object[] options = {"Fortify", "End turn"};
+
+        JPanel fortifyPanel = new JPanel();//creates panel to show list of draft territories
+        fortifyPanel.add(new JLabel("Select territory to take troops from to send to another territory"));
+        JComboBox fortifyComboBox = new JComboBox(fortifyStarterTerritories);
+        fortifyPanel.add(fortifyComboBox);
+        int response = JOptionPane.showOptionDialog(this,
+                fortifyPanel,
+                "Fortify Stage",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options, options[0]);
+
+        String territoryString = (String) fortifyComboBox.getItemAt(fortifyComboBox.getSelectedIndex());// gets the territory the player chose
+        String[] results = {Integer.toString(response), territoryString};
+        return results;
+    }
+
+    public String chooseFortified(String[] territories){
+
+        JPanel fortifyPanel = new JPanel();//creates panel to show list of attack starters
+        fortifyPanel.add(new JLabel("Select territory to send troops to"));
+        JComboBox fortifiables = new JComboBox(territories);
+        fortifyPanel.add(fortifiables);
+        JOptionPane.showConfirmDialog(null, fortifyPanel, "Fortifiables", JOptionPane.DEFAULT_OPTION);
+
+        return (String) fortifiables.getItemAt(fortifiables.getSelectedIndex());
+    }
 
     /**
      * Will display a message to the user. Expect message to be on of the following:
