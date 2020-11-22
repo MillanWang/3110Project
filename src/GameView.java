@@ -410,8 +410,7 @@ public class GameView extends JFrame {
      *
      * @return String array {Player's choice to end attack or fortify, the chosen territory to start the fortify}
      */
-    public String[] startFortify(){
-        String[] fortifyStarterTerritories = controller.getPlayersTerritories();
+    public String[] startFortify(String[] fortifyStarterTerritories){
 
         Object[] options = {"Fortify", "End turn"};
 

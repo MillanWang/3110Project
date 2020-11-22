@@ -258,7 +258,7 @@ public class Territory {
      */
     public boolean surroundedByFriendlies(){
         for (Territory t : neighboursList){
-            if (t.getOwner().equals(owner)) return false;
+            if (!t.getOwner().equals(owner)) return false;
         }
         return true;
     }

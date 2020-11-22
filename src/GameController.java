@@ -36,18 +36,16 @@ public class GameController {
         //If the current player is an AI player, handle turn in different method
         if (game.getCurrentPlayerObject() instanceof AIPlayer){
             startAIPlayersTurn((AIPlayer) game.getCurrentPlayerObject());
-            game.nextTurn();//Switching to the next player
-            return;
+        } else{
+            //Currently a human player
+            humanPlayerDraft(game.getCurrentPlayerObject());
+            humanPlayerAttack(game.getCurrentPlayerObject());
+            if (!game.hasWinner() && game.getCurrentPlayerObject().getFortifyGivers() != null){
+                //Can only fortify when there is no winner and when the current player has more than one territory
+                humanPlayerFortify(game.getCurrentPlayerObject());
+            }
         }
-
-        Player currentPlayer = game.getCurrentPlayerObject();
-        humanPlayerDraft(currentPlayer);
-        humanPlayerAttack(currentPlayer);
-        if (!game.hasWinner()){
-            humanPlayerFortify(currentPlayer);
-            gameView.displayMessage(currentPlayer.getName() + " has finished their turn!");
-        }
-
+        gameView.displayMessage(game.getCurrentPlayerObject().getName() + " has finished their turn!");
         game.nextTurn();//Switching to the next player
     }
 
@@ -150,15 +148,13 @@ public class GameController {
     private void humanPlayerFortify(Player currentPlayer){
         gameView.displayMessage("Attack stage complete, starting the Fortify stage for player: " + game.getCurrentPlayer());
         //Ask player to choose any one of their owned terrys
-        String[] results = gameView.startFortify();
+        String[] results = gameView.startFortify(Player.getTerritoryStringArray(currentPlayer.getFortifyGivers()));
         if (!results[0].equals("0")) return; //Player decides to skip fortify. Ends turn
 
         //Once selection is made, get the fortifiable terry list
 
         //Player chooses one of the fortifiable territories
         String fortified = gameView.chooseFortified(Player.getTerritoryStringArray(currentPlayer.getFortifiableTerritories(game.getTerritory(results[1]))));
-
-        System.out.println(results[1] + "    FORTIFIES   " + fortified);
 
         int movedTroops = gameView.numTroopsToFortify(game.getTerritory(results[1]).getTroops() - 1 );
         //Max troops to send is numTroops on fortifyStarter-1
@@ -180,14 +176,18 @@ public class GameController {
 
         // Fortify
         //Need to check if the AI wants to fortify or not
-        //if (aiPlayer.wantToFortify()){
-        if (true){
+        //if (aiPlayer.wantToFortify() && aiPlayer.getTerritories().size()>1){
+        if (aiPlayer.getFortifyGivers().size()>1){
             Territory giver = aiPlayer.findFortifyGiver();
             Territory receiver = aiPlayer.findFortifyReceiver(giver);
-            int movedTroops = Math.floorDiv(giver.getTroops(), 3);
-            giver.changeTroops(-movedTroops);
-            receiver.changeTroops(movedTroops);
-            gameView.displayMessage("Fortify phase complete: " + movedTroops + " troops moved from " + giver.getTerritoryName() + " to " + receiver.getTerritoryName());
+
+            if (giver != null && receiver != null){
+                int movedTroops = Math.floorDiv(giver.getTroops(), 3);
+                giver.changeTroops(-movedTroops);
+                receiver.changeTroops(movedTroops);
+                gameView.displayMessage("Fortify phase complete: " + movedTroops + " troops moved from " + giver.getTerritoryName() + " to " + receiver.getTerritoryName());
+            }
+
         }
 
     }
