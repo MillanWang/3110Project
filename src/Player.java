@@ -242,6 +242,13 @@ public class Player {
         return fortifiables;
     }
 
+    public LinkedList<Territory> getFortifyGivers(){
+        LinkedList<Territory> givers = new LinkedList<>();
+        for (Territory t : territories){
+            if (t.getTroops()>1) givers.add(t);
+        }
+        return !givers.isEmpty()? givers : null;
+    }
 
     /**
      * This returns a string array containing the names of the territories
