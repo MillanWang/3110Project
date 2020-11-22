@@ -84,7 +84,7 @@ public class PlayerTest extends TestCase {
 
         territoryA.addNeighbours(territoryB);
 
-        assertEquals(1, playerA.getAttackStarters().length);
+        assertEquals(1, playerA.getAttackStarters().size());
     }
 
     @org.junit.Test

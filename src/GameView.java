@@ -272,7 +272,7 @@ public class GameView extends JFrame {
      * @return StringArray of {attackStarterTerritoryName, defenderTerritoryName}
      */
     public String[] attackSelection(){
-        String[] attackStartersStringArray = game.getCurrentPlayerObject().getAttackStarters();
+        String[] attackStartersStringArray = Player.getTerritoryStringArray(game.getCurrentPlayerObject().getAttackStarters());
 
         JPanel attackPanel = new JPanel();//creates panel to show list of attack starters
         attackPanel.add(new JLabel("Select country to attack from"));
