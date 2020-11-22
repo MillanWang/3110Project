@@ -114,7 +114,7 @@ public class GameView extends JFrame {
         menuItemCurrentPlayer = new JMenuItem("Current-Player");
         menuItemCurrentPlayer.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         menuItemCurrentPlayer.addActionListener(e-> {
-            displayMessage("Current player: " + game.getCurrentPlayer()+" \n"+ game.getCurrentPlayerObject().getTerritories());
+            displayMessage("Current player: " + game.getCurrentPlayer()+" \n"+ game.getCurrentPlayerObject().getTerritoriesString());
         });
         menuBar.add(menuItemCurrentPlayer);
 
@@ -185,6 +185,7 @@ public class GameView extends JFrame {
         // checking for any invalid names as empty strings or duplicates
         for (int i = 0; i < numberOfPlayers; i++) {
             jLabel.setText("Enter Name of Player: " + (1 + i));
+            aiPlayer.setSelected(false);
             int result = JOptionPane.showConfirmDialog(null, namesPanel, "Player Names", JOptionPane.OK_OPTION);
             if (result ==JOptionPane.OK_OPTION) {
                 while (jTextField.getText().equals("") || playerNames.contains(jTextField.getText())){
@@ -220,7 +221,7 @@ public class GameView extends JFrame {
      * @return StringArray {nameOfSelectedTerritory, numberOfTroopsMovingIn}
      */
     public String[] startDraft(int numTroops){
-        String[] draftTerritories = controller.getPlayersTerritoriesForDraft();
+        String[] draftTerritories = controller.getPlayersTerritories();
 
         JPanel draftPanel = new JPanel();//creates panel to show list of draft territories
         draftPanel.add(new JLabel("Select territory to send troops to"));
@@ -407,6 +408,71 @@ public class GameView extends JFrame {
         JOptionPane.showMessageDialog(this, game.getCurrentPlayer() + " IS THE ULTIMATE RISK CHAMPION!!!", "GAME OVER!", JOptionPane.WARNING_MESSAGE);
     }
 
+    /**
+     * Starts the fortify phase of the current players turn. Choose the territory to start the fortify or to end turn
+     *
+     * @return String array {Player's choice to end attack or fortify, the chosen territory to start the fortify}
+     */
+    public String[] startFortify(){
+        String[] fortifyStarterTerritories = controller.getPlayersTerritories();
+
+        Object[] options = {"Fortify", "End turn"};
+
+        JPanel fortifyPanel = new JPanel();//creates panel to show list of draft territories
+        fortifyPanel.add(new JLabel("Select territory to take troops from to send to another territory"));
+        JComboBox fortifyComboBox = new JComboBox(fortifyStarterTerritories);
+        fortifyPanel.add(fortifyComboBox);
+        int response = JOptionPane.showOptionDialog(this,
+                fortifyPanel,
+                "Fortify Stage",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options, options[0]);
+
+        String territoryString = (String) fortifyComboBox.getItemAt(fortifyComboBox.getSelectedIndex());// gets the territory the player chose
+        String[] results = {Integer.toString(response), territoryString};
+        return results;
+    }
+
+    /**
+     * During fortify phase, choose who to receive troops
+     *
+     * @param territories String array of territories that can receive troops in the fortify stage
+     * @return The chosen territory to receive troops
+     */
+    public String chooseFortified(String[] territories){
+
+        JPanel fortifyPanel = new JPanel();//creates panel to show list of attack starters
+        fortifyPanel.add(new JLabel("Select territory to send troops to"));
+        JComboBox fortifiables = new JComboBox(territories);
+        fortifyPanel.add(fortifiables);
+        JOptionPane.showConfirmDialog(null, fortifyPanel, "Fortifiables", JOptionPane.DEFAULT_OPTION);
+
+        return (String) fortifiables.getItemAt(fortifiables.getSelectedIndex());
+    }
+
+    /**
+     * Asks the player how many troops to move from the fortify starter to the fortified territory
+     *
+     * @param maxTroopsToMove maximum number of troops that can be moved
+     * @return selected number of troops to move
+     */
+    public int numTroopsToFortify(int maxTroopsToMove){
+
+        String[] troopNumbers = new String[maxTroopsToMove];
+        for(int i = 0; i<maxTroopsToMove; i++){
+            troopNumbers[i] = Integer.toString(i+1);
+        }
+
+        JPanel troopPanel = new JPanel();//creates panel to show list of draft territories
+        troopPanel.add(new JLabel("Select number of troops to send"));
+        JComboBox troopComboBox = new JComboBox(troopNumbers);
+        troopPanel.add(troopComboBox);
+        JOptionPane.showConfirmDialog(null, troopPanel, "Fortify Phase", JOptionPane.DEFAULT_OPTION);
+
+        return Integer.parseInt( (String) troopComboBox.getItemAt(troopComboBox.getSelectedIndex()));
+    }
 
     /**
      * Will display a message to the user. Expect message to be on of the following:

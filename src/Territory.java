@@ -143,6 +143,13 @@ public class Territory {
         this.owner = owner;
     }
 
+    /**
+     * Getter method for the neighboursList field
+     * @return neighboursList field
+     */
+    public List<Territory> getNeighboursList() {
+        return neighboursList;
+    }
 
     /**
      * adding a new territory neighbour to the neighboursList
@@ -242,5 +249,17 @@ public class Territory {
             }
         }
         return getNeighbourStringArray(attackableNeighbours);
+    }
+
+    /**
+     * Determines if the territory is surrounded by friendly territories. Used by AI player
+     *
+     * @return boolean of if the territory is surrounded by friendlies
+     */
+    public boolean surroundedByFriendlies(){
+        for (Territory t : neighboursList){
+            if (t.getOwner().equals(owner)) return false;
+        }
+        return true;
     }
 }

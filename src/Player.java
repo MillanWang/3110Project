@@ -49,7 +49,7 @@ public class Player {
      *
      * @return The description of all player owned territory
      */
-    public String getTerritories(){
+    public String getTerritoriesString(){
         if (territories.size() > 0) {
             String str = "";
             for (Territory t : territories) {
@@ -61,6 +61,8 @@ public class Player {
         }
 
     }
+
+    public LinkedList<Territory> getTerritories(){ return territories;}
 
     /**
      * Returns the  of player owned territories
@@ -214,8 +216,32 @@ public class Player {
         if (attackStarters.isEmpty()) return null;
 
         return getTerritoryStringArray(attackStarters);
-
     }
+
+    /**
+     * Returns a LIST/STRINGARRAY of territories that can be fortified from the given territory
+     *
+     * @param rootTerritory The territory that supplies the fortified troops
+     */
+    public LinkedList<Territory> getFortifiableTerritories(Territory rootTerritory){
+
+        LinkedList<Territory> fortifiables = new LinkedList<>();
+        fortifiables.add(rootTerritory);
+        int current = 0;
+
+        while(current < fortifiables.size()){
+            for (Territory t : fortifiables.get(current).getNeighboursList()){
+                if (t.getOwner().equals(rootTerritory.getOwner()) && !fortifiables.contains(t)){
+                    //Only add to fortifiables if owners match and not in list already
+                    fortifiables.add(t);
+                }
+            }
+            current++;
+        }
+        fortifiables.pop();//Removes the rootTerritory. Cannot fortify to self. Always at front of list
+        return fortifiables;
+    }
+
 
     /**
      * This returns a string array containing the names of the territories
@@ -223,7 +249,7 @@ public class Player {
      * @param territories linked list of territories
      * @return String array containing territory names
      */
-    public String[] getTerritoryStringArray(LinkedList<Territory> territories){
+    public static String[] getTerritoryStringArray(LinkedList<Territory> territories){
         String[] stringArray = new String[territories.size()];
         for (int i = 0; i < territories.size() ; i++){
             stringArray[i] = territories.get(i).getTerritoryName();
@@ -231,7 +257,4 @@ public class Player {
         return stringArray;
     }
 
-    public String aiDraftPhase() {
-        return"";
-    }
 }
