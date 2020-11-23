@@ -40,7 +40,7 @@ public class GameController {
             //Currently a human player
             humanPlayerDraft(game.getCurrentPlayerObject());
             humanPlayerAttack(game.getCurrentPlayerObject());
-            if (!game.hasWinner() && game.getCurrentPlayerObject().getFortifyGivers() != null){
+            if (!game.hasWinner() && game.getCurrentPlayerObject().getFortifyGivers() != null && game.getCurrentPlayerObject().getTerritories().size() > 1){
                 //Can only fortify when there is no winner and when the current player has more than one territory
                 humanPlayerFortify(game.getCurrentPlayerObject());
             }
