@@ -55,7 +55,6 @@ public class TerritoryTest {
     }
 
 
-
     /**
      * ensures the correct maximum dice roll is returned
      */

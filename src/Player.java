@@ -49,7 +49,7 @@ public class Player {
      *
      * @return The description of all player owned territory
      */
-    public String getTerritories(){
+    public String getTerritoriesString(){
         if (territories.size() > 0) {
             String str = "";
             for (Territory t : territories) {
@@ -61,6 +61,8 @@ public class Player {
         }
 
     }
+
+    public LinkedList<Territory> getTerritories(){ return territories;}
 
     /**
      * Returns the  of player owned territories
@@ -203,7 +205,7 @@ public class Player {
      *
      * @return a list of territories player can use to start an attack
      */
-    public String[] getAttackStarters() {
+    public LinkedList<Territory> getAttackStarters() {
         LinkedList attackStarters = new LinkedList<Territory>();
         for (Territory ter : territories) {
 
@@ -213,8 +215,39 @@ public class Player {
         }
         if (attackStarters.isEmpty()) return null;
 
-        return getTerritoryStringArray(attackStarters);
+        return attackStarters;
+    }
 
+    /**
+     * Returns a LIST/STRINGARRAY of territories that can be fortified from the given territory
+     *
+     * @param rootTerritory The territory that supplies the fortified troops
+     */
+    public LinkedList<Territory> getFortifiableTerritories(Territory rootTerritory){
+
+        LinkedList<Territory> fortifiables = new LinkedList<>();
+        fortifiables.add(rootTerritory);
+        int current = 0;
+
+        while(current < fortifiables.size()){
+            for (Territory t : fortifiables.get(current).getNeighboursList()){
+                if (t.getOwner().equals(rootTerritory.getOwner()) && !fortifiables.contains(t)){
+                    //Only add to fortifiables if owners match and not in list already
+                    fortifiables.add(t);
+                }
+            }
+            current++;
+        }
+        fortifiables.pop();//Removes the rootTerritory. Cannot fortify to self. Always at front of list
+        return fortifiables;
+    }
+
+    public LinkedList<Territory> getFortifyGivers(){
+        LinkedList<Territory> givers = new LinkedList<>();
+        for (Territory t : territories){
+            if (t.getTroops()>1) givers.add(t);
+        }
+        return !givers.isEmpty()? givers : null;
     }
 
     /**
@@ -223,11 +256,12 @@ public class Player {
      * @param territories linked list of territories
      * @return String array containing territory names
      */
-    public String[] getTerritoryStringArray(LinkedList<Territory> territories){
+    public static String[] getTerritoryStringArray(LinkedList<Territory> territories){
         String[] stringArray = new String[territories.size()];
         for (int i = 0; i < territories.size() ; i++){
             stringArray[i] = territories.get(i).getTerritoryName();
         }
         return stringArray;
     }
+
 }
