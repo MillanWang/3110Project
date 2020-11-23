@@ -31,14 +31,13 @@ public class AIPlayer extends Player{
         Collections.shuffle(territories);
 
         this.bonusTroops();
-        int draftTroops = this.getNumTroops();
 
-        while (draftTroops > 0){
-            int troopToDraft =  rando.nextInt(draftTroops) + 1;
+        while (super.numTroops > 0){
+            int troopToDraft =  rando.nextInt(super.numTroops) + 1;
             //Get ONE terry from shuffled territories list
             territories.peek().changeTroops(troopToDraft);
             //Send random number of troops there
-            draftTroops -= troopToDraft;
+            super.numTroops -= troopToDraft;
             //Add the terry to the list of drafted
             if (!drafted.contains(territories.peek())) drafted.add(territories.peek());
             //Send that terry to the back of the linked list
