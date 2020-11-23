@@ -22,7 +22,6 @@ public class TerritoryTest {
     }
 
 
-
     /**
      * checks for the key info that a territory has in the returned string namely; territoty name,
      * territory owner, and number of troops, to ensure a territory info is correct
