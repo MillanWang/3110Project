@@ -205,7 +205,7 @@ public class Player {
      *
      * @return a list of territories player can use to start an attack
      */
-    public String[] getAttackStarters() {
+    public LinkedList<Territory> getAttackStarters() {
         LinkedList attackStarters = new LinkedList<Territory>();
         for (Territory ter : territories) {
 
@@ -215,7 +215,7 @@ public class Player {
         }
         if (attackStarters.isEmpty()) return null;
 
-        return getTerritoryStringArray(attackStarters);
+        return attackStarters;
     }
 
     /**

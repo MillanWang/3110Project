@@ -43,6 +43,66 @@ public class AIPlayer extends Player{
         return str;
     }
 
+    public boolean wantToAttack(){
+        return this.findAttackStarter() != null;
+    }
+
+    /**
+     * Returns an AI player's attack starter territory.
+     * The first attack starter with at least 4 troops on it will be chosen
+     *
+     * @return The chosen attack starter territory
+     */
+    public Territory findAttackStarter(){
+        LinkedList<Territory> attackStarters = super.getAttackStarters();
+
+        for (Territory t : attackStarters){
+            if (t.getTroops()>=4 ) return t;
+        }
+        return null;
+    }
+
+    /**
+     * Returns the chosen defender territory for a given attacker
+     * The attackable neighbour with the lowest number of troops will be chosen
+     *
+     * @param attacker The territory that starts the attack
+     * @return The selected defender of the attack
+     */
+    public Territory findAttackDefender(Territory attacker){
+        LinkedList<Territory> attackables = attacker.getAttackableNeighbours();
+        int minTroops = attackables.get(0).getTroops();
+        Territory current = attacker.getAttackableNeighbours().get(0);
+
+        for(int i = 1; i < attacker.getAttackableNeighbours().size() ; i++) {
+            if ( minTroops > attackables.get(i).getTroops())
+                current = attackables.get(i);
+            }
+        return current;
+    }
+
+    /**
+     * Returns if the current AIPlayer wants to diceFight right now
+     * Only want to dice fight if attacker has more troops than (defender troops)-3
+     *
+     * @param attacker The attacker territory
+     * @param defender The defender territory
+     * @return If the AI player wants to continue with the attack or not
+     */
+    public boolean wantToDiceFight(Territory attacker,Territory defender){
+        return attacker.getTroops() > defender.getTroops() - 3;
+    }
+
+    public int chooseNumDice(Territory territory){
+        if (territory.getTroops() >=4 ){
+            return 3;
+        } else if (territory.getTroops() == 3 ){
+            return 2;
+        } else {
+            return 1;
+        }
+    }
+
     /**
      * Determines if the current AI player wants to fortify
      *
@@ -94,7 +154,7 @@ public class AIPlayer extends Player{
     public Territory findFortifyReceiver(Territory giver){
         LinkedList<Territory> fortifiables = super.getFortifiableTerritories(giver);
         int maxAttackableNeighbours = 0;
-        Territory current = null;
+        Territory current = fortifiables.get(0);
 
         for (Territory t : fortifiables){
             System.out.println(t.getInfoString());

@@ -106,7 +106,7 @@ public class GameController {
                 diceFightChoice = gameView.diceFightView(game.getTerritory(attackerDefender[0]).maxDiceToRoll());
                 if (diceFightChoice[0] != 0) break;//Player wants to end current diceFight.
 
-                diceFightResultString = game.diceFight(attackerDefender, diceFightChoice[1], getDefenderDiceRoll(attackerDefender));
+                diceFightResultString = game.diceFight(attackerDefender, diceFightChoice[1], getDefenderDiceRoll(attackerDefender[1]));
                 diceFightResultString += "\n" + game.diceFightInfo(attackerDefender);
                 gameView.displayMessage(diceFightResultString);//Telling the player the rolls and results of the dice fight
 
@@ -173,7 +173,57 @@ public class GameController {
         gameView.displayMessage(aiPlayer.aiDraftPhase());
 
         // Attack phase
+        Territory attacker, defender;
+        while(true){
+            if (!aiPlayer.wantToAttack()) break;
+            //Selecting the attacker and defender for this particular dice fight
+            attacker = aiPlayer.findAttackStarter();
+            defender = aiPlayer.findAttackDefender(attacker);
 
+            //DiceFight
+            while(aiPlayer.wantToDiceFight(attacker,defender)){
+                //Need how many dice the attacker rolled
+                int attackerDice = aiPlayer.chooseNumDice(attacker);
+                //Need to "ask" defender how many to roll
+                int defenderDice = getDefenderDiceRoll(defender.getTerritoryName());
+
+                //Do the diceFight and the GUI show the dice fight results
+                String[] attackerDefender = {attacker.getTerritoryName(), defender.getTerritoryName()};
+                String diceFightResultString = game.diceFight(attackerDefender, attackerDice, defenderDice);
+                diceFightResultString += "\n" + game.diceFightInfo(attackerDefender);
+                gameView.displayMessage(diceFightResultString);
+
+                //Possible takeover of territory
+                //Need to choose how many troops to send into conquered territory
+                //Possible eliminations
+                //Possible announcement of win
+
+
+                //Checking if another dice fight can happen or not.
+                if (attacker.getTroops() <= 1){
+                    break;
+                } else if (defender.getTroops() <= 0){
+                    //Defender just lost. Territory is given to the attacker. Ask how many troops to move in
+                    gameView.displayMessage(defender.getTerritoryName() + " has just been conquered!");
+
+                    //Checking if the defender owner is eliminated
+
+                    if (game.takeoverTerritory(aiPlayer, attacker, defender, attackerDice)){
+                        //A player has been eliminated
+                        gameView.announceElimination(defender.getOwner());
+
+                        //Checking if the player has won. If so,
+                        if(game.hasWinner()){
+                            gameView.announceWinner();
+                            return;
+                        }
+                    }
+                    break;//No more dice fight for this attackDefender pair after territory takeover
+                }
+            }
+        }
+
+        gameView.displayMessage("FORTIFYFORTIFYFORTIFYFORTIFYFORTIFYFORTIFYFORTIFYFORTIFYFORTIFYFORTIFYFORTIFY");
         // Fortify
         //Need to check if the AI wants to fortify or not
         //if (aiPlayer.wantToFortify() && aiPlayer.getTerritories().size()>1){
@@ -192,14 +242,14 @@ public class GameController {
 
     }
 
-    private int getDefenderDiceRoll(String[] attackerDefender){
+    private int getDefenderDiceRoll(String defender){
         int defenderDiceFightChoice=1;
-        if (game.getPlayerFromList(game.getTerritory(attackerDefender[1]).getOwner()) instanceof AIPlayer){
+        if (game.getPlayerFromList(game.getTerritory(defender).getOwner()) instanceof AIPlayer){
             //Always roll 2 unless down to last troop. Roll 1
-            defenderDiceFightChoice= (game.getTerritory(attackerDefender[1]).getTroops() >=2) ? 2 : 1;
+            defenderDiceFightChoice= (game.getTerritory(defender).getTroops() >=2) ? 2 : 1;
         } else {
             //Human player is the defender. Ask for how many dice to roll
-            defenderDiceFightChoice = gameView.defenderDiceRoll(game.getTerritory(attackerDefender[1]));
+            defenderDiceFightChoice = gameView.defenderDiceRoll(game.getTerritory(defender));
         }
         //GOTTA ASK DEFENDER HOW MANY DICE TO ROLL IF DEFENDER IS HUMAN
         //AI DEFENDERS AUTO ROLL 2 UNLESS FORCED TO ROLL 1
