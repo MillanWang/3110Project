@@ -1,3 +1,4 @@
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -22,22 +23,33 @@ public class AIPlayer extends Player{
      * @return String containing the full result of the AIPlayers Draft
      */
     public String aiDraftPhase(){
-        String str = "";
-        Random r = new Random();
-        String[] territories = this.getTerritoriesList();
+
+
+        Random rando = new Random();
+        LinkedList<Territory> territories = this.getTerritories();
+        LinkedList<Territory> drafted = new LinkedList<>();
+        Collections.shuffle(territories);
+
         this.bonusTroops();
         int draftTroops = this.getNumTroops();
 
         while (draftTroops > 0){
-            String randomTerritory, randomTroop;
-            randomTerritory = territories[r.nextInt(territories.length)];
-            int troopToDraft =  r.nextInt(draftTroops) + 1;
-            randomTroop = "" + troopToDraft;
-            System.out.println(randomTerritory);
-            System.out.println(randomTroop);
-            str = str +  this.draftPhase(randomTerritory, randomTroop) + "\n";
-            System.out.println(str);
-            draftTroops = draftTroops - troopToDraft;
+            int troopToDraft =  rando.nextInt(draftTroops) + 1;
+            //Get ONE terry from shuffled territories list
+            territories.peek().changeTroops(troopToDraft);
+            //Send random number of troops there
+            draftTroops -= troopToDraft;
+            //Add the terry to the list of drafted
+            if (!drafted.contains(territories.peek())) drafted.add(territories.peek());
+            //Send that terry to the back of the linked list
+            territories.add(territories.pop());
+
+        }
+
+        //Build string from the drafted territories list
+        String str = "";
+        for (Territory territory: drafted){
+            str += territory.getTerritoryName() + " now has " + territory.getTroops() + " troops" + "\n";
         }
 
         return str;
@@ -56,8 +68,10 @@ public class AIPlayer extends Player{
     public Territory findAttackStarter(){
         LinkedList<Territory> attackStarters = super.getAttackStarters();
 
+        if (attackStarters!=null && !attackStarters.isEmpty()) Collections.shuffle(attackStarters);
+
         for (Territory t : attackStarters){
-            if (t.getTroops()>=4 ) return t;
+            if (t.getTroops()>=2 ) return t;
         }
         return null;
     }
@@ -72,10 +86,10 @@ public class AIPlayer extends Player{
     public Territory findAttackDefender(Territory attacker){
         LinkedList<Territory> attackables = attacker.getAttackableNeighbours();
         int minTroops = attackables.get(0).getTroops();
-        Territory current = attacker.getAttackableNeighbours().get(0);
+        Territory current = null;
 
         for(int i = 1; i < attacker.getAttackableNeighbours().size() ; i++) {
-            if ( minTroops > attackables.get(i).getTroops())
+            if ( minTroops > attackables.get(i).getTroops() && attackables.get(i).getTroops() <= attacker.getTroops())
                 current = attackables.get(i);
             }
         return current;
@@ -83,14 +97,13 @@ public class AIPlayer extends Player{
 
     /**
      * Returns if the current AIPlayer wants to diceFight right now
-     * Only want to dice fight if attacker has more troops than (defender troops)-3
+     * Only want to dice fight if attacker has more troops than 5 troops
      *
      * @param attacker The attacker territory
-     * @param defender The defender territory
      * @return If the AI player wants to continue with the attack or not
      */
-    public boolean wantToDiceFight(Territory attacker,Territory defender){
-        return attacker.getTroops() > defender.getTroops() - 3;
+    public boolean wantToDiceFight(Territory attacker){
+        return attacker.getTroops() > 5;
     }
 
     public int chooseNumDice(Territory territory){
@@ -154,11 +167,11 @@ public class AIPlayer extends Player{
     public Territory findFortifyReceiver(Territory giver){
         LinkedList<Territory> fortifiables = super.getFortifiableTerritories(giver);
         int maxAttackableNeighbours = 0;
-        Territory current = fortifiables.get(0);
+        Territory current = null;
 
         for (Territory t : fortifiables){
-            System.out.println(t.getInfoString());
-            if (maxAttackableNeighbours < t.getAttackableNeighbours().size()){
+
+            if (t.getAttackableNeighbours()!= null && maxAttackableNeighbours < t.getAttackableNeighbours().size()){
                 current = t;
                 maxAttackableNeighbours = t.getAttackableNeighbours().size();
             }

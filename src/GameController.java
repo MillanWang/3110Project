@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class GameController {
     private Game game;
     private GameView gameView;
@@ -174,14 +176,16 @@ public class GameController {
 
         // Attack phase
         Territory attacker, defender;
-        while(true){
-            if (!aiPlayer.wantToAttack()) break;
+        while(aiPlayer.wantToAttack()){
+
             //Selecting the attacker and defender for this particular dice fight
             attacker = aiPlayer.findAttackStarter();
             defender = aiPlayer.findAttackDefender(attacker);
 
+            if (defender==null || attacker == null || !aiPlayer.wantToDiceFight(attacker)) break;
+
             //DiceFight
-            while(aiPlayer.wantToDiceFight(attacker,defender)){
+            while(aiPlayer.wantToDiceFight(attacker)){
                 //Need how many dice the attacker rolled
                 int attackerDice = aiPlayer.chooseNumDice(attacker);
                 //Need to "ask" defender how many to roll
@@ -223,16 +227,16 @@ public class GameController {
             }
         }
 
-        gameView.displayMessage("FORTIFYFORTIFYFORTIFYFORTIFYFORTIFYFORTIFYFORTIFYFORTIFYFORTIFYFORTIFYFORTIFY");
         // Fortify
         //Need to check if the AI wants to fortify or not
         //if (aiPlayer.wantToFortify() && aiPlayer.getTerritories().size()>1){
-        if (aiPlayer.getFortifyGivers().size()>1){
+        if (aiPlayer.getFortifyGivers().size()>2){
             Territory giver = aiPlayer.findFortifyGiver();
             Territory receiver = aiPlayer.findFortifyReceiver(giver);
 
+            Random rando = new Random();
             if (giver != null && receiver != null){
-                int movedTroops = Math.floorDiv(giver.getTroops(), 3);
+                int movedTroops = rando.nextInt(giver.getTroops()-1) + 1;
                 giver.changeTroops(-movedTroops);
                 receiver.changeTroops(movedTroops);
                 gameView.displayMessage("Fortify phase complete: " + movedTroops + " troops moved from " + giver.getTerritoryName() + " to " + receiver.getTerritoryName());
