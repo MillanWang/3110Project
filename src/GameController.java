@@ -42,7 +42,7 @@ public class GameController {
             //Currently a human player
             humanPlayerDraft(game.getCurrentPlayerObject());
             humanPlayerAttack(game.getCurrentPlayerObject());
-            if (!game.hasWinner() && game.getCurrentPlayerObject().getFortifyGivers() != null && game.getCurrentPlayerObject().getTerritories().size() > 1){
+            if (!game.hasWinner() && game.getCurrentPlayerObject().getFortifyGivers() != null && game.getCurrentPlayerObject().getTerritories().size() > 2){
                 //Can only fortify when there is no winner and when the current player has more than one territory
                 humanPlayerFortify(game.getCurrentPlayerObject());
             }
@@ -174,6 +174,21 @@ public class GameController {
         // Draft phase
         gameView.displayMessage(aiPlayer.aiDraftPhase());
 
+        //Attack phase
+        AIPlayerAttack(aiPlayer);
+
+        // Fortify
+        if (!game.hasWinner() && aiPlayer.getFortifyGivers() != null) {
+            AIPlayerFortify(aiPlayer);
+        }
+    }
+
+    /**
+     * Runs the attack phase of an AI players turn
+     *
+     * @param aiPlayer the current AIPlayer
+     */
+    private void AIPlayerAttack(AIPlayer aiPlayer){
         // Attack phase
         Territory attacker, defender;
         while(aiPlayer.wantToAttack()){
@@ -226,11 +241,16 @@ public class GameController {
                 }
             }
         }
+    }
 
-        // Fortify
+    /**
+     * Runs the fortify phase of an AI players turn
+     *
+     * @param aiPlayer the current AIPlayer
+     */
+    private void AIPlayerFortify(AIPlayer aiPlayer){
         //Need to check if the AI wants to fortify or not
-        //if (aiPlayer.wantToFortify() && aiPlayer.getTerritories().size()>1){
-        if (aiPlayer.getFortifyGivers().size()>2){
+        if (aiPlayer.wantToFortify() && aiPlayer.getTerritories().size()>2){
             Territory giver = aiPlayer.findFortifyGiver();
             Territory receiver = aiPlayer.findFortifyReceiver(giver);
 
@@ -242,10 +262,14 @@ public class GameController {
                 gameView.displayMessage("Fortify phase complete: " + movedTroops + " troops moved from " + giver.getTerritoryName() + " to " + receiver.getTerritoryName());
             }
 
-        }
+        }}
 
-    }
-
+    /**
+     * Gets the number of dice to roll form the defending territory's owner
+     *
+     * @param defender The name of the defending territory's owner
+     * @return How many dice the defender wants to roll
+     */
     private int getDefenderDiceRoll(String defender){
         int defenderDiceFightChoice=1;
         if (game.getPlayerFromList(game.getTerritory(defender).getOwner()) instanceof AIPlayer){
