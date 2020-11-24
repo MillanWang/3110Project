@@ -85,9 +85,9 @@ public class AIPlayer extends Player{
     public Territory findAttackDefender(Territory attacker){
         LinkedList<Territory> attackables = attacker.getAttackableNeighbours();
         int minTroops = attackables.get(0).getTroops();
-        Territory current = null;
+        Territory current = attackables.get(0);
 
-        for(int i = 1; i < attacker.getAttackableNeighbours().size() ; i++) {
+        for(int i = 0; i < attacker.getAttackableNeighbours().size() ; i++) {
             if ( minTroops > attackables.get(i).getTroops() && attackables.get(i).getTroops() <= attacker.getTroops())
                 current = attackables.get(i);
             }
@@ -144,7 +144,7 @@ public class AIPlayer extends Player{
         for (Territory t : super.getTerritories()){
             if (t.surroundedByFriendlies() && t.getTroops()>1) return t;
 
-            if (currentHighestTroops < t.getTroops()){
+            if (currentHighestTroops < t.getTroops() && t.hasFriendlyNeighbour()){
                 current = t;
                 currentHighestTroops = t.getTroops();
             }

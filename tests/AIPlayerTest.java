@@ -6,9 +6,9 @@ import static org.junit.Assert.*;
 
 public class AIPlayerTest {
 
-    Game game;
+    private Game game;
 
-    public void setUp() throws Exception {
+    public void setUp() {
 
         //Setting up game to with AI players. All methods require the aiPlayer to be in a game context
 
@@ -21,7 +21,8 @@ public class AIPlayerTest {
 
     @Test
     public void aiDraftPhase() {
-        try{setUp();} catch (Exception e){}
+        setUp();
+
         AIPlayer ai = (AIPlayer) game.getCurrentPlayerObject();
 
         int initialTotalTroops = 0;
@@ -40,33 +41,82 @@ public class AIPlayerTest {
 
     @Test
     public void wantToAttack() {
+        setUp();
+        AIPlayer ai = (AIPlayer) game.getCurrentPlayerObject();
+        ai.aiDraftPhase();
+
+        assertTrue(ai.wantToAttack());//Will want to attack if has an attack starter with more than 2 troops on it
     }
 
     @Test
     public void findAttackStarter() {
+        setUp();
+        AIPlayer ai = (AIPlayer) game.getCurrentPlayerObject();
+        ai.aiDraftPhase();
+
+        assertTrue(ai.findAttackStarter() != null); //Should be able to find an attack starter initially
     }
 
     @Test
     public void findAttackDefender() {
+        setUp();
+        AIPlayer ai = (AIPlayer) game.getCurrentPlayerObject();
+        ai.aiDraftPhase();
+
+        assertTrue(ai.findAttackDefender(ai.findAttackStarter()) != null);
+        //Attack starters should always find a defender
     }
 
     @Test
     public void wantToDiceFight() {
+        setUp();
+        AIPlayer ai = (AIPlayer) game.getCurrentPlayerObject();
+        Territory attacker = ai.getTerritories().get(0);
+        attacker.changeTroops(100); //Always want to dice fight with more than 5 troops
+
+        assertTrue(ai.wantToDiceFight(attacker));
+
     }
 
     @Test
     public void chooseNumDice() {
+        setUp();
+        AIPlayer ai = (AIPlayer) game.getCurrentPlayerObject();
+        Territory territory = ai.getTerritories().get(0);
+        territory.changeTroops(100);
+        assertEquals(3, ai.chooseNumDice(territory));//Always roll 3 when more than 4 troops
+
+        //Rolling 2 only occurs when there are 3 troops on the territory.
+        //Random distribution of troops makes this very difficult to test as there is no setter method for numTroops
+
+        territory.changeTroops(-110);
+        assertEquals(1, ai.chooseNumDice(territory));//Roll 1 if 2 troops left on territory
     }
 
     @Test
     public void wantToFortify() {
+        setUp();
+        AIPlayer ai = (AIPlayer) game.getCurrentPlayerObject();
+
+        //will want to fortify iff there is a territory with less than 3 troops on it
+        ai.getTerritories().get(0).changeTroops(-20);
+        //While not possible to get negative troops, will be detected as less than 3
+        assertTrue(ai.wantToFortify());
     }
 
     @Test
     public void findFortifyGiver() {
+        setUp();
+        AIPlayer ai = (AIPlayer) game.getCurrentPlayerObject();
+        //Will always be able to find one. Behavior in the comments of the method
+        assertNotNull(ai.findFortifyGiver());
     }
 
     @Test
     public void findFortifyReceiver() {
+        setUp();
+        AIPlayer ai = (AIPlayer) game.getCurrentPlayerObject();
+        assertNotNull(ai.findFortifyReceiver(ai.findFortifyGiver()));
+        //Should always be able to find receiver if there is a giver
     }
 }
