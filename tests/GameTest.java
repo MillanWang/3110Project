@@ -47,10 +47,10 @@ public class GameTest extends TestCase {
         list.add("Nemo");
         game.makePlayers(list);
 
-        Territory attacker = game.getTerritory(game.getCurrentPlayerObject().getTerritoriesList()[0]);
-        Territory defender = game.getTerritory(game.getPlayersList().peek().getTerritoriesList()[0]);
+        Territory attacker = game.getCurrentPlayerObject().getTerritories().get(0);
+        Territory defender = game.getPlayersList().peek().getTerritories().get(0);
         game.takeoverTerritory(game.getCurrentPlayerObject(), attacker, defender, 3);
-        assertEquals("Mo", defender.getOwner());
+        assertEquals(game.getCurrentPlayer(), defender.getOwner());
         assertEquals(22, game.getCurrentPlayerObject().getTerritoriesList().length);
     }
 
@@ -65,4 +65,6 @@ public class GameTest extends TestCase {
         // since selection of player is random at first either could be the current player
         assertTrue(game.getCurrentPlayer().equals("Nemo") || game.getCurrentPlayer().equals("Mo"));
     }
+
+
 }
