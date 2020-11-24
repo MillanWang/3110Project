@@ -106,6 +106,36 @@ public class TerritoryTest {
 
     @Test
     public void surroundedByFriendlies(){
+        territory = new Territory.Builder("Congo")
+                .setNumTerritoriesInContinent(4).setContinentControlBonus(7).build();
+        territory.setOwner("Josh");
+        territory.changeTroops(5);
+        Territory territory1 = new Territory.Builder("Egypt").setContinentName("Africa")
+                .setNumTerritoriesInContinent(4).setContinentControlBonus(7).build();
+        territory1.setOwner("Josh");
+        territory.addNeighbours(territory1);
 
+        assertTrue(territory1.surroundedByFriendlies());
+
+        territory1.setOwner("StrangerDanger");
+        assertFalse(territory1.surroundedByFriendlies());
+    }
+
+    @Test
+    public void hasFriendlyNeighbour(){
+
+        territory = new Territory.Builder("Congo")
+                .setNumTerritoriesInContinent(4).setContinentControlBonus(7).build();
+        territory.setOwner("Josh");
+        territory.changeTroops(5);
+        Territory territory1 = new Territory.Builder("Egypt").setContinentName("Africa")
+                .setNumTerritoriesInContinent(4).setContinentControlBonus(7).build();
+        territory1.setOwner("Josh");
+        territory.addNeighbours(territory1);
+
+        assertTrue(territory1.hasFriendlyNeighbour());
+
+        territory1.setOwner("StrangerDanger");
+        assertFalse(territory1.hasFriendlyNeighbour());
     }
 }
