@@ -19,6 +19,9 @@ public class AIPlayerTest {
         game.makePlayers(aiPlayers);
     }
 
+    /**
+     * Ensures that AI player drafts are working properly
+     */
     @Test
     public void aiDraftPhase() {
         setUp();
@@ -38,7 +41,9 @@ public class AIPlayerTest {
         assertTrue(finalTotalTroops >= initialTotalTroops+3);//Drafting should always distribute at least 3 troops
     }
 
-
+    /**
+     * Ensures that the mechanism to determine if an AIPlayer wants to attack is working properly
+     */
     @Test
     public void wantToAttack() {
         setUp();
@@ -48,6 +53,9 @@ public class AIPlayerTest {
         assertTrue(ai.wantToAttack());//Will want to attack if has an attack starter with more than 2 troops on it
     }
 
+    /**
+     * Ensures that the mechanism to find an attack starter is working properly
+     */
     @Test
     public void findAttackStarter() {
         setUp();
@@ -57,6 +65,9 @@ public class AIPlayerTest {
         assertTrue(ai.findAttackStarter() != null); //Should be able to find an attack starter initially
     }
 
+    /**
+     * Ensures that the mechanism used to determine the defender territory is working properly
+     */
     @Test
     public void findAttackDefender() {
         setUp();
@@ -67,6 +78,9 @@ public class AIPlayerTest {
         //Attack starters should always find a defender
     }
 
+    /**
+     * Ensures that the mechanism used to determine if the AIPlayer wants to diceFight is working properly
+     */
     @Test
     public void wantToDiceFight() {
         setUp();
@@ -75,9 +89,11 @@ public class AIPlayerTest {
         attacker.changeTroops(100); //Always want to dice fight with more than 5 troops
 
         assertTrue(ai.wantToDiceFight(attacker));
-
     }
 
+    /**
+     * Ensures that the mechanism used to determine the aiPlayer player's number of dice is working properly
+     */
     @Test
     public void chooseNumDice() {
         setUp();
@@ -93,6 +109,9 @@ public class AIPlayerTest {
         assertEquals(1, ai.chooseNumDice(territory));//Roll 1 if 2 troops left on territory
     }
 
+    /**
+     * Ensures that the mechanism used to determine if the AIPlayer wants to fortify is working properly
+     */
     @Test
     public void wantToFortify() {
         setUp();
@@ -104,6 +123,9 @@ public class AIPlayerTest {
         assertTrue(ai.wantToFortify());
     }
 
+    /**
+     * Ensures that the mechanism used to determine the fortify giver is working properly
+     */
     @Test
     public void findFortifyGiver() {
         setUp();
@@ -112,6 +134,9 @@ public class AIPlayerTest {
         assertNotNull(ai.findFortifyGiver());
     }
 
+    /**
+     * Ensures that the mechanism used to determine fortify receiver is working properly
+     */
     @Test
     public void findFortifyReceiver() {
         setUp();

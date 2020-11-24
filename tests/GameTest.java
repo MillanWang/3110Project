@@ -65,4 +65,6 @@ public class GameTest extends TestCase {
         // since selection of player is random at first either could be the current player
         assertTrue(game.getCurrentPlayer().equals("Nemo") || game.getCurrentPlayer().equals("Mo"));
     }
+
+
 }

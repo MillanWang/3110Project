@@ -103,4 +103,9 @@ public class TerritoryTest {
         String[] neighbours = territory.attackableNeighbours();
         assertTrue(Arrays.asList(neighbours).contains("Egypt"));
     }
+
+    @Test
+    public void surroundedByFriendlies(){
+
+    }
 }
