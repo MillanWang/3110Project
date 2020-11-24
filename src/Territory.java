@@ -262,4 +262,16 @@ public class Territory {
         }
         return true;
     }
+
+    /**
+     * Determines if the territory has at least one friendly neighbour
+     *
+     * @return if territory has friendly neighbour
+     */
+    public boolean hasFriendlyNeighbour(){
+        for (Territory t : neighboursList){
+            if (t.getOwner().equals(owner)) return true;
+        }
+        return false;
+    }
 }

@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class GameController {
     private Game game;
     private GameView gameView;
@@ -40,7 +42,7 @@ public class GameController {
             //Currently a human player
             humanPlayerDraft(game.getCurrentPlayerObject());
             humanPlayerAttack(game.getCurrentPlayerObject());
-            if (!game.hasWinner() && game.getCurrentPlayerObject().getFortifyGivers() != null && game.getCurrentPlayerObject().getTerritories().size() > 1){
+            if (!game.hasWinner() && game.getCurrentPlayerObject().getFortifyGivers() != null && game.getCurrentPlayerObject().getTerritories().size() > 2){
                 //Can only fortify when there is no winner and when the current player has more than one territory
                 humanPlayerFortify(game.getCurrentPlayerObject());
             }
@@ -172,16 +174,33 @@ public class GameController {
         // Draft phase
         gameView.displayMessage(aiPlayer.aiDraftPhase());
 
+        //Attack phase
+        AIPlayerAttack(aiPlayer);
+
+        // Fortify
+        if (!game.hasWinner() && aiPlayer.getFortifyGivers() != null) {
+            AIPlayerFortify(aiPlayer);
+        }
+    }
+
+    /**
+     * Runs the attack phase of an AI players turn
+     *
+     * @param aiPlayer the current AIPlayer
+     */
+    private void AIPlayerAttack(AIPlayer aiPlayer){
         // Attack phase
         Territory attacker, defender;
-        while(true){
-            if (!aiPlayer.wantToAttack()) break;
+        while(aiPlayer.wantToAttack()){
+
             //Selecting the attacker and defender for this particular dice fight
             attacker = aiPlayer.findAttackStarter();
             defender = aiPlayer.findAttackDefender(attacker);
 
+            if (defender==null || attacker == null || !aiPlayer.wantToDiceFight(attacker)) break;
+
             //DiceFight
-            while(aiPlayer.wantToDiceFight(attacker,defender)){
+            while(aiPlayer.wantToDiceFight(attacker)){
                 //Need how many dice the attacker rolled
                 int attackerDice = aiPlayer.chooseNumDice(attacker);
                 //Need to "ask" defender how many to roll
@@ -222,26 +241,35 @@ public class GameController {
                 }
             }
         }
+    }
 
-        gameView.displayMessage("FORTIFYFORTIFYFORTIFYFORTIFYFORTIFYFORTIFYFORTIFYFORTIFYFORTIFYFORTIFYFORTIFY");
-        // Fortify
+    /**
+     * Runs the fortify phase of an AI players turn
+     *
+     * @param aiPlayer the current AIPlayer
+     */
+    private void AIPlayerFortify(AIPlayer aiPlayer){
         //Need to check if the AI wants to fortify or not
-        //if (aiPlayer.wantToFortify() && aiPlayer.getTerritories().size()>1){
-        if (aiPlayer.getFortifyGivers().size()>1){
+        if (aiPlayer.wantToFortify() && aiPlayer.getTerritories().size()>2){
             Territory giver = aiPlayer.findFortifyGiver();
             Territory receiver = aiPlayer.findFortifyReceiver(giver);
 
+            Random rando = new Random();
             if (giver != null && receiver != null){
-                int movedTroops = Math.floorDiv(giver.getTroops(), 3);
+                int movedTroops = rando.nextInt(giver.getTroops()-1) + 1;
                 giver.changeTroops(-movedTroops);
                 receiver.changeTroops(movedTroops);
                 gameView.displayMessage("Fortify phase complete: " + movedTroops + " troops moved from " + giver.getTerritoryName() + " to " + receiver.getTerritoryName());
             }
 
-        }
+        }}
 
-    }
-
+    /**
+     * Gets the number of dice to roll form the defending territory's owner
+     *
+     * @param defender The name of the defending territory's owner
+     * @return How many dice the defender wants to roll
+     */
     private int getDefenderDiceRoll(String defender){
         int defenderDiceFightChoice=1;
         if (game.getPlayerFromList(game.getTerritory(defender).getOwner()) instanceof AIPlayer){
