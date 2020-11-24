@@ -31,14 +31,13 @@ public class AIPlayer extends Player{
         Collections.shuffle(territories);
 
         this.bonusTroops();
-        int draftTroops = this.getNumTroops();
 
-        while (draftTroops > 0){
-            int troopToDraft =  rando.nextInt(draftTroops) + 1;
+        while (super.numTroops > 0){
+            int troopToDraft =  rando.nextInt(super.numTroops) + 1;
             //Get ONE terry from shuffled territories list
             territories.peek().changeTroops(troopToDraft);
             //Send random number of troops there
-            draftTroops -= troopToDraft;
+            super.numTroops -= troopToDraft;
             //Add the terry to the list of drafted
             if (!drafted.contains(territories.peek())) drafted.add(territories.peek());
             //Send that terry to the back of the linked list
@@ -86,9 +85,9 @@ public class AIPlayer extends Player{
     public Territory findAttackDefender(Territory attacker){
         LinkedList<Territory> attackables = attacker.getAttackableNeighbours();
         int minTroops = attackables.get(0).getTroops();
-        Territory current = null;
+        Territory current = attackables.get(0);
 
-        for(int i = 1; i < attacker.getAttackableNeighbours().size() ; i++) {
+        for(int i = 0; i < attacker.getAttackableNeighbours().size() ; i++) {
             if ( minTroops > attackables.get(i).getTroops() && attackables.get(i).getTroops() <= attacker.getTroops())
                 current = attackables.get(i);
             }
@@ -145,7 +144,7 @@ public class AIPlayer extends Player{
         for (Territory t : super.getTerritories()){
             if (t.surroundedByFriendlies() && t.getTroops()>1) return t;
 
-            if (currentHighestTroops < t.getTroops()){
+            if (currentHighestTroops < t.getTroops() && t.hasFriendlyNeighbour()){
                 current = t;
                 currentHighestTroops = t.getTroops();
             }

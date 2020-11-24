@@ -6,7 +6,7 @@ import java.util.*;
 public class Player {
     private String name; // The name of the player.
     private LinkedList<Territory> territories; // A list of the territories the player occupies.
-    private int numTroops;
+    protected int numTroops;
 
     /**
      * A constructor that sets the player class variables.
