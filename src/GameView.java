@@ -188,8 +188,8 @@ public class GameView extends JFrame {
             aiPlayer.setSelected(false);
             int result = JOptionPane.showConfirmDialog(null, namesPanel, "Player Names", JOptionPane.OK_OPTION);
             if (result ==JOptionPane.OK_OPTION) {
-                while (jTextField.getText().equals("") || playerNames.contains(jTextField.getText())){
-                    displayMessage("Player " + (1 + i) + " name: " + jTextField.getText() + " can't be empty or the same as another player!!");
+                while (jTextField.getText().equals("") || playerNames.contains(jTextField.getText()) || jTextField.getText().contains("[B0T]")){
+                    displayMessage("Player " + (1 + i) + " name: " + jTextField.getText() + " can't be empty, contain \"[B0T]\" or be the same as another player!!");
                     jTextField.setText("");
                     result = JOptionPane.showConfirmDialog(null, namesPanel, "Player Names", JOptionPane.OK_OPTION);
                     if (result != JOptionPane.OK_OPTION){

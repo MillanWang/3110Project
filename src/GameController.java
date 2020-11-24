@@ -212,12 +212,6 @@ public class GameController {
                 diceFightResultString += "\n" + game.diceFightInfo(attackerDefender);
                 gameView.displayMessage(diceFightResultString);
 
-                //Possible takeover of territory
-                //Need to choose how many troops to send into conquered territory
-                //Possible eliminations
-                //Possible announcement of win
-
-
                 //Checking if another dice fight can happen or not.
                 if (attacker.getTroops() <= 1){
                     break;
