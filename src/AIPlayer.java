@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
@@ -5,7 +6,7 @@ import java.util.Random;
 /**
  * This class represents an AI player in the game RISK
  */
-public class AIPlayer extends Player{
+public class AIPlayer extends Player implements Serializable {
 
     /**
      * A constructor that sets the player class variables.
