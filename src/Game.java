@@ -7,6 +7,9 @@ public class Game implements Serializable {
     private Dice dice;
     private GenericWorldMap genericWorldMap;
 
+    public enum GameState {BEFORETURN, DRAFT, DRAFTCOMPLETE, ATTACKERSELECTION, DEFENDERSELECITON, DICEFIGHTING, FORTIFYGIVER, FORTIFYRECEIVER};
+
+
     /**
      * Constructor for the class game. This will start playing the game
      */
