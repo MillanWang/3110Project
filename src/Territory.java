@@ -1,10 +1,11 @@
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Territory class holds each territory name, how many troops on it, who owns it and it's neighbours.
  */
-public class Territory {
+public class Territory implements Serializable {
 
     /**
      * Builder pattern to create territory classes
@@ -273,5 +274,26 @@ public class Territory {
             if (t.getOwner().equals(owner)) return true;
         }
         return false;
+    }
+
+
+    /**
+     * NEEDS TESTING A$AP FAST
+     *
+     * @param o
+     * @return
+     */
+    public boolean equals(Object o){
+        Territory compared = (Territory) o;
+
+        for (int i = 0; i<neighboursList.size(); i++){
+            if (!this.getNeighboursList().get(i).getTerritoryName().equals(
+                    compared.getNeighboursList().get(i).getTerritoryName()) ||
+                    this.getNeighboursList().get(i).getTroops() != compared.getNeighboursList().get(i).getTroops()){
+                return false;// Neighbours don't match or have have different numbers of troops
+            }
+        }
+        return this.getTerritoryName().equals(compared.getTerritoryName()) &&
+                this.getOwner().equals(compared.getOwner());
     }
 }

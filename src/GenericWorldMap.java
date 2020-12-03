@@ -3,6 +3,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Collections;
 
@@ -12,7 +13,7 @@ import java.util.Collections;
  *
  * Loads territory information about the map from external JSON file.
  */
-public class GenericWorldMap {
+public class GenericWorldMap implements Serializable {
 
     private LinkedList<Territory> allTerritories;
 

@@ -1,6 +1,7 @@
+import java.io.*;
 import java.util.*;
 
-public class Game {
+public class Game implements Serializable {
     private LinkedList<Player> players;
     private Player currentPlayer;
     private Dice dice;
@@ -244,4 +245,48 @@ public class Game {
         }
         currentPlayer = players.pop();//Establish the first player to go
     }
+
+    public void saveGame(String fileName){
+        try {
+            File file1 = new File(fileName);
+            FileOutputStream fileOutputStream = new FileOutputStream(file1);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(this);
+        }catch (Exception e){
+            System.err.println("Error when saving file");
+        }
+    }
+
+    public static Game loadGame(String fileName){
+        Game game = null;
+        try {
+            File file1 = new File(fileName);
+            FileInputStream fileInputStream = new FileInputStream(file1);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            game = (Game) objectInputStream.readObject();
+        }catch (Exception e){
+            System.err.println("Error when loading file");
+        }
+        return game;
+    }
+
+    public boolean equals(Object o){
+        Game comparedGame = (Game) o;
+
+        //Comparing current player names
+        if (!comparedGame.getCurrentPlayer().equals(this.getCurrentPlayer())) return false;
+
+        //Comparing queued player order
+        for (int i = 0; i<this.getPlayersList().size(); i++){
+            if (!this.getPlayersList().get(i).equals(comparedGame.getPlayersList().get(i))) return false;
+        }
+
+        //Comparing all territories
+        for(int i = 0; i<this.getGenericWorldMap().getAllTerritories().size(); i++){
+            if (!this.getGenericWorldMap().getAllTerritories().get(i).equals(comparedGame.getGenericWorldMap().getAllTerritories().get(i)))return false;
+        }
+
+        return true;
+    }
+
 }

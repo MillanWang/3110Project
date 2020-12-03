@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
@@ -10,7 +11,7 @@ import java.util.Scanner;
  * TEST COMMENT
  *
  */
-public class Dice {
+public class Dice implements Serializable {
     private Random random;
 
 
