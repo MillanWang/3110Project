@@ -22,22 +22,12 @@ public class AIPlayer extends Player implements Serializable {
     public void draftChoice(Game game){
         //Do all the draft behavior. Distribute all troops
         //game.displayMessage("Whatever happened during the draft phase")
-    }
-
-    /**
-     * Does the draft part of a phase for the current AI player's turn
-     *
-     * @return String containing the full result of the AIPlayers Draft
-     */
-    public String aiDraftPhase(){
-
-
         Random rando = new Random();
         LinkedList<Territory> territories = this.getTerritories();
         LinkedList<Territory> drafted = new LinkedList<>();
         Collections.shuffle(territories);
 
-        this.bonusTroops();
+        //this.bonusTroops();
 
         while (super.numTroops > 0){
             int troopToDraft =  rando.nextInt(super.numTroops) + 1;
@@ -58,8 +48,10 @@ public class AIPlayer extends Player implements Serializable {
             str += territory.getTerritoryName() + " now has " + territory.getTroops() + " troops" + "\n";
         }
 
-        return str;
+        game.displayMessage(str);
     }
+
+
 
     public boolean wantToAttack(){
         return this.findAttackStarter() != null;
