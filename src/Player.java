@@ -8,6 +8,7 @@ public class Player implements Serializable {
     private String name; // The name of the player.
     private LinkedList<Territory> territories; // A list of the territories the player occupies.
     protected int numTroops;
+    private String controllerMessage;
 
     /**
      * A constructor that sets the player class variables.
@@ -198,6 +199,16 @@ public class Player implements Serializable {
         numTroops -= Integer.parseInt(troops);
 
         return territoryName + " now has " + getTerritory(territoryName).getTroops() + " troops after adding " + troops;
+    }
+
+    /**
+     * WORK IN PROGRESS
+     * Determines if the current player wants to attack or not. Asks the player directly
+     *
+     * @return if the player wants to attack or not
+     */
+    public boolean wantToAttack(){
+        return true;
     }
 
     /**
