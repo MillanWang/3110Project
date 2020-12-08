@@ -10,6 +10,7 @@ public class Game implements Serializable {
         DICEFIGHTORQUIT,
         DICEFIGHTATTACKERCHOICE,
         DICEFIGHTDEFENDERCHOICE,
+        FORTIFYORQUIT,
         FORTIFYGIVER,
         FORTIFYRECEIVER,
         ELIMINATION,
@@ -375,6 +376,11 @@ public class Game implements Serializable {
         //Set the field to the string "attack" if wants to attack. Clear the field otherwise
     }
 
+    public void fortifyOrQuit(){
+        gameState = GameState.FORTIFYORQUIT;
+        notifyObservers();
+    }
+
     public void chooseAttackStarter(){
         gameState = GameState.ATTACKERSELECTION;
         currentTerritoriesOfInterest = Player.getTerritoryStringArray(currentPlayer.getAttackStarters());
@@ -408,6 +414,19 @@ public class Game implements Serializable {
 
     public void chooseAttackerDice(int maxDice){
 
+    }
+
+
+    public void chooseFortifyGivers(){
+        gameState = GameState.FORTIFYGIVER;
+        currentTerritoriesOfInterest = Player.getTerritoryStringArray(currentPlayer.getFortifyGivers());
+        notifyObservers();
+    }
+
+    public void chooseFortifyReceivers(String fortifyGiver){
+        gameState = GameState.FORTIFYRECEIVER;
+        Territory territory = currentPlayer.getTerritory(fortifyGiver);
+        currentTerritoriesOfInterest = Player.getTerritoryStringArray(currentPlayer.getFortifiableTerritories(territory));
     }
 
     public void gameDraft(){
@@ -457,7 +476,12 @@ public class Game implements Serializable {
 
 
 
+public void gameFortify(){
+        String fortifyGiver = currentPlayer.chooseFortifyGiver(this);
+        while(currentPlayer.wantToFortify(this, currentPlayer.getTerritory(fortifyGiver))){
 
+        }
+}
 
 
 
@@ -696,7 +720,7 @@ public class Game implements Serializable {
      */
     private void AIPlayerFortify(AIPlayer aiPlayer){
         //Need to check if the AI wants to fortify or not
-        if (aiPlayer.wantToFortify() && aiPlayer.getTerritories().size()>2){
+        if (aiPlayer.aiWantToFortify() && aiPlayer.getTerritories().size()>2){
             Territory giver = aiPlayer.findFortifyGiver();
             Territory receiver = aiPlayer.findFortifyReceiver(giver);
 
