@@ -10,6 +10,21 @@ public class Player implements Serializable {
     protected int numTroops;
     private String controllerMessage;
 
+    /*CONTROLLER MESSAGE
+        Controller calls the setter method on controllerMessage
+        ^^^Return this field to the game method that calls it
+        This should hold stuff like wantToAttack, attackStarterChoice, wantToFortify, etc.
+
+    */
+
+
+
+
+
+
+
+
+
     /**
      * A constructor that sets the player class variables.
      *
