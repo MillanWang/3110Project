@@ -1,9 +1,10 @@
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * A class representing a player in the game.
  */
-public class Player {
+public class Player implements Serializable {
     private String name; // The name of the player.
     private LinkedList<Territory> territories; // A list of the territories the player occupies.
     protected int numTroops;
@@ -262,6 +263,17 @@ public class Player {
             stringArray[i] = territories.get(i).getTerritoryName();
         }
         return stringArray;
+    }
+
+    public boolean equals(Object o){
+        Player compared = (Player) o;
+
+        //Comparing all owned territories
+        for (int i = 0; i<this.getTerritories().size(); i++){
+            if (!this.getTerritories().get(i).equals(compared.getTerritories().get(i))) return false;
+        }
+
+        return this.getName().equals(compared.getName());
     }
 
 }

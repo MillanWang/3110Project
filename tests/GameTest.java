@@ -67,4 +67,18 @@ public class GameTest extends TestCase {
     }
 
 
+    @Test
+    public void testSaveAndLoad(){
+
+        LinkedList<String> names = new LinkedList<>();
+        names.add("first");
+        names.add("second[B0T]");
+        names.add("third");
+        game.makePlayers(names);
+
+        game.saveGame("testfile.txt");
+        Game loadedGame = Game.loadGame("testfile.txt");
+
+        assertTrue(game.equals(loadedGame));
+    }
 }
