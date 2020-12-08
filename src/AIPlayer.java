@@ -52,8 +52,8 @@ public class AIPlayer extends Player implements Serializable {
     }
 
 
-
-    public boolean wantToAttack(){
+    @Override
+    public boolean wantToAttack(Game game){
         return this.findAttackStarter() != null;
     }
 

@@ -128,6 +128,15 @@ public class Player implements Serializable {
      * and the territories / 3
      */
 
+    /**
+     * Used by controller to get GUI information to the player
+     *
+     * @param controllerMessage The message from the GUI
+     */
+    public void setControllerMessage(String controllerMessage) {
+        this.controllerMessage = controllerMessage;
+    }
+
     public void bonusTroops() {
         numTroops += continentBonus() + (Math.max((int) Math.floor(this.territories.size() / 3), 3));
     }
@@ -229,34 +238,16 @@ public class Player implements Serializable {
         game.displayMessage(this.getName() + " currently has " + this.getNumTroops());
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * WORK IN PROGRESS
      * Determines if the current player wants to attack or not. Asks the player directly
      *
      * @return if the player wants to attack or not
      */
-    public boolean wantToAttack(){
-        return true;
+    public boolean wantToAttack(Game game){
+        game.attackOrQuit();
+        //^^Publishes event to GUI. GUI response to controller which changes the field in current player
+        return controllerMessage.equals("attack");
     }
 
     /**

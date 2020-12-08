@@ -4,6 +4,7 @@ import java.util.*;
 public class Game implements Serializable {
     public enum GameState {BEFORETURN,
         DRAFT,
+        ATTACKORQUIT,
         ATTACKERSELECTION,
         DEFENDERSELECITON,
         DICEFIGHTING,
@@ -362,6 +363,15 @@ public class Game implements Serializable {
 
     }
 
+    public void attackOrQuit(){
+        gameState = GameState.ATTACKORQUIT;
+        notifyObservers();
+
+
+
+        //CONTROLLER NEEDS TO CHANGE THE FIELD INSIDE OF CURRENT PLAYER TO GET THE ANSWER
+    }
+
 
 
     public void gameDraft(){
@@ -378,7 +388,11 @@ public class Game implements Serializable {
         this.displayMessage("Draft stage complete, starting the attack phase for player: " + this.getCurrentPlayer());
     }
 
+    public void gameAttack(){
+        while (currentPlayer.wantToAttack(this)){
 
+        }
+    }
 
 
 
