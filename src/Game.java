@@ -7,7 +7,9 @@ public class Game implements Serializable {
         ATTACKORQUIT,
         ATTACKERSELECTION,
         DEFENDERSELECITON,
-        DICEFIGHTING,
+        DICEFIGHTORQUIT,
+        DICEFIGHTATTACKERCHOICE,
+        DICEFIGHTDEFENDERCHOICE,
         FORTIFYGIVER,
         FORTIFYRECEIVER,
         ELIMINATION,
@@ -370,9 +372,39 @@ public class Game implements Serializable {
 
 
         //CONTROLLER NEEDS TO CHANGE THE FIELD INSIDE OF CURRENT PLAYER TO GET THE ANSWER
-        //Set the field to the string "attack" if wants to attack. Do nothing otherwise
+        //Set the field to the string "attack" if wants to attack. Clear the field otherwise
     }
 
+    public void chooseAttackStarter(){
+        gameState = GameState.ATTACKERSELECTION;
+        currentTerritoriesOfInterest = Player.getTerritoryStringArray(currentPlayer.getAttackStarters());
+        notifyObservers();
+
+
+
+        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
+        //Field will be set to the name of the chosen attack starter territory
+
+    }
+
+    public void chooseAttackDefender(String attackStarter){
+        gameState = GameState.DEFENDERSELECITON;
+        currentTerritoriesOfInterest = Player.getTerritoryStringArray(currentPlayer.getTerritory(attackStarter).getAttackableNeighbours());
+        notifyObservers();
+
+        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
+        //Field will be set to the name of the chosen defender given the attackStarter
+    }
+
+
+    public void wantToDiceFight(){
+        gameState = GameState.DICEFIGHTORQUIT;
+        notifyObservers();
+
+
+        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
+        //Field will be set to the diceFight if want to fight. Clear the field otherwise
+    }
 
 
     public void gameDraft(){
@@ -391,13 +423,23 @@ public class Game implements Serializable {
 
     public void gameAttack(){
         while (currentPlayer.wantToAttack(this)){
-            //AttackStarterSelection
+
             String[] attackerDefender = {"",""};
+            //AttackStarterSelection
+            attackerDefender[0] = currentPlayer.chooseAttackStarter(this);
+
             //AttackDefenderSelection
-            //DiceFightAttackerChoiceOrQuit
-            //DiceFightDefenderChoice
-            //DiceFight results
-            //Possible Elimination and announcement of winner
+            attackerDefender[1] = currentPlayer.chooseAttackDefender(this, attackerDefender[0]);
+
+            //DiceFightOrQuit
+        while (currentPlayer.wantToDiceFight(this, attackerDefender[0])){
+                //DiceFightAttackerChoice
+                //DiceFightDefenderChoice
+                //DiceFight results
+                //Possible Elimination and announcement of winner
+            }
+
+
         }
     }
 

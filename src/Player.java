@@ -276,6 +276,29 @@ public class Player implements Serializable {
         return attackStarters;
     }
 
+    public String chooseAttackStarter(Game game){
+        game.chooseAttackStarter();
+        //^^This event will change the string in controller message to the user selected attackStarter
+
+        return this.controllerMessage;
+    }
+
+    public String chooseAttackDefender(Game game, String attackStarter){
+        game.chooseAttackDefender(attackStarter);
+        //^^This event will change the string in controller message to the user selected attackStarter
+
+        return this.controllerMessage;
+    }
+
+    public boolean wantToDiceFight(Game game, String attacker){
+
+        game.wantToDiceFight();
+        //^^This event will change the string in controllerMessage. Empty if no fight. diceFight if want to fight
+
+        return this.controllerMessage.equals("diceFight");
+    }
+
+
     /**
      * Returns a LIST/STRINGARRAY of territories that can be fortified from the given territory
      *
