@@ -2,7 +2,7 @@ import java.util.Random;
 
 public class GameController {
     private Game game;
-    private GameView gameView;
+
 
     /**
      * Constructor for the GameController class
@@ -10,9 +10,8 @@ public class GameController {
      * @param gameModel the model. Game class
      * @param gameView the view. GameView class
      */
-    public GameController(Game gameModel,  GameView gameView) {
+    public GameController(Game gameModel) {
         this.game = gameModel;
-        this.gameView = gameView;
     }
 
     /**
@@ -101,6 +100,10 @@ public class GameController {
 
             int[] diceFightChoice;//{diceFightOrBackToAttackSelection, numDiceRolls}
             String diceFightResultString = "";
+
+    public void draft(String territoryName, String troops){
+        game.displayMessage(game.getCurrentPlayerObject().draftPhase(territoryName,troops));
+    }
 
 
             while(true){//A PARTICULAR DICE FIGHT AFTER ATTACKER&DEFENDER ARE SELECTED
