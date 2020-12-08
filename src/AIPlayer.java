@@ -125,6 +125,10 @@ public class AIPlayer extends Player implements Serializable {
         }
     }
 
+    public int getAttackerDice(Game game, String attacker){
+        return this.chooseNumDice(this.getTerritory(attacker));
+    }
+
     /**
      * Determines if the current AI player wants to fortify
      *

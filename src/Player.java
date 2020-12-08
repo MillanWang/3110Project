@@ -298,13 +298,13 @@ public class Player implements Serializable {
         return this.controllerMessage.equals("diceFight");
     }
 
-/**
-    public boolean wantToFortify(Game game, Territory rootTerritory){
-        if (this.getFortifiableTerritories(rootTerritory) == null) {
+    public int getAttackerDice(Game game, String attacker){
+        game.chooseAttackerDice(Math.min(3 , this.getTerritory(attacker).getTroops() - 1));
+        //^^The number of dice that the player wants to roll will be written into controller message
 
-        }
+        return Integer.parseInt(controllerMessage);
     }
-**/
+
 
     /**
      * Returns a LIST/STRINGARRAY of territories that can be fortified from the given territory

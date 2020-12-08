@@ -29,8 +29,8 @@ public class Game implements Serializable {
     /**
      * Constructor for the class  This will start playing the game
      */
-    public Game(){
-        genericWorldMap = new GenericWorldMap();
+    public Game(String customMapName){
+        genericWorldMap = new GenericWorldMap(customMapName);
         players = new LinkedList<Player>();
         dice = new Dice();
         observers = new LinkedList<>();
@@ -406,19 +406,9 @@ public class Game implements Serializable {
         //Field will be set to the diceFight if want to fight. Clear the field otherwise
     }
 
-    public void chooseFortifyGiver(){
-        gameState = GameState.FORTIFYGIVER;
-        currentTerritoriesOfInterest = Player.getTerritoryStringArray(currentPlayer.getFortifyGivers());
-        notifyObservers();
-    }
+    public void chooseAttackerDice(int maxDice){
 
-    public void chooseFortifyReceiver(String fortifyGiver){
-        gameState = GameState.FORTIFYRECEIVER;
-        Territory territory = currentPlayer.getTerritory(fortifyGiver);
-        currentTerritoriesOfInterest = Player.getTerritoryStringArray(getCurrentPlayerObject().getFortifiableTerritories(territory));
-        notifyObservers();
     }
-
 
     public void gameDraft(){
         this.displayMessage("Starting the draft phase for player: " + this.getCurrentPlayer());
@@ -445,40 +435,24 @@ public class Game implements Serializable {
             attackerDefender[1] = currentPlayer.chooseAttackDefender(this, attackerDefender[0]);
 
             //DiceFightOrQuit
-        while (currentPlayer.wantToDiceFight(this, attackerDefender[0])){
+            int attackerDice, defenderDice;
+            while (currentPlayer.wantToDiceFight(this, attackerDefender[0])){
                 //DiceFightAttackerChoice
+                attackerDice = currentPlayer.getAttackerDice(this, attackerDefender[0]);
+
                 //DiceFightDefenderChoice
+                defenderDice = 0;
+
                 //DiceFight results
-                //Possible Elimination and announcement of winner
-            }
+                displayMessage(this.diceFight(attackerDefender, attackerDice,defenderDice));
+
+                //Possible elimination and announcement of winner
+
+            }//End diceFightOrQuit
 
 
-        }
-    }
-
-
-    public void gameFortify(){
-
-
-        //while(currentPlayer.wantToFortify(this, currentPlayer.)){}
-        /*private void humanPlayerFortify(Player currentPlayer){
-        this.displayMessage("Attack stage complete, starting the Fortify stage for player: " + this.getCurrentPlayer());
-        //Ask player to choose any one of their owned terrys
-        String[] results = gameView.startFortify(Player.getTerritoryStringArray(currentPlayer.getFortifyGivers()));
-        if (!results[0].equals("0")) return; //Player decides to skip fortify. Ends turn
-
-        //Once selection is made, get the fortifiable terry list
-
-        //Player chooses one of the fortifiable territories
-        String fortified = gameView.chooseFortified(Player.getTerritoryStringArray(currentPlayer.getFortifiableTerritories(this.getTerritory(results[1]))));
-
-        int movedTroops = gameView.numTroopsToFortify(this.getTerritory(results[1]).getTroops() - 1 );
-        //Max troops to send is numTroops on fortifyStarter-1
-        //Adjust the troop numbers appropriately
-        this.getTerritory(results[1]).changeTroops(-movedTroops);
-        this.getTerritory(fortified).changeTroops(movedTroops);
-    }*/
-    }
+        }//End wantToAttack
+    }//End gameAttack()
 
 
 

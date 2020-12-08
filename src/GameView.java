@@ -9,9 +9,9 @@ public class GameView extends JFrame implements GameObserver{
     private Game game;// the model of the game
     private JMenuBar menuBar;//the menu bar for the game
     private JMenuItem menuItemHelp, menuItemQuit, menuItemReset, menuItemCurrentPlayer, menuItemShowTerritories, menuItemNextTurn;// the menuItems for the game
-    private JPanel gamePanel;// the two JPanels that will be used in the game
-    private JButton newGameBtn;// the first button will be appeard to the player
-    private GameController controller;// the controller of the game
+    private JPanel gamePanel,startPage,mapInfo,status;// the two JPanels that will be used in the game
+    private JButton newGameBtn;// the first button will be appeard to the player	    private JButton newGameBtn;// the first button will be appeared to the player
+    private GameController controller;// the controller of the game    private GameController controller;// the controller of the game
     private ImageIcon map;// will store the path for the map picture
 
     /**
@@ -36,6 +36,7 @@ public class GameView extends JFrame implements GameObserver{
 
     /**
      * Creates red start page before starting the game
+     *
 
     private void createStartPage() {
         gamePanel = new JPanel(new BorderLayout());
@@ -77,6 +78,8 @@ public class GameView extends JFrame implements GameObserver{
         addMenuItems();
         addMapPicture();
         settingNumberOfPlayer();
+        addMapInfo();
+        addGameStatus();
     }
 
     /**
@@ -104,7 +107,7 @@ public class GameView extends JFrame implements GameObserver{
         menuItemReset.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         menuItemReset.addActionListener(e -> {
             dispose();//causes the JFrame window to be destroyed and cleaned up by the operating system
-            new GameView(new Game());//create a new GameVew, so new window
+            new GameView(new Game("DefaultMap.txt"));//create a new GameVew, so new window
         });
         menuBar.add(menuItemReset);
 
@@ -152,13 +155,74 @@ public class GameView extends JFrame implements GameObserver{
     private void addMapPicture(){
         map = new ImageIcon(getClass().getResource("DefaultWorldMap.jpg"));
         JLabel MapLabel = new JLabel(map);
+        gamePanel.setBackground(Color.LIGHT_GRAY);
         gamePanel.add(MapLabel,BorderLayout.CENTER);
-        pack();
+    }
+
+
+    /**
+     * Sets the full game info on the GUI
+     */
+    private void addMapInfo(){
+        mapInfo = new JPanel();
+        mapInfo.setBackground(Color.LIGHT_GRAY);
+        mapInfo.setLayout(new BoxLayout(mapInfo, BoxLayout.Y_AXIS));
+        updateGameInfo();
+        mapInfo.setVisible(true);
+        gamePanel.add(mapInfo, BorderLayout.EAST);
     }
 
     /**
-     * Setting the number of players in the game
+     * Sets the current game status on the GUI
      */
+    private void addGameStatus(){
+        status = new JPanel();
+        status.setBackground(Color.LIGHT_GRAY);
+        status.setLayout(new BoxLayout(status, BoxLayout.Y_AXIS));
+        updateGameStatus("Welcome to RISK Global Domination\n"+
+                "The goal of the game is to take control of all territories on the map.\n"+
+                "Players who lose all of their territories are eliminated from the \n" +
+                "The last player standing is the ULTIMATE CHAMPION.\n" +
+                "To start the draft phase, click on the Start Next Turn JMenu Item (Top Right).");
+        status.setVisible(true);
+        gamePanel.add(status, BorderLayout.SOUTH);
+        pack();
+    }
+
+
+    /**
+    * updates the  current game status on the GUI
+    */
+    private void updateGameInfo(){
+        mapInfo.removeAll();
+        String[] arr = game.getGenericWorldMap().getAllTerritoriesString().split("\n");
+        for (int i = 0; i<arr.length; i++) {
+             JLabel text = new JLabel( arr[i]);
+            text.setFont(new Font("Arial", Font.BOLD, 12));
+            text.setBorder(BorderFactory.createLineBorder(Color.orange));
+            mapInfo.add(text);
+        }
+        mapInfo.revalidate();
+    }
+
+    /**
+    * updates the current game status on the GUI
+    */
+    private void updateGameStatus(String newStatus){
+        status.removeAll();
+        String[] arr = newStatus.split("\n");
+        for (int i = 0; i<arr.length; i++) {
+            JLabel text = new JLabel(  arr[i]);
+            text.setFont(new Font("Arial", Font.BOLD, 12));
+            status.add(text);
+        }
+        status.revalidate();
+    }
+
+
+/**
+ * Setting the number of players in the game
+ */
     private void settingNumberOfPlayer(){
         String[] possiblePlayers = { "2","3","4","5","6" };
         JPanel panel = new JPanel();
@@ -219,6 +283,7 @@ public class GameView extends JFrame implements GameObserver{
         }
 
         this.game.makePlayers(playerNames);//calling the makePlayers method and create the player in the Model
+        updateGameInfo(); // updating the game info with updated territory info
     }
 
     /**
@@ -511,6 +576,6 @@ public class GameView extends JFrame implements GameObserver{
      * @param args
      */
     public static void main(String[] args) {
-        new GameView(new Game());//Starts the game
+        new GameView(new Game("DefaultMap.txt"));//Starts the game
     }
 }
