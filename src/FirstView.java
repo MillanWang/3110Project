@@ -35,7 +35,7 @@ public class FirstView extends JFrame {
         // when the user click the button, then these methods would be called and the startPage would be removed
         newGamebtnDefaultMap.addActionListener(e-> {
             gamePanel.remove(startPage);
-            game = new Game();
+            game = new Game("DefaultMap.txt");
             gameView = new GameView(game);
             dispose();
         });
