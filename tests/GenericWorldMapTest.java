@@ -16,7 +16,7 @@ public class GenericWorldMapTest {
      */
     @Test
     public void getAllTerritories() {
-        gwm = new GenericWorldMap();
+        gwm = new GenericWorldMap("DefaultMap.txt");
         assertEquals(42, gwm.getAllTerritories().size());
     }
 
@@ -26,7 +26,7 @@ public class GenericWorldMapTest {
      */
     @Test
     public void getAllTerritoriesString() {
-        gwm = new GenericWorldMap();
+        gwm = new GenericWorldMap("DefaultMap.txt");
         LinkedList<Territory> territories = gwm.getAllTerritories();
         assertTrue(gwm.getAllTerritoriesString().contains("Alaska"));
         assertTrue(gwm.getAllTerritoriesString().contains("Congo"));
@@ -40,7 +40,7 @@ public class GenericWorldMapTest {
      */
     @Test
     public void getTerritory() {
-        gwm = new GenericWorldMap();
+        gwm = new GenericWorldMap("DefaultMap.txt");
         Territory ter = new Territory.Builder("Alaska").setContinentName("NorthAmerica")
                 .setNumTerritoriesInContinent(9).setContinentControlBonus(5).build();
         assertTrue(gwm.getAllTerritories().contains(gwm.getTerritory("Alaska")));

@@ -12,7 +12,7 @@ public class AIPlayerTest {
 
         //Setting up game to with AI players. All methods require the aiPlayer to be in a game context
 
-        game = new Game();
+        game = new Game("DefaultMap.txt");
         LinkedList<String> aiPlayers = new LinkedList<String>();
         aiPlayers.add("AI1[B0T]");
         aiPlayers.add("AI2[B0T]");

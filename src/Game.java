@@ -29,8 +29,8 @@ public class Game implements Serializable {
     /**
      * Constructor for the class  This will start playing the game
      */
-    public Game(){
-        genericWorldMap = new GenericWorldMap();
+    public Game(String customMapName){
+        genericWorldMap = new GenericWorldMap(customMapName);
         players = new LinkedList<Player>();
         dice = new Dice();
         observers = new LinkedList<>();
@@ -406,6 +406,9 @@ public class Game implements Serializable {
         //Field will be set to the diceFight if want to fight. Clear the field otherwise
     }
 
+    public void chooseAttackerDice(int maxDice){
+
+    }
 
     public void gameDraft(){
         this.displayMessage("Starting the draft phase for player: " + this.getCurrentPlayer());
@@ -432,16 +435,24 @@ public class Game implements Serializable {
             attackerDefender[1] = currentPlayer.chooseAttackDefender(this, attackerDefender[0]);
 
             //DiceFightOrQuit
-        while (currentPlayer.wantToDiceFight(this, attackerDefender[0])){
+            int attackerDice, defenderDice;
+            while (currentPlayer.wantToDiceFight(this, attackerDefender[0])){
                 //DiceFightAttackerChoice
+                attackerDice = currentPlayer.getAttackerDice(this, attackerDefender[0]);
+
                 //DiceFightDefenderChoice
+                defenderDice = 0;
+
                 //DiceFight results
-                //Possible Elimination and announcement of winner
-            }
+                displayMessage(this.diceFight(attackerDefender, attackerDice,defenderDice));
+
+                //Possible elimination and announcement of winner
+
+            }//End diceFightOrQuit
 
 
-        }
-    }
+        }//End wantToAttack
+    }//End gameAttack()
 
 
 

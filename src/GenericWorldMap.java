@@ -23,14 +23,15 @@ public class GenericWorldMap implements Serializable {
      * Constructor for the DefaultWorldMap class
      * This map is modeled after the real world and
      */
-    public GenericWorldMap() {
+    public GenericWorldMap(String mapName) {
         allTerritories = new LinkedList<>();
 
         //Loading in the custom map from file. Need to ask for user path. SMALL EXAMPLE FOR NOW.
         String jsonText = "";
         try {
             //InputStream in = getClass().getResourceAsStream("/TestSmallWorldMap.txt"); //SMALLER MAP FOR EASIER TESTING
-            InputStream in = getClass().getResourceAsStream("/DefaultMap.txt");
+            //InputStream in = getClass().getResourceAsStream("/DefaultMap.txt");
+            InputStream in = getClass().getResourceAsStream(mapName);
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             StringBuilder sb = new StringBuilder();
             String line = reader.readLine();

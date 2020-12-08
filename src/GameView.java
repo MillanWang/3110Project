@@ -103,7 +103,7 @@ public class GameView extends JFrame implements GameObserver{
         menuItemReset.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         menuItemReset.addActionListener(e -> {
             dispose();//causes the JFrame window to be destroyed and cleaned up by the operating system
-            new GameView(new Game());//create a new GameVew, so new window
+            new GameView(new Game("DefaultMap.txt"));//create a new GameVew, so new window
         });
         menuBar.add(menuItemReset);
 
@@ -508,6 +508,6 @@ public class GameView extends JFrame implements GameObserver{
      * @param args
      */
     public static void main(String[] args) {
-        new GameView(new Game());//Starts the game
+        new GameView(new Game("DefaultMap.txt"));//Starts the game
     }
 }
