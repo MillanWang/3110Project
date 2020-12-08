@@ -125,8 +125,18 @@ public class AIPlayer extends Player implements Serializable {
         }
     }
 
+    @Override
     public int getAttackerDice(Game game, String attacker){
         return this.chooseNumDice(this.getTerritory(attacker));
+    }
+
+    @Override
+    public int getDefenderDice(Game game, Territory territory){
+        if (territory.getTroops() >= 2){
+            return 2;
+        } else{
+            return 1;
+        }
     }
 
     /**

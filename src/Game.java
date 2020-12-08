@@ -407,6 +407,27 @@ public class Game implements Serializable {
     }
 
     public void chooseAttackerDice(int maxDice){
+        gameState = GameState.DICEFIGHTATTACKERCHOICE;
+        currentMessage = "" + maxDice;
+        notifyObservers();
+        currentMessage = "";
+
+
+
+        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
+        //Field will be set to the chosen number of dice to roll
+    }
+
+    public void chooseDefenderDice(int maxDice){
+        gameState = GameState.DICEFIGHTDEFENDERCHOICE;
+        currentMessage = "" + maxDice;
+        notifyObservers();
+        currentMessage = "";
+
+
+
+        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
+        //Field will be set to the chosen number of dice to roll
 
     }
 
@@ -441,12 +462,15 @@ public class Game implements Serializable {
                 attackerDice = currentPlayer.getAttackerDice(this, attackerDefender[0]);
 
                 //DiceFightDefenderChoice
-                defenderDice = 0;
+                Player defender = this.getPlayerFromList(this.getTerritory(attackerDefender[1]).getOwner());
+                defenderDice = defender.getDefenderDice(this, this.getTerritory(attackerDefender[1]));
 
                 //DiceFight results
                 displayMessage(this.diceFight(attackerDefender, attackerDice,defenderDice));
 
                 //Possible elimination and announcement of winner
+                //Current diceFight ends if attacker has 1 troop left, or territory is conquered
+                if (endDiceFight(attackerDefender, attackerDice)) break;
 
             }//End diceFightOrQuit
 
@@ -454,7 +478,40 @@ public class Game implements Serializable {
         }//End wantToAttack
     }//End gameAttack()
 
+    public boolean endDiceFight(String[] attackerDefender, int attackerDice){
+        //Checking if another dice fight can happen or not.
+        if (this.getTerritory(attackerDefender[0]).getTroops() <= 1){
+            //Attacker can no longer dice fight from the current selected territory
+            this.displayMessage("Only one troop left! You can no longer attack from " + attackerDefender[0]);
+            return true;
 
+
+        } else if (this.getTerritory(attackerDefender[1]).getTroops() <= 0){
+            //Defender just lost. Territory is given to the attacker. Ask how many troops to move in
+            this.displayMessage(attackerDefender[1] + " has just been conquered!");
+
+
+
+
+            //Asking user for how many troops to move into newly conquered territory
+            //int incomingTroops = gameView.troopsToMoveIn(this.getTerritory(attackerDefender[0]).getTroops(), attackerDice);
+
+
+            int incomingTroops = 0;
+
+            //Checking if the defender owner is eliminated
+            String loserName = this.getTerritory(attackerDefender[1]).getOwner();
+            if (this.takeoverTerritory(currentPlayer, this.getTerritory(attackerDefender[0]), this.getTerritory(attackerDefender[1]), incomingTroops)){
+                //A player has been eliminated
+                this.announceElimination(loserName);
+
+                //Checking if the player has won. Announce it if so
+                if (this.hasWinner()) this.announceWinner();
+            }
+            return true;//No more dice fight for this attackDefender pair after territory takeover
+        }
+        return false;
+    }
 
 
 

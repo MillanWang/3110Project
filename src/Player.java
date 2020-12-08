@@ -305,6 +305,13 @@ public class Player implements Serializable {
         return Integer.parseInt(controllerMessage);
     }
 
+    public int getDefenderDice(Game game, Territory territory){
+        game.chooseDefenderDice(Math.min(territory.getTroops(), 2));
+        //^^The number of dice that the player wants to roll will be written into controller message
+
+        return Integer.parseInt(controllerMessage);
+    }
+
 
     /**
      * Returns a LIST/STRINGARRAY of territories that can be fortified from the given territory
