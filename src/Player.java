@@ -225,8 +225,9 @@ public class Player implements Serializable {
     public void draftChoice(Game game){
         //Make an event with the currentPlayer's territories and the numTroops=Message
         //game.draftEvent
+        game.draftEvent();
+        game.displayMessage(this.getName() + " currently has " + this.getNumTroops());
     }
-
 
 
 
