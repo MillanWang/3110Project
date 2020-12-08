@@ -18,17 +18,57 @@ public class AIPlayer extends Player implements Serializable {
         super(name);
     }
 
+
+
+
+
+
+
     @Override
     public void draftChoice(Game game){
         //Do all the draft behavior. Distribute all troops
         //game.displayMessage("Whatever happened during the draft phase")
+        Random rando = new Random();
+        LinkedList<Territory> territories = this.getTerritories();
+        LinkedList<Territory> drafted = new LinkedList<>();
+        Collections.shuffle(territories);
+
+        //this.bonusTroops();
+
+        while (super.numTroops > 0){
+            int troopToDraft =  rando.nextInt(super.numTroops) + 1;
+            //Get ONE terry from shuffled territories list
+            territories.peek().changeTroops(troopToDraft);
+            //Send random number of troops there
+            super.numTroops -= troopToDraft;
+            //Add the terry to the list of drafted
+            if (!drafted.contains(territories.peek())) drafted.add(territories.peek());
+            //Send that terry to the back of the linked list
+            territories.add(territories.pop());
+
+        }
+
+        //Build string from the drafted territories list
+        String str = "";
+        for (Territory territory: drafted){
+            str += territory.getTerritoryName() + " now has " + territory.getTroops() + " troops" + "\n";
+        }
+
+        game.displayMessage(str);
     }
+
+
+
+
+
+
 
     /**
      * Does the draft part of a phase for the current AI player's turn
      *
      * @return String containing the full result of the AIPlayers Draft
      */
+    /**
     public String aiDraftPhase(){
 
 
@@ -60,6 +100,7 @@ public class AIPlayer extends Player implements Serializable {
 
         return str;
     }
+     **/
 
     public boolean wantToAttack(){
         return this.findAttackStarter() != null;
