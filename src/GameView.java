@@ -8,7 +8,7 @@ public class GameView extends JFrame implements GameObserver{
     private Game game;// the model of the game
     private JMenuBar menuBar;//the menu bar for the game
     private JMenuItem menuItemHelp, menuItemQuit, menuItemReset, menuItemCurrentPlayer, menuItemShowTerritories, menuItemNextTurn;// the menuItems for the game
-    private JPanel gamePanel,startPage;// the two JPanels that will be used in the game
+    private JPanel gamePanel;// the two JPanels that will be used in the game
     private JButton newGameBtn;// the first button will be appeard to the player
     private GameController controller;// the controller of the game
     private ImageIcon map;// will store the path for the map picture
@@ -23,7 +23,9 @@ public class GameView extends JFrame implements GameObserver{
         this.setLayout(new BorderLayout());
         this.game=game;
         this.controller = new GameController(game);
-        createStartPage();
+        gamePanel = new JPanel(new BorderLayout());
+        add(gamePanel);
+        displayGame();
         setSize(800, 580);
         // i changed resizable to true just in case the player wants it full screen
         setResizable(false);
@@ -33,7 +35,7 @@ public class GameView extends JFrame implements GameObserver{
 
     /**
      * Creates red start page before starting the game
-     */
+
     private void createStartPage() {
         gamePanel = new JPanel(new BorderLayout());
         add(gamePanel);
@@ -65,7 +67,7 @@ public class GameView extends JFrame implements GameObserver{
         startPage.add(newGameBtn);
         gamePanel.add(startPage,BorderLayout.CENTER);
     }
-
+     */
     /**
      * Displays the game GUI
      */
@@ -73,6 +75,7 @@ public class GameView extends JFrame implements GameObserver{
         gamePanel.setVisible(true);
         addMenuItems();
         addMapPicture();
+        settingNumberOfPlayer();
     }
 
     /**
