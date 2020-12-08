@@ -150,6 +150,7 @@ public class GameView extends JFrame implements GameObserver {
     private void addMapPicture(){
         map = new ImageIcon(getClass().getResource("DefaultWorldMap.jpg"));
         JLabel MapLabel = new JLabel(map);
+        gamePanel.setBackground(Color.LIGHT_GRAY);
         gamePanel.add(MapLabel,BorderLayout.CENTER);
     }
 
@@ -170,6 +171,7 @@ public class GameView extends JFrame implements GameObserver {
      */
     private void addGameStatus(){
         status = new JPanel();
+        status.setBackground(Color.LIGHT_GRAY);
         status.setLayout(new BoxLayout(status, BoxLayout.Y_AXIS));
         updateGameStatus("Welcome to RISK Global Domination\n"+
                 "The goal of the game is to take control of all territories on the map.\n"+
@@ -200,6 +202,7 @@ public class GameView extends JFrame implements GameObserver {
      * updates the current game status on the GUI
      */
     private void updateGameStatus(String newStatus){
+        status.removeAll();
         String[] arr = newStatus.split("\n");
         for (int i = 0; i<arr.length; i++) {
             JLabel text = new JLabel(  arr[i]);
