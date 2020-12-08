@@ -406,6 +406,19 @@ public class Game implements Serializable {
         //Field will be set to the diceFight if want to fight. Clear the field otherwise
     }
 
+    public void chooseFortifyGiver(){
+        gameState = GameState.FORTIFYGIVER;
+        currentTerritoriesOfInterest = Player.getTerritoryStringArray(currentPlayer.getFortifyGivers());
+        notifyObservers();
+    }
+
+    public void chooseFortifyReceiver(String fortifyGiver){
+        gameState = GameState.FORTIFYRECEIVER;
+        Territory territory = currentPlayer.getTerritory(fortifyGiver);
+        currentTerritoriesOfInterest = Player.getTerritoryStringArray(getCurrentPlayerObject().getFortifiableTerritories(territory));
+        notifyObservers();
+    }
+
 
     public void gameDraft(){
         this.displayMessage("Starting the draft phase for player: " + this.getCurrentPlayer());
@@ -441,6 +454,30 @@ public class Game implements Serializable {
 
 
         }
+    }
+
+
+    public void gameFortify(){
+
+
+        //while(currentPlayer.wantToFortify(this, currentPlayer.)){}
+        /*private void humanPlayerFortify(Player currentPlayer){
+        this.displayMessage("Attack stage complete, starting the Fortify stage for player: " + this.getCurrentPlayer());
+        //Ask player to choose any one of their owned terrys
+        String[] results = gameView.startFortify(Player.getTerritoryStringArray(currentPlayer.getFortifyGivers()));
+        if (!results[0].equals("0")) return; //Player decides to skip fortify. Ends turn
+
+        //Once selection is made, get the fortifiable terry list
+
+        //Player chooses one of the fortifiable territories
+        String fortified = gameView.chooseFortified(Player.getTerritoryStringArray(currentPlayer.getFortifiableTerritories(this.getTerritory(results[1]))));
+
+        int movedTroops = gameView.numTroopsToFortify(this.getTerritory(results[1]).getTroops() - 1 );
+        //Max troops to send is numTroops on fortifyStarter-1
+        //Adjust the troop numbers appropriately
+        this.getTerritory(results[1]).changeTroops(-movedTroops);
+        this.getTerritory(fortified).changeTroops(movedTroops);
+    }*/
     }
 
 
