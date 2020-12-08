@@ -44,9 +44,13 @@ public class FirstView extends JFrame {
         loadGameBtn.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         // when the user click the button, then these methods would be called and the startPage would be removed
         loadGameBtn.addActionListener(e-> {
-            //displayGame();
+
+            try{
+                chooseFile();
+            } catch (Exception event) {
+                event.printStackTrace();
+            }
             gamePanel.remove(startPage);
-            //settingNumberOfPlayer();
         });
 
         // Adding game title
@@ -62,6 +66,19 @@ public class FirstView extends JFrame {
         gamePanel.add(startPage,BorderLayout.CENTER);
     }
 
+    public String chooseFile(){
+        String fileName="";
+        JFileChooser fileChooser = new JFileChooser();
+        StringBuilder sb = new StringBuilder();
+        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
+            //get the file
+            fileName = fileChooser.getSelectedFile().getName();
+        }
+        else {
+            JOptionPane.showMessageDialog(this,"No file was selected!");
+        }
+        return fileName;
+    }
     public static void main(String[] args) {
         new FirstView();
     }
