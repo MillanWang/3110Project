@@ -350,7 +350,7 @@ public class Game implements Serializable {
         currentMessage = "";
     }
 
-    public void startDraft(){
+    public void draftEvent(){
         gameState = GameState.DRAFT;
         currentMessage = "" + currentPlayer.getNumTroops();
         currentTerritoriesOfInterest = currentPlayer.getTerritoriesList();
@@ -360,7 +360,26 @@ public class Game implements Serializable {
 
 
 
+    public void gameDraft(){
+        this.displayMessage("Starting the draft phase for player: " + this.getCurrentPlayer());
+        //String[] draftInfoFromView;
+        currentPlayer.bonusTroops();
 
+
+        //Keep asking player to send troops to territories until there are no more troops to send
+        while (currentPlayer.getNumTroops() > 0){
+            currentPlayer.draftChoice(this);//Calls the player obj to get the choice
+
+            //EXAMPLE FOR FUTURE OPERATIONS
+            //String answer = currentPlayer.doAttackThingExample()
+                                                //^^Returns the field set by the controller
+            //game.doSomething(answer);
+
+        }
+
+        //Draft complete. Move on to attack
+        this.displayMessage("Draft stage complete, starting the attack phase for player: " + this.getCurrentPlayer());
+    }
 
 
 

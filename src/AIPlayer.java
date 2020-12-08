@@ -18,6 +18,12 @@ public class AIPlayer extends Player implements Serializable {
         super(name);
     }
 
+    @Override
+    public void draftChoice(Game game){
+        //Do all the draft behavior. Distribute all troops
+        //game.displayMessage("Whatever happened during the draft phase")
+    }
+
     /**
      * Does the draft part of a phase for the current AI player's turn
      *
