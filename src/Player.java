@@ -128,6 +128,15 @@ public class Player implements Serializable {
      * and the territories / 3
      */
 
+    /**
+     * Used by controller to get GUI information to the player
+     *
+     * @param controllerMessage The message from the GUI
+     */
+    public void setControllerMessage(String controllerMessage) {
+        this.controllerMessage = controllerMessage;
+    }
+
     public void bonusTroops() {
         numTroops += continentBonus() + (Math.max((int) Math.floor(this.territories.size() / 3), 3));
     }
@@ -217,11 +226,6 @@ public class Player implements Serializable {
     }
 
 
-
-
-
-
-
     /**
      * WORK IN PROGRESS
      *
@@ -230,32 +234,9 @@ public class Player implements Serializable {
     public void draftChoice(Game game){
         //Make an event with the currentPlayer's territories and the numTroops=Message
         //game.draftEvent
-        this.getTerritoriesList();
-        this.getNumTroops();
         game.draftEvent();
         game.displayMessage(this.getName() + " currently has " + this.getNumTroops());
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     /**
      * WORK IN PROGRESS
@@ -263,8 +244,17 @@ public class Player implements Serializable {
      *
      * @return if the player wants to attack or not
      */
-    public boolean wantToAttack(){
-        return true;
+    public boolean wantToAttack(Game game){
+        if (this.getAttackStarters()==null){
+            //No attack starters. Cannot attack
+            game.displayMessage("No available territories can start an attack");
+            return false;
+        }
+
+
+        game.attackOrQuit();
+        //^^Publishes event to GUI. GUI response to controller which changes the field in current player
+        return controllerMessage.equals("attack");
     }
 
     /**
@@ -285,6 +275,29 @@ public class Player implements Serializable {
 
         return attackStarters;
     }
+
+    public String chooseAttackStarter(Game game){
+        game.chooseAttackStarter();
+        //^^This event will change the string in controller message to the user selected attackStarter
+
+        return this.controllerMessage;
+    }
+
+    public String chooseAttackDefender(Game game, String attackStarter){
+        game.chooseAttackDefender(attackStarter);
+        //^^This event will change the string in controller message to the user selected attackStarter
+
+        return this.controllerMessage;
+    }
+
+    public boolean wantToDiceFight(Game game, String attacker){
+
+        game.wantToDiceFight();
+        //^^This event will change the string in controllerMessage. Empty if no fight. diceFight if want to fight
+
+        return this.controllerMessage.equals("diceFight");
+    }
+
 
     /**
      * Returns a LIST/STRINGARRAY of territories that can be fortified from the given territory

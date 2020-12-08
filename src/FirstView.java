@@ -2,8 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class FirstView extends JFrame {
-    private JButton newGameBtn, loadGameBtn;
+    private JButton newGamebtnDefaultMap, newGamebtnCustomMaps, loadGameBtn;
     private JPanel gamePanel,startPage;// the two JPanels that will be used in the game
+    private GameView gameView;
+    private Game game;
 
     public FirstView(){
         createStartPage();
@@ -25,26 +27,38 @@ public class FirstView extends JFrame {
         startPage.setLayout(null);
         startPage.setBackground(new Color(204, 0, 24));
 
-        newGameBtn = new JButton("Start a New Game");
-        newGameBtn.setBounds(280, 350, 210, 50);
-        newGameBtn.setFont(new Font("Monospaced", Font.BOLD, 20));
-        newGameBtn.setBackground(Color.WHITE);
-        newGameBtn.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        newGamebtnDefaultMap = new JButton("Start a New Game With Default Map");
+        newGamebtnDefaultMap.setBounds(180, 350, 420, 50);
+        newGamebtnDefaultMap.setFont(new Font("Monospaced", Font.BOLD, 20));
+        newGamebtnDefaultMap.setBackground(Color.WHITE);
+        newGamebtnDefaultMap.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         // when the user click the button, then these methods would be called and the startPage would be removed
-        newGameBtn.addActionListener(e-> {
+        newGamebtnDefaultMap.addActionListener(e-> {
+            gamePanel.remove(startPage);
+            game = new Game();
+            gameView = new GameView(game);
+            dispose();
+        });
+
+        newGamebtnCustomMaps = new JButton("Start a New Game With Custom Map");
+        newGamebtnCustomMaps.setBounds(180, 410, 420, 50);
+        newGamebtnCustomMaps.setFont(new Font("Monospaced", Font.BOLD, 20));
+        newGamebtnCustomMaps.setBackground(Color.WHITE);
+        newGamebtnCustomMaps.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        // when the user click the button, then these methods would be called and the startPage would be removed
+        newGamebtnCustomMaps.addActionListener(e-> {
             //displayGame();
             gamePanel.remove(startPage);
             //settingNumberOfPlayer();
         });
 
         loadGameBtn = new JButton("Load Previous Game");
-        loadGameBtn.setBounds(280, 460, 240, 40);
+        loadGameBtn.setBounds(250, 470, 240, 40);
         loadGameBtn.setFont(new Font("Monospaced", Font.BOLD, 20));
         loadGameBtn.setBackground(Color.WHITE);
         loadGameBtn.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         // when the user click the button, then these methods would be called and the startPage would be removed
         loadGameBtn.addActionListener(e-> {
-
             try{
                 chooseFile();
             } catch (Exception event) {
@@ -56,12 +70,13 @@ public class FirstView extends JFrame {
         // Adding game title
         JLabel title = new JLabel("RISK GAME");
         title.setFont(new Font("Monospaced", Font.BOLD, 100));
-        title.setBounds(150, 200, 900, 100);
+        title.setBounds(140, 180, 900, 100);
         title.setForeground(Color.WHITE);
 
         // Adding all components to panel
         startPage.add(title);
-        startPage.add(newGameBtn);
+        startPage.add(newGamebtnDefaultMap);
+        startPage.add(newGamebtnCustomMaps);
         startPage.add(loadGameBtn);
         gamePanel.add(startPage,BorderLayout.CENTER);
     }

@@ -18,12 +18,6 @@ public class AIPlayer extends Player implements Serializable {
         super(name);
     }
 
-
-
-
-
-
-
     @Override
     public void draftChoice(Game game){
         //Do all the draft behavior. Distribute all troops
@@ -58,51 +52,8 @@ public class AIPlayer extends Player implements Serializable {
     }
 
 
-
-
-
-
-
-    /**
-     * Does the draft part of a phase for the current AI player's turn
-     *
-     * @return String containing the full result of the AIPlayers Draft
-     */
-    /**
-    public String aiDraftPhase(){
-
-
-        Random rando = new Random();
-        LinkedList<Territory> territories = this.getTerritories();
-        LinkedList<Territory> drafted = new LinkedList<>();
-        Collections.shuffle(territories);
-
-        this.bonusTroops();
-
-        while (super.numTroops > 0){
-            int troopToDraft =  rando.nextInt(super.numTroops) + 1;
-            //Get ONE terry from shuffled territories list
-            territories.peek().changeTroops(troopToDraft);
-            //Send random number of troops there
-            super.numTroops -= troopToDraft;
-            //Add the terry to the list of drafted
-            if (!drafted.contains(territories.peek())) drafted.add(territories.peek());
-            //Send that terry to the back of the linked list
-            territories.add(territories.pop());
-
-        }
-
-        //Build string from the drafted territories list
-        String str = "";
-        for (Territory territory: drafted){
-            str += territory.getTerritoryName() + " now has " + territory.getTroops() + " troops" + "\n";
-        }
-
-        return str;
-    }
-     **/
-
-    public boolean wantToAttack(){
+    @Override
+    public boolean wantToAttack(Game game){
         return this.findAttackStarter() != null;
     }
 
@@ -142,6 +93,16 @@ public class AIPlayer extends Player implements Serializable {
         return current;
     }
 
+    @Override
+    public String chooseAttackStarter(Game game){
+        return this.findAttackStarter().getTerritoryName();
+    }
+
+    @Override
+    public String chooseAttackDefender(Game game, String attackStarter){
+        return this.findAttackDefender(getTerritory(attackStarter)).getTerritoryName();
+    }
+
     /**
      * Returns if the current AIPlayer wants to diceFight right now
      * Only want to dice fight if attacker has more troops than 5 troops
@@ -149,8 +110,9 @@ public class AIPlayer extends Player implements Serializable {
      * @param attacker The attacker territory
      * @return If the AI player wants to continue with the attack or not
      */
-    public boolean wantToDiceFight(Territory attacker){
-        return attacker.getTroops() > 5;
+    @Override
+    public boolean wantToDiceFight(Game game, String attacker){
+        return this.getTerritory(attacker).getTroops() > 5;
     }
 
     public int chooseNumDice(Territory territory){

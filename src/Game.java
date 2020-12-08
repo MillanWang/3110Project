@@ -4,9 +4,12 @@ import java.util.*;
 public class Game implements Serializable {
     public enum GameState {BEFORETURN,
         DRAFT,
+        ATTACKORQUIT,
         ATTACKERSELECTION,
         DEFENDERSELECITON,
-        DICEFIGHTING,
+        DICEFIGHTORQUIT,
+        DICEFIGHTATTACKERCHOICE,
+        DICEFIGHTDEFENDERCHOICE,
         FORTIFYGIVER,
         FORTIFYRECEIVER,
         ELIMINATION,
@@ -356,32 +359,89 @@ public class Game implements Serializable {
         currentTerritoriesOfInterest = currentPlayer.getTerritoriesList();
         notifyObservers();
         currentMessage = "";
+
+
+        //CONTROLLER NEEDS TO DO SOME DRAFT
+
     }
 
+    public void attackOrQuit(){
+        gameState = GameState.ATTACKORQUIT;
+        notifyObservers();
+
+
+
+        //CONTROLLER NEEDS TO CHANGE THE FIELD INSIDE OF CURRENT PLAYER TO GET THE ANSWER
+        //Set the field to the string "attack" if wants to attack. Clear the field otherwise
+    }
+
+    public void chooseAttackStarter(){
+        gameState = GameState.ATTACKERSELECTION;
+        currentTerritoriesOfInterest = Player.getTerritoryStringArray(currentPlayer.getAttackStarters());
+        notifyObservers();
+
+
+
+        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
+        //Field will be set to the name of the chosen attack starter territory
+
+    }
+
+    public void chooseAttackDefender(String attackStarter){
+        gameState = GameState.DEFENDERSELECITON;
+        currentTerritoriesOfInterest = Player.getTerritoryStringArray(currentPlayer.getTerritory(attackStarter).getAttackableNeighbours());
+        notifyObservers();
+
+        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
+        //Field will be set to the name of the chosen defender given the attackStarter
+    }
+
+
+    public void wantToDiceFight(){
+        gameState = GameState.DICEFIGHTORQUIT;
+        notifyObservers();
+
+
+        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
+        //Field will be set to the diceFight if want to fight. Clear the field otherwise
+    }
 
 
     public void gameDraft(){
         this.displayMessage("Starting the draft phase for player: " + this.getCurrentPlayer());
 
-        currentPlayer.bonusTroops();
-
+        currentPlayer.bonusTroops();//Calculates the number of troops to be distributed
 
         //Keep asking player to send troops to territories until there are no more troops to send
         while (currentPlayer.getNumTroops() > 0){
             currentPlayer.draftChoice(this);//Calls the player obj to get the choice
-
-            //EXAMPLE FOR FUTURE OPERATIONS
-            //String answer = currentPlayer.doAttackThingExample()
-                                                //^^Returns the field set by the controller
-            //game.doSomething(answer);
-
         }
 
         //Draft complete. Move on to attack
         this.displayMessage("Draft stage complete, starting the attack phase for player: " + this.getCurrentPlayer());
     }
 
+    public void gameAttack(){
+        while (currentPlayer.wantToAttack(this)){
 
+            String[] attackerDefender = {"",""};
+            //AttackStarterSelection
+            attackerDefender[0] = currentPlayer.chooseAttackStarter(this);
+
+            //AttackDefenderSelection
+            attackerDefender[1] = currentPlayer.chooseAttackDefender(this, attackerDefender[0]);
+
+            //DiceFightOrQuit
+        while (currentPlayer.wantToDiceFight(this, attackerDefender[0])){
+                //DiceFightAttackerChoice
+                //DiceFightDefenderChoice
+                //DiceFight results
+                //Possible Elimination and announcement of winner
+            }
+
+
+        }
+    }
 
 
 
