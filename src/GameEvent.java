@@ -6,23 +6,23 @@ public class GameEvent extends EventObject {
     //Fields of interest
     private Player currentPlayer;
     private GenericWorldMap genericWorldMap;
-    private boolean hasWinner;
     private Game.GameState gameState;
     private String[] territoriesOfInterest;
+    private String message;
 
     //Constructor
     public GameEvent(Game model,
                      Player currentPlayer,
                      GenericWorldMap genericWorldMap,
-                     boolean hasWinner,
                      Game.GameState gameState,
-                     String[] territoriesOfInterest){
+                     String[] territoriesOfInterest,
+                     String message){
         super(model);
         this.currentPlayer = currentPlayer;
         this.genericWorldMap = genericWorldMap;
-        this.hasWinner = hasWinner;
         this.gameState = gameState;
         this.territoriesOfInterest = territoriesOfInterest;
+        this.message = message;
     }
 
     //Getter methods for all fields
@@ -30,10 +30,10 @@ public class GameEvent extends EventObject {
 
     public GenericWorldMap getGenericWorldMap() { return genericWorldMap; }
 
-    public boolean isHasWinner() { return hasWinner; }
-
     public Game.GameState getGameState() { return gameState; }
 
     public String[] getTerritoriesOfInterest() { return territoriesOfInterest; }
+
+    public String getMessage() {return message;}
 
 }

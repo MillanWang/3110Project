@@ -22,7 +22,7 @@ public class GameView extends JFrame implements GameObserver{
         super("RISK: GLOBAL DOMINATION");
         this.setLayout(new BorderLayout());
         this.game=game;
-        this.controller = new GameController(game,this);
+        this.controller = new GameController(game);
         createStartPage();
         setSize(800, 580);
         // i changed resizable to true just in case the player wants it full screen
@@ -134,7 +134,7 @@ public class GameView extends JFrame implements GameObserver{
         menuItemNextTurn = new JMenuItem("Start Next Turn");
         menuItemNextTurn.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         menuItemNextTurn.addActionListener(e -> {
-            controller.startPlayersTurn();
+            //controller.startPlayersTurn();
         });
         menuBar.add(menuItemNextTurn);
 
@@ -287,7 +287,7 @@ public class GameView extends JFrame implements GameObserver{
         // gets the territory that can start an attack
 
         //GETTING THE DEFENDER
-        String[] defenderStrings = controller.getNeighboursToAttack(game.getCurrentPlayerObject().getTerritory(currentAttackStarter));
+        String[] defenderStrings = {};//controller.getNeighboursToAttack(game.getCurrentPlayerObject().getTerritory(currentAttackStarter));
 
         JPanel defendPanel = new JPanel();
         defendPanel.add(new JLabel("Select country to attack from " + currentAttackStarter));
@@ -486,16 +486,16 @@ public class GameView extends JFrame implements GameObserver{
     @Override
     public void handleUpdate(GameEvent event) {
         if (event.getGameState().equals(Game.GameState.ELIMINATION)) {
-            announceElimination(event.getCurrentMessage());
+            announceElimination(event.getMessage());
 
         } else if (event.getGameState().equals(Game.GameState.HASWINNER)) {
             announceWinner(event.getCurrentPlayer().getName());
 
         }else if (event.getGameState().equals(Game.GameState.DRAFT)){
-            startDraft(Integer.parseInt(event.getCurrentMessage()), event.getTerritoriesOfInterest());
+            startDraft(Integer.parseInt(event.getMessage()), event.getTerritoriesOfInterest());
 
-        } else if (!event.getCurrentMessage().equals("")) {
-            displayMessage(event.getCurrentMessage());
+        } else if (!event.getMessage().equals("")) {
+            displayMessage(event.getMessage());
         }
     }
 

@@ -387,7 +387,7 @@ public class Game implements Serializable {
      *
      */
     public void startPlayersTurn() {
-        if (this.hasWinner()) {
+   /*     if (this.hasWinner()) {
             //Cannot do next turn if a winner has already been found
             this.announceWinner();
             return;//Immediately get out the method.
@@ -407,6 +407,8 @@ public class Game implements Serializable {
         }
         this.displayMessage(this.getCurrentPlayerObject().getName() + " has finished their turn!");
         this.nextTurn();//Switching to the next player
+        */
+
     }
 
     /**
@@ -415,19 +417,21 @@ public class Game implements Serializable {
      * @param currentPlayer The current player
      */
     private void humanPlayerDraft(Player currentPlayer){
-        this.displayMessage("Starting the draft phase for player: " + this.getCurrentPlayer());
+       /* this.displayMessage("Starting the draft phase for player: " + this.getCurrentPlayer());
         String[] draftInfoFromView;
 
         currentPlayer.bonusTroops();
 
         //Keep asking player to send troops to territories until there are no more troops to send
         while (currentPlayer.getNumTroops() > 0){
-            draftInfoFromView = this.startDraft();//ONLY FOR HUMANS
+            //draftInfoFromView = this.startDraft();//ONLY FOR HUMANS
             this.displayMessage(this.getCurrentPlayerObject().draftPhase(draftInfoFromView[0],draftInfoFromView[1]));
         }
 
         //Draft complete. Move on to attack
         this.displayMessage("Draft stage complete, starting the attack phase for player: " + this.getCurrentPlayer());
+        */
+
     }
 
     /**
@@ -435,7 +439,7 @@ public class Game implements Serializable {
      *
      * @param currentPlayer The current player
      */
-    private void humanPlayerAttack(Player currentPlayer){
+   /* private void humanPlayerAttack(Player currentPlayer){
         int endAttackStage = 0; //Non zero when player hits "End Attack" or window X
         String[] attackerDefender; //{AttackingTerritoryName , DefenderTerritoryName}
         while (true){//Continue attacking until player decides to stop, or no more territories can start the attack
@@ -447,12 +451,12 @@ public class Game implements Serializable {
             }
 
             //Getting the option from the player
-            endAttackStage = gameView.attackOrQuitOption();
+            //endAttackStage = gameView.attackOrQuitOption();
 
             if (endAttackStage!=0)break;//Player chooses to end attack. Moving on to next phase
 
             //Player wants to start an attack
-            attackerDefender = gameView.attackSelection();
+            //attackerDefender = gameView.attackSelection();
             //^^Array of {attacker, defender}
 
             this.displayMessage(attackerDefender[0] + " is about to attack " + attackerDefender[1]);
@@ -498,14 +502,14 @@ public class Game implements Serializable {
                 }
             }
         }
-    }
+    }*/
 
     /**
      * Starts the fortify phase for a human player
      *
      * @param currentPlayer The current player
      */
-    private void humanPlayerFortify(Player currentPlayer){
+    /*private void humanPlayerFortify(Player currentPlayer){
         this.displayMessage("Attack stage complete, starting the Fortify stage for player: " + this.getCurrentPlayer());
         //Ask player to choose any one of their owned terrys
         String[] results = gameView.startFortify(Player.getTerritoryStringArray(currentPlayer.getFortifyGivers()));
@@ -521,14 +525,14 @@ public class Game implements Serializable {
         //Adjust the troop numbers appropriately
         this.getTerritory(results[1]).changeTroops(-movedTroops);
         this.getTerritory(fortified).changeTroops(movedTroops);
-    }
+    }*/
 
     /**
      * Processes and handles an AI player's turn.
      * This will only be called by the startPlayersTurn() method if the current player is an AI
      *
      */
-    private void startAIPlayersTurn(AIPlayer aiPlayer){
+    /*private void startAIPlayersTurn(AIPlayer aiPlayer){
         // Draft phase
         this.displayMessage(aiPlayer.aiDraftPhase());
 
@@ -539,14 +543,14 @@ public class Game implements Serializable {
         if (!this.hasWinner() && aiPlayer.getFortifyGivers() != null) {
             AIPlayerFortify(aiPlayer);
         }
-    }
+    }*/
 
     /**
      * Runs the attack phase of an AI players turn
      *
      * @param aiPlayer the current AIPlayer
      */
-    private void AIPlayerAttack(AIPlayer aiPlayer){
+   /* private void AIPlayerAttack(AIPlayer aiPlayer){
         // Attack phase
         Territory attacker, defender;
         while(aiPlayer.wantToAttack()){
@@ -593,7 +597,7 @@ public class Game implements Serializable {
                 }
             }
         }
-    }
+    }*/
 
     /**
      * Runs the fortify phase of an AI players turn
@@ -622,7 +626,7 @@ public class Game implements Serializable {
      * @param defender The name of the defending territory's owner
      * @return How many dice the defender wants to roll
      */
-    private int getDefenderDiceRoll(String defender){
+  /*  private int getDefenderDiceRoll(String defender){
         int defenderDiceFightChoice=1;
         if (this.getPlayerFromList(this.getTerritory(defender).getOwner()) instanceof AIPlayer){
             //Always roll 2 unless down to last troop. Roll 1
@@ -634,7 +638,7 @@ public class Game implements Serializable {
         //GOTTA ASK DEFENDER HOW MANY DICE TO ROLL IF DEFENDER IS HUMAN
         //AI DEFENDERS AUTO ROLL 2 UNLESS FORCED TO ROLL 1
         return defenderDiceFightChoice;
-    }
+    }    */
 
     /**
      * Getting the attackable neighbours string array for the specified territory
