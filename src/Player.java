@@ -245,6 +245,13 @@ public class Player implements Serializable {
      * @return if the player wants to attack or not
      */
     public boolean wantToAttack(Game game){
+        if (this.getAttackStarters()==null){
+            //No attack starters. Cannot attack
+            game.displayMessage("No available territories can start an attack");
+            return false;
+        }
+
+
         game.attackOrQuit();
         //^^Publishes event to GUI. GUI response to controller which changes the field in current player
         return controllerMessage.equals("attack");

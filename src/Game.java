@@ -370,6 +370,7 @@ public class Game implements Serializable {
 
 
         //CONTROLLER NEEDS TO CHANGE THE FIELD INSIDE OF CURRENT PLAYER TO GET THE ANSWER
+        //Set the field to the string "attack" if wants to attack. Do nothing otherwise
     }
 
 
@@ -390,7 +391,13 @@ public class Game implements Serializable {
 
     public void gameAttack(){
         while (currentPlayer.wantToAttack(this)){
-
+            //AttackStarterSelection
+            String[] attackerDefender = {"",""};
+            //AttackDefenderSelection
+            //DiceFightAttackerChoiceOrQuit
+            //DiceFightDefenderChoice
+            //DiceFight results
+            //Possible Elimination and announcement of winner
         }
     }
 
