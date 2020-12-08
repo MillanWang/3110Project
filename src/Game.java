@@ -362,7 +362,7 @@ public class Game implements Serializable {
 
     public void gameDraft(){
         this.displayMessage("Starting the draft phase for player: " + this.getCurrentPlayer());
-        //String[] draftInfoFromView;
+
         currentPlayer.bonusTroops();
 
 
