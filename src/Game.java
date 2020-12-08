@@ -369,6 +369,12 @@ public class Game implements Serializable {
         //Keep asking player to send troops to territories until there are no more troops to send
         while (currentPlayer.getNumTroops() > 0){
             currentPlayer.draftChoice(this);//Calls the player obj to get the choice
+
+            //EXAMPLE FOR FUTURE OPERATIONS
+            //String answer = currentPlayer.doAttackThingExample()
+                                                //^^Returns the field set by the controller
+            //game.doSomething(answer);
+
         }
 
         //Draft complete. Move on to attack
