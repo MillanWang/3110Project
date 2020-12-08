@@ -201,6 +201,38 @@ public class Player implements Serializable {
         return territoryName + " now has " + getTerritory(territoryName).getTroops() + " troops after adding " + troops;
     }
 
+
+    /**
+     * WORK IN PROGRESS
+     *
+     * @param game The game obj to be used to publish events
+     */
+    public void draftChoice(Game game){
+        //Make an event with the currentPlayer's territories and the numTroops=Message
+        //game.draftEvent
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * WORK IN PROGRESS
      * Determines if the current player wants to attack or not. Asks the player directly

@@ -375,7 +375,20 @@ public class Game implements Serializable {
 
 
 
+    public void gameDraft(){
+        this.displayMessage("Starting the draft phase for player: " + this.getCurrentPlayer());
+        //String[] draftInfoFromView;
+        currentPlayer.bonusTroops();
 
+
+        //Keep asking player to send troops to territories until there are no more troops to send
+        while (currentPlayer.getNumTroops() > 0){
+            currentPlayer.draftChoice(this);//Calls the player obj to get the choice
+        }
+
+        //Draft complete. Move on to attack
+        this.displayMessage("Draft stage complete, starting the attack phase for player: " + this.getCurrentPlayer());
+    }
 
 
 
