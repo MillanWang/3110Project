@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Collections;
+import java.util.Map;
 
 /**
  * This class is to represent the entire playing map in the game RISK for
@@ -130,4 +132,67 @@ public class GenericWorldMap implements Serializable {
             System.out.println("Neighbour count: " );
         }
     }
+
+    /**
+     * Verifies if the loaded map can be played or not
+     *
+     * @return True if the map can be played, false otherwise
+     */
+    public boolean verifyMap(){
+
+        if (this.getAllTerritories().size() < 6 ) return false; //Map must have at least 6 territories to be legitimate
+
+        Map continentAndTimesSeen = new HashMap<String, Integer>();
+        Map continentAndContinentBonus = new HashMap<String, Integer>();
+
+        //Iterate through all territories.
+        for(Territory t : allTerritories){
+            if (t.getNeighboursList().size() == 0) return false; //Illegal to have no neighbours
+
+            //Ensuring that all neighbour relationships are two directional
+            for (Territory neighbour : t.getNeighboursList()){
+                if (!verifyTwoWayNeighbour(t,neighbour)) return false;
+            }
+
+            String cName = t.getContinentName(); // getting the continent the territory belongs to
+
+            // check if we have seen a territory that belongs to the continent previously
+            if (continentAndTimesSeen.containsKey(cName)) {
+                // if we have seen the a territory in the continent previously increment our counter
+                continentAndTimesSeen.put(cName, ((int) continentAndTimesSeen.get(cName) + 1));
+
+                //Verifies that the continent control bonus will be consistent between territories
+                if ((int) continentAndContinentBonus.get(cName) != t.getContinentControlBonus()) return false;
+            }else{
+                // if we are yet to see the continent put it as a new key value pair
+                continentAndTimesSeen.put(cName, 1);
+                continentAndContinentBonus.put(cName, t.getContinentControlBonus());
+            }
+
+            //Cannot see territories in a given continent more times than there are territories in that continent
+            if(t.getNumberOfTerritoriesInContinent() < (int)continentAndTimesSeen.get(cName))return false;
+
+        }
+
+        LinkedList<Territory> seenTerritories = new LinkedList<>();
+        seenTerritories.add(this.getAllTerritories().get(0));
+        int current = 0;
+
+        while(current < seenTerritories.size()){
+            for (Territory t : seenTerritories.get(current).getNeighboursList()){
+                if (!seenTerritories.contains(t)){
+                    //Only add to seen if not in list already
+                    seenTerritories.add(t);
+                }
+            }
+            current++;
+        }
+
+        return seenTerritories.size() == this.getAllTerritories().size();
+    }
+
+    private boolean verifyTwoWayNeighbour(Territory territory1, Territory territory2){
+        return territory1.getNeighboursList().contains(territory2) && territory2.getNeighboursList().contains(territory1);
+    }
+
 }

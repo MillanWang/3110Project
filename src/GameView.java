@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
 
-public class GameView extends JFrame {
+public class GameView extends JFrame implements GameObserver{
     private Game game;// the model of the game
     private JMenuBar menuBar;//the menu bar for the game
     private JMenuItem menuItemHelp, menuItemQuit, menuItemReset, menuItemCurrentPlayer, menuItemShowTerritories, menuItemNextTurn;// the menuItems for the game
@@ -23,7 +23,7 @@ public class GameView extends JFrame {
         super("RISK: GLOBAL DOMINATION");
         this.setLayout(new BorderLayout());
         this.game=game;
-        this.controller = new GameController(game,this);
+        this.controller = new GameController(game);
         createStartPage();
         setSize(800, 580);
         // i changed resizable to true just in case the player wants it full screen
@@ -88,7 +88,11 @@ public class GameView extends JFrame {
         menuItemHelp = new JMenuItem("Help");
         menuItemHelp.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         menuItemHelp.addActionListener(e -> {
-            displayMessage(game.welcomeMessage());
+            displayMessage("Welcome to RISK Global Domination\n"+
+                    "The goal of the game is to take control of all territories on the map.\n"+
+                    "Players who lose all of their territories are eliminated from the \n" +
+                    "The last player standing is the ULTIMATE CHAMPION.\n" +
+                    "To start the draft phase, click on the Start Next Turn JMenu Item (Top Right).");
         });
         menuBar.add(menuItemHelp);
 
@@ -105,7 +109,7 @@ public class GameView extends JFrame {
         menuItemQuit = new JMenuItem("Quit");
         menuItemQuit.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         menuItemQuit.addActionListener(e -> {
-            displayMessage(game.quitMessage());
+            displayMessage("Thanks for playing. Goodbye");
             dispose();
         });
         menuBar.add(menuItemQuit);
@@ -131,7 +135,7 @@ public class GameView extends JFrame {
         menuItemNextTurn = new JMenuItem("Start Next Turn");
         menuItemNextTurn.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         menuItemNextTurn.addActionListener(e -> {
-            controller.startPlayersTurn();
+            //controller.startPlayersTurn();
         });
         menuBar.add(menuItemNextTurn);
 
@@ -220,8 +224,7 @@ public class GameView extends JFrame {
      * @param numTroops The maximum number of troops that can be sent
      * @return StringArray {nameOfSelectedTerritory, numberOfTroopsMovingIn}
      */
-    public String[] startDraft(int numTroops){
-        String[] draftTerritories = controller.getPlayersTerritories();
+    public String[] startDraft(int numTroops, String[] draftTerritories){
 
         JPanel draftPanel = new JPanel();//creates panel to show list of draft territories
         draftPanel.add(new JLabel("Select territory to send troops to"));
@@ -287,7 +290,7 @@ public class GameView extends JFrame {
         // gets the territory that can start an attack
 
         //GETTING THE DEFENDER
-        String[] defenderStrings = controller.getNeighboursToAttack(game.getCurrentPlayerObject().getTerritory(currentAttackStarter));
+        String[] defenderStrings = {};//controller.getNeighboursToAttack(game.getCurrentPlayerObject().getTerritory(currentAttackStarter));
 
         JPanel defendPanel = new JPanel();
         defendPanel.add(new JLabel("Select country to attack from " + currentAttackStarter));
@@ -404,8 +407,8 @@ public class GameView extends JFrame {
     /**
      * Message dialog box announcing the winner
      */
-    public void announceWinner(){
-        JOptionPane.showMessageDialog(this, game.getCurrentPlayer() + " IS THE ULTIMATE RISK CHAMPION!!!", "GAME OVER!", JOptionPane.WARNING_MESSAGE);
+    public void announceWinner(String winner){
+        JOptionPane.showMessageDialog(this, winner + " IS THE ULTIMATE RISK CHAMPION!!!", "GAME OVER!", JOptionPane.WARNING_MESSAGE);
     }
 
     /**
@@ -482,6 +485,23 @@ public class GameView extends JFrame {
     public void displayMessage(String message) {
         JOptionPane.showMessageDialog(this, message);
     }
+
+    @Override
+    public void handleUpdate(GameEvent event) {
+        if (event.getGameState().equals(Game.GameState.ELIMINATION)) {
+            announceElimination(event.getMessage());
+
+        } else if (event.getGameState().equals(Game.GameState.HASWINNER)) {
+            announceWinner(event.getCurrentPlayer().getName());
+
+        }else if (event.getGameState().equals(Game.GameState.DRAFT)){
+            startDraft(Integer.parseInt(event.getMessage()), event.getTerritoriesOfInterest());
+
+        } else if (!event.getMessage().equals("")) {
+            displayMessage(event.getMessage());
+        }
+    }
+
 
     /**
      * Main method of the game. Run to start the GUI
