@@ -23,7 +23,10 @@ public class GameView extends JFrame implements GameObserver{
         this.setLayout(new BorderLayout());
         this.game=game;
         this.controller = new GameController(game);
-        createStartPage();
+        gamePanel = new JPanel(new BorderLayout());
+        add(gamePanel);
+        displayGame();
+        //createStartPage();
         setSize(800, 580);
         // i changed resizable to true just in case the player wants it full screen
         setResizable(false);
@@ -33,7 +36,6 @@ public class GameView extends JFrame implements GameObserver{
 
     /**
      * Creates red start page before starting the game
-     */
     private void createStartPage() {
         gamePanel = new JPanel(new BorderLayout());
         add(gamePanel);
@@ -65,7 +67,7 @@ public class GameView extends JFrame implements GameObserver{
         startPage.add(newGameBtn);
         gamePanel.add(startPage,BorderLayout.CENTER);
     }
-
+     */
     /**
      * Displays the game GUI
      */
@@ -73,6 +75,7 @@ public class GameView extends JFrame implements GameObserver{
         gamePanel.setVisible(true);
         addMenuItems();
         addMapPicture();
+        settingNumberOfPlayer();
     }
 
     /**
