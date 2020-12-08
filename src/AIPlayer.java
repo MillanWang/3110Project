@@ -57,6 +57,14 @@ public class AIPlayer extends Player implements Serializable {
         return this.findAttackStarter() != null;
     }
 
+
+    @Override
+    public boolean wantToFortify(Game game, Territory territory){
+        //BEHAVIOR
+        //Only want to fortify iff the player has a territory that has 1 or 2 troops
+        return this.findFortifyGiver() != null;
+    }
+
     /**
      * Returns an AI player's attack starter territory.
      * The first attack starter with at least 4 troops on it will be chosen
@@ -144,7 +152,7 @@ public class AIPlayer extends Player implements Serializable {
      *
      * @return Boolean of if the AI player wants to fortify or not
      */
-    public boolean wantToFortify(){
+    public boolean aiWantToFortify(){
         //BEHAVIOR
         //Only want to fortify iff the player has a territory that has 1 or 2 troops
         for (Territory t : super.getTerritories()){

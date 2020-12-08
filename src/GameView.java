@@ -3,6 +3,7 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Random;
 
 public class GameView extends JFrame implements GameObserver{
     private Game game;// the model of the game
@@ -315,6 +316,8 @@ public class GameView extends JFrame implements GameObserver{
         String[] returnValues = {territoryString,troopString};
         return returnValues;
     }
+
+
 
     /**
      * Asks the player if they want to start an attack or move on to the next phase (ENDS TURN IN MILESTONE 2)
