@@ -37,6 +37,7 @@ public class FirstView extends JFrame {
             gamePanel.remove(startPage);
             game = new Game();
             gameView = new GameView(game);
+            dispose();
         });
 
         newGamebtnCustomMaps = new JButton("Start a New Game With Custom Map");
