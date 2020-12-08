@@ -26,7 +26,7 @@ public class GameView extends JFrame implements GameObserver{
         gamePanel = new JPanel(new BorderLayout());
         add(gamePanel);
         displayGame();
-        setSize(800, 580);
+        setSize(1000, 580);
         // i changed resizable to true just in case the player wants it full screen
         setResizable(false);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -76,8 +76,8 @@ public class GameView extends JFrame implements GameObserver{
         gamePanel.setVisible(true);
         addMenuItems();
         addMapPicture();
-        settingNumberOfPlayer();
         addMapInfo();
+        settingNumberOfPlayer();
         addGameStatus();
     }
 
