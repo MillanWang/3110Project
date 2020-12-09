@@ -18,6 +18,7 @@ import java.util.Map;
 public class GenericWorldMap implements Serializable {
 
     private LinkedList<Territory> allTerritories;
+    private String imageFileName;
 
     /**
      * Constructor for the DefaultWorldMap class
@@ -51,6 +52,8 @@ public class GenericWorldMap implements Serializable {
         try {
             JSONTerritoryListParser jsonTerritoryListParser = mapper.readValue(jsonText, JSONTerritoryListParser.class);
             //^^Linkedlist containing info for individual territory objects
+
+            imageFileName = jsonTerritoryListParser.getImageFileName();
 
             //Creating new territories from all elements in the list
             Territory currentTerritoryToAdd;
@@ -130,7 +133,6 @@ public class GenericWorldMap implements Serializable {
     public void printAllTerritories(){
         for (Territory t: allTerritories){
             t.printInfo();
-            System.out.println("Neighbour count: " );
         }
     }
 
@@ -196,4 +198,5 @@ public class GenericWorldMap implements Serializable {
         return territory1.getNeighboursList().contains(territory2) && territory2.getNeighboursList().contains(territory1);
     }
 
+    public String getImageFileName() { return imageFileName; }
 }

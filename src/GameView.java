@@ -44,7 +44,7 @@ public class GameView extends JFrame implements GameObserver, Serializable {
     private void displayGame(){
         gamePanel.setVisible(true);
         addMenuItems();
-        addMapPicture();
+        addMapPicture(controller.getImageFileName());
         addMapInfo();
 
         addGameStatus();
@@ -136,11 +136,11 @@ public class GameView extends JFrame implements GameObserver, Serializable {
     /**
      * Sets the map image in the GUI
      */
-    private void addMapPicture(){
+    private void addMapPicture(String imageFileName){
 
         //NEEEDS A PARAMETER FOR THE PICTURE FILE NAME
 
-        map = new ImageIcon(getClass().getResource("DefaultWorldMap.jpg"));
+        map = new ImageIcon(getClass().getResource(imageFileName));
         JLabel MapLabel = new JLabel(map);
         gamePanel.setBackground(Color.LIGHT_GRAY);
         gamePanel.add(MapLabel,BorderLayout.CENTER);

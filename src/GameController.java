@@ -14,6 +14,10 @@ public class GameController implements Serializable {
         this.game = gameModel;
     }
 
+    public String getImageFileName(){
+        return game.getGenericWorldMap().getImageFileName();
+    }
+
     public void startPlayersTurn(){
         game.startTurn();
         game.nextTurn();

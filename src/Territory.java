@@ -293,7 +293,6 @@ public class Territory implements Serializable {
                 return false;// Neighbours don't match or have have different numbers of troops
             }
         }
-        return this.getTerritoryName().equals(compared.getTerritoryName()) &&
-                this.getOwner().equals(compared.getOwner());
+        return this.getTerritoryName().equals(compared.getTerritoryName());
     }
 }

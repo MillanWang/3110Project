@@ -4,6 +4,11 @@ import java.util.ArrayList;
 
 public class JSONTerritoryListParser {
     private ArrayList<JSONTerritoryParser> territories;
+    private String imageFileName;
+
+    public String getImageFileName() { return imageFileName; }
+
+    public void setImageFileName(String imageFileName) { this.imageFileName = imageFileName; }
 
     public ArrayList<JSONTerritoryParser> getTerritories() {
         return territories;

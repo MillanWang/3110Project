@@ -1,4 +1,5 @@
-{"territories" :[
+{"imageFileName" : "DefaultWorldMap.jpg",
+"territories" :[
 	{
 		"territoryName" : "Alaska",
 		"continentName" : "NorthAmerica",
