@@ -223,7 +223,7 @@ public class Player implements Serializable {
         //Make an event with the currentPlayer's territories and the numTroops=Message
         //game.draftEvent
         game.draftEvent();
-        game.displayMessage(this.getName() + " currently has " + this.getNumTroops());
+        game.displayMessage(this.getName() + " currently has " + this.getNumTroops() + " troops left to give");
     }
 
     /**
@@ -278,22 +278,22 @@ public class Player implements Serializable {
         return this.controllerMessage;
     }
 
-    public boolean wantToDiceFight(Game game, String attacker){
-        game.wantToDiceFight();
+    public boolean wantToDiceFight(Game game, String attackerCommaDefender){
+        game.wantToDiceFight(attackerCommaDefender);
         //^^This event will change the string in controllerMessage. Empty if no fight. diceFight if want to fight
 
         return this.controllerMessage.equals("diceFight");
     }
 
-    public int getAttackerDice(Game game, String attacker){
-        game.chooseAttackerDice(Math.min(3 , this.getTerritory(attacker).getTroops() - 1));
+    public int getAttackerDice(Game game, Territory territory){
+        game.chooseAttackerDice(Math.min(3 , territory.getTroops() - 1), territory.getOwner(), territory.getTerritoryName());
         //^^The number of dice that the player wants to roll will be written into controller message
 
         return Integer.parseInt(controllerMessage);
     }
 
     public int getDefenderDice(Game game, Territory territory){
-        game.chooseDefenderDice(Math.min(territory.getTroops(), 2));
+        game.chooseDefenderDice(Math.min(territory.getTroops(), 2), territory.getOwner(), territory.getTerritoryName());
         //^^The number of dice that the player wants to roll will be written into controller message
 
         return Integer.parseInt(controllerMessage);

@@ -14,6 +14,10 @@ public class GameController {
         this.game = gameModel;
     }
 
+    public void startPlayersTurn(){
+        game.nextTurn();
+    }
+
     public void makePlayers(LinkedList<String> playerNames){
         game.makePlayers(playerNames);
     }
@@ -47,8 +51,13 @@ public class GameController {
         game.setPlayerControllerMessage(attackDefender);
     }
 
-    public void wantToDiceFight(String diceFight){
-        game.setPlayerControllerMessage(diceFight);
+    public void wantToDiceFight(boolean wantToDiceFight) {
+        if (wantToDiceFight) {
+            game.setPlayerControllerMessage("diceFight");
+
+        } else {
+            game.setPlayerControllerMessage("");
+        }
     }
 
     public void setAttackerDice(String dice){

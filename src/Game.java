@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class Game implements Serializable {
-    public enum GameState {BEFORETURN,
+    public enum GameState {MESSAGE,
         DRAFT,
         ATTACKORQUIT,
         ATTACKERSELECTION,
@@ -37,6 +37,7 @@ public class Game implements Serializable {
         players = new LinkedList<Player>();
         dice = new Dice();
         observers = new LinkedList<>();
+        gameState = GameState.MESSAGE;
 
         this.addObserver(new GameView(this));
     }
@@ -98,8 +99,16 @@ public class Game implements Serializable {
      * Completes the current players turn (Draft>attack cycle) and sets the current player to the next player in line
      */
     public void nextTurn(){
+        startTurn();
         players.add(currentPlayer);//Added to the back
         currentPlayer = players.pop();//Pull out the first player in line to go next
+    }
+
+    public void startTurn(){
+        gameDraft();
+        gameAttack();
+        gameFortify();
+        displayMessage("End of " + currentPlayer.getName() + "'s turn!");
     }
 
     /**
@@ -337,6 +346,7 @@ public class Game implements Serializable {
      * @param message The message to be displayed to the user
      */
     public void displayMessage(String message){
+        gameState = GameState.MESSAGE;
         currentMessage = message;
         notifyObservers();
         currentMessage = "";
@@ -365,80 +375,55 @@ public class Game implements Serializable {
     public void draftEvent(){
         gameState = GameState.DRAFT;
         currentMessage = "" + currentPlayer.getNumTroops();
+
+        System.out.println(currentMessage);
+
         currentTerritoriesOfInterest = currentPlayer.getTerritoriesList();
         notifyObservers();
+
         currentMessage = "";
-
-
-        //CONTROLLER NEEDS TO DO SOME DRAFT
-
+        System.out.println(currentMessage);
     }
 
     public void attackOrQuit(){
         gameState = GameState.ATTACKORQUIT;
         notifyObservers();
-
-
-
-        //CONTROLLER NEEDS TO CHANGE THE FIELD INSIDE OF CURRENT PLAYER TO GET THE ANSWER
-        //Set the field to the string "attack" if wants to attack. Clear the field otherwise
     }
-
-
 
     public void chooseAttackStarter(){
         gameState = GameState.ATTACKERSELECTION;
         currentTerritoriesOfInterest = Player.getTerritoryStringArray(currentPlayer.getAttackStarters());
         notifyObservers();
-
-
-
-        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
-        //Field will be set to the name of the chosen attack starter territory
-
     }
 
     public void chooseAttackDefender(String attackStarter){
         gameState = GameState.DEFENDERSELECITON;
         currentTerritoriesOfInterest = Player.getTerritoryStringArray(currentPlayer.getTerritory(attackStarter).getAttackableNeighbours());
+        currentMessage = attackStarter;
         notifyObservers();
 
-        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
-        //Field will be set to the name of the chosen defender given the attackStarter
+        currentMessage = "";
     }
 
-
-    public void wantToDiceFight(){
+    public void wantToDiceFight(String attackerCommaDefender){
         gameState = GameState.DICEFIGHTORQUIT;
+        currentMessage = attackerCommaDefender;
         notifyObservers();
-
-
-        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
-        //Field will be set to the diceFight if want to fight. Clear the field otherwise
+        currentMessage = "";
     }
 
-    public void chooseAttackerDice(int maxDice){
+    public void chooseAttackerDice(int maxDice, String owner, String territoryName){
         gameState = GameState.DICEFIGHTATTACKERCHOICE;
-        currentMessage = "" + maxDice;
+        currentMessage = "" + maxDice + "," + owner + "," + territoryName;
         notifyObservers();
         currentMessage = "";
-
-
-
-        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
-        //Field will be set to the chosen number of dice to roll
     }
 
-    public void chooseDefenderDice(int maxDice){
+    public void chooseDefenderDice(int maxDice, String owner, String territoryName){
         gameState = GameState.DICEFIGHTDEFENDERCHOICE;
-        currentMessage = "" + maxDice;
+        currentMessage = "" + maxDice + "," + owner + "," + territoryName;
         notifyObservers();
         currentMessage = "";
-
-
-
-        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
-        //Field will be set to the chosen number of dice to roll
 
     }
 
@@ -447,23 +432,17 @@ public class Game implements Serializable {
         currentMessage = minMovingIn + "," + maxMovingIn;
         notifyObservers();
         currentMessage = "";
-
-        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
     }
 
     public void fortifyOrQuit(){
         gameState = GameState.FORTIFYORQUIT;
         notifyObservers();
-
-        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
     }
 
     public void chooseFortifyGivers(){
         gameState = GameState.FORTIFYGIVER;
         currentTerritoriesOfInterest = Player.getTerritoryStringArray(currentPlayer.getFortifyGivers());
         notifyObservers();
-
-        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
     }
 
     public void chooseFortifyReceivers(String fortifyGiver){
@@ -471,8 +450,6 @@ public class Game implements Serializable {
         Territory territory = currentPlayer.getTerritory(fortifyGiver);
         currentTerritoriesOfInterest = Player.getTerritoryStringArray(currentPlayer.getFortifiableTerritories(territory));
         notifyObservers();
-
-        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
     }
 
     public void chooseFortifyTroops(int maxTroopsToMove){
@@ -480,8 +457,7 @@ public class Game implements Serializable {
         currentMessage = "" + maxTroopsToMove;
 
         notifyObservers();
-
-        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
+        currentMessage = "";
     }
 
     public void gameDraft(){
@@ -510,9 +486,9 @@ public class Game implements Serializable {
 
             //DiceFightOrQuit
             int attackerDice, defenderDice;
-            while (currentPlayer.wantToDiceFight(this, attackerDefender[0])){
+            while (currentPlayer.wantToDiceFight(this, attackerDefender[0]+ "," + attackerDefender[1])){
                 //DiceFightAttackerChoice
-                attackerDice = currentPlayer.getAttackerDice(this, attackerDefender[0]);
+                attackerDice = currentPlayer.getAttackerDice(this, getTerritory(attackerDefender[0]));
 
                 //DiceFightDefenderChoice
                 Player defender = this.getPlayerFromList(this.getTerritory(attackerDefender[1]).getOwner());
@@ -544,13 +520,6 @@ public class Game implements Serializable {
             //Defender just lost. Territory is given to the attacker. Ask how many troops to move in
             this.displayMessage(attackerDefender[1] + " has just been conquered!");
 
-
-
-
-            //Asking user for how many troops to move into newly conquered territory
-            //int incomingTroops = gameView.troopsToMoveIn(this.getTerritory(attackerDefender[0]).getTroops(), attackerDice);
-
-
             int incomingTroops = currentPlayer.getTakeoverTroops(this, attackerDice, this.getTerritory(attackerDefender[0]).getTroops());
 
             //Checking if the defender owner is eliminated
@@ -579,15 +548,8 @@ public class Game implements Serializable {
         fortifyReceiver.changeTroops(troopsToMove);
 
         displayMessage("Fortify stage complete");
+        gameState = GameState.MESSAGE;
     }
-
-    public void startTurn(){
-        gameDraft();
-        gameAttack();
-        gameFortify();
-        displayMessage("End of " + currentPlayer.getName() + "'s turn!");
-    }
-
 
 
     /**
@@ -599,264 +561,6 @@ public class Game implements Serializable {
         return this.getCurrentPlayerObject().getTerritoriesList();
     }
 
-    /**
-     * Starts the draft,attack,(Fortify on next milestone),endTurn sequence for the current player.
-     *
-     */
-    public void startPlayersTurn() {
-   /*     if (this.hasWinner()) {
-            //Cannot do next turn if a winner has already been found
-            this.announceWinner();
-            return;//Immediately get out the method.
-        }
-
-        //If the current player is an AI player, handle turn in different method
-        if (this.getCurrentPlayerObject() instanceof AIPlayer){
-            startAIPlayersTurn((AIPlayer) this.getCurrentPlayerObject());
-        } else{
-            //Currently a human player
-            humanPlayerDraft(this.getCurrentPlayerObject());
-            humanPlayerAttack(this.getCurrentPlayerObject());
-            if (!this.hasWinner() && this.getCurrentPlayerObject().getFortifyGivers() != null && this.getCurrentPlayerObject().getTerritories().size() > 2){
-                //Can only fortify when there is no winner and when the current player has more than one territory
-                humanPlayerFortify(this.getCurrentPlayerObject());
-            }
-        }
-        this.displayMessage(this.getCurrentPlayerObject().getName() + " has finished their turn!");
-        this.nextTurn();//Switching to the next player
-        */
-
-    }
-
-    /**
-     * Starts the draft phase for a human player
-     *
-     * @param currentPlayer The current player
-     */
-    private void humanPlayerDraft(Player currentPlayer){
-       /* this.displayMessage("Starting the draft phase for player: " + this.getCurrentPlayer());
-        String[] draftInfoFromView;
-
-        currentPlayer.bonusTroops();
-
-        //Keep asking player to send troops to territories until there are no more troops to send
-        while (currentPlayer.getNumTroops() > 0){
-            //draftInfoFromView = this.startDraft();//ONLY FOR HUMANS
-            this.displayMessage(this.getCurrentPlayerObject().draftPhase(draftInfoFromView[0],draftInfoFromView[1]));
-        }
-
-        //Draft complete. Move on to attack
-        this.displayMessage("Draft stage complete, starting the attack phase for player: " + this.getCurrentPlayer());
-        */
-
-    }
-
-    /**
-     * Starts the attack phase for a human player
-     *
-     * @param currentPlayer The current player
-     */
-   /* private void humanPlayerAttack(Player currentPlayer){
-        int endAttackStage = 0; //Non zero when player hits "End Attack" or window X
-        String[] attackerDefender; //{AttackingTerritoryName , DefenderTerritoryName}
-        while (true){//Continue attacking until player decides to stop, or no more territories can start the attack
-            //Ensure that the player has attack starters
-            if (this.getCurrentPlayerObject().getAttackStarters() == null){
-                this.displayMessage(this.getCurrentPlayer() + " has no territories that can start an attack. End attack phase");
-                break;
-                //End turn and move on if no attack starters
-            }
-
-            //Getting the option from the player
-            //endAttackStage = gameView.attackOrQuitOption();
-
-            if (endAttackStage!=0)break;//Player chooses to end attack. Moving on to next phase
-
-            //Player wants to start an attack
-            //attackerDefender = gameView.attackSelection();
-            //^^Array of {attacker, defender}
-
-            this.displayMessage(attackerDefender[0] + " is about to attack " + attackerDefender[1]);
-
-            int[] diceFightChoice;//{diceFightOrBackToAttackSelection, numDiceRolls}
-            String diceFightResultString = "";
-
-
-            while(true){//A PARTICULAR DICE FIGHT AFTER ATTACKER&DEFENDER ARE SELECTED
-
-                diceFightChoice = gameView.diceFightView(this.getTerritory(attackerDefender[0]).maxDiceToRoll());
-                if (diceFightChoice[0] != 0) break;//Player wants to end current diceFight.
-
-                diceFightResultString = this.diceFight(attackerDefender, diceFightChoice[1], getDefenderDiceRoll(attackerDefender[1]));
-                diceFightResultString += "\n" + this.diceFightInfo(attackerDefender);
-                this.displayMessage(diceFightResultString);//Telling the player the rolls and results of the dice fight
-
-                //Checking if another dice fight can happen or not.
-                if (this.getTerritory(attackerDefender[0]).getTroops() <= 1){
-                    //Attacker can no longer dice fight from the current selected territory
-                    this.displayMessage("Only one troop left! You can no longer attack from " + attackerDefender[0]);
-                    break;
-                } else if (this.getTerritory(attackerDefender[1]).getTroops() <= 0){
-                    //Defender just lost. Territory is given to the attacker. Ask how many troops to move in
-                    this.displayMessage(attackerDefender[1] + " has just been conquered!");
-
-                    //Asking user for how many troops to move into newly conquered territory
-                    int incomingTroops = gameView.troopsToMoveIn(this.getTerritory(attackerDefender[0]).getTroops(), diceFightChoice[1]);
-
-                    //Checking if the defender owner is eliminated
-                    String loserName = this.getTerritory(attackerDefender[1]).getOwner();
-                    if (this.takeoverTerritory(currentPlayer, this.getTerritory(attackerDefender[0]), this.getTerritory(attackerDefender[1]), incomingTroops)){
-                        //A player has been eliminated
-                        this.announceElimination(loserName);
-
-                        //Checking if the player has won. If so,
-                        if(this.hasWinner()){
-                            this.announceWinner();
-                            return;
-                        }
-                    }
-                    break;//No more dice fight for this attackDefender pair after territory takeover
-                }
-            }
-        }
-    }*/
-
-    /**
-     * Starts the fortify phase for a human player
-     *
-     * @param currentPlayer The current player
-     */
-    /*private void humanPlayerFortify(Player currentPlayer){
-        this.displayMessage("Attack stage complete, starting the Fortify stage for player: " + this.getCurrentPlayer());
-        //Ask player to choose any one of their owned terrys
-        String[] results = gameView.startFortify(Player.getTerritoryStringArray(currentPlayer.getFortifyGivers()));
-        if (!results[0].equals("0")) return; //Player decides to skip fortify. Ends turn
-
-        //Once selection is made, get the fortifiable terry list
-
-        //Player chooses one of the fortifiable territories
-        String fortified = gameView.chooseFortified(Player.getTerritoryStringArray(currentPlayer.getFortifiableTerritories(this.getTerritory(results[1]))));
-
-        int movedTroops = gameView.numTroopsToFortify(this.getTerritory(results[1]).getTroops() - 1 );
-        //Max troops to send is numTroops on fortifyStarter-1
-        //Adjust the troop numbers appropriately
-        this.getTerritory(results[1]).changeTroops(-movedTroops);
-        this.getTerritory(fortified).changeTroops(movedTroops);
-    }*/
-
-    /**
-     * Processes and handles an AI player's turn.
-     * This will only be called by the startPlayersTurn() method if the current player is an AI
-     *
-     */
-    /*private void startAIPlayersTurn(AIPlayer aiPlayer){
-        // Draft phase
-        this.displayMessage(aiPlayer.aiDraftPhase());
-
-        //Attack phase
-        AIPlayerAttack(aiPlayer);
-
-        // Fortify
-        if (!this.hasWinner() && aiPlayer.getFortifyGivers() != null) {
-            AIPlayerFortify(aiPlayer);
-        }
-    }*/
-
-    /**
-     * Runs the attack phase of an AI players turn
-     *
-     * @param aiPlayer the current AIPlayer
-     */
-   /* private void AIPlayerAttack(AIPlayer aiPlayer){
-        // Attack phase
-        Territory attacker, defender;
-        while(aiPlayer.wantToAttack()){
-
-            //Selecting the attacker and defender for this particular dice fight
-            attacker = aiPlayer.findAttackStarter();
-            defender = aiPlayer.findAttackDefender(attacker);
-
-            if (defender==null || attacker == null || !aiPlayer.wantToDiceFight(attacker)) break;
-
-            //DiceFight
-            while(aiPlayer.wantToDiceFight(attacker)){
-                //Need how many dice the attacker rolled
-                int attackerDice = aiPlayer.chooseNumDice(attacker);
-                //Need to "ask" defender how many to roll
-                int defenderDice = getDefenderDiceRoll(defender.getTerritoryName());
-
-                //Do the diceFight and the GUI show the dice fight results
-                String[] attackerDefender = {attacker.getTerritoryName(), defender.getTerritoryName()};
-                String diceFightResultString = this.diceFight(attackerDefender, attackerDice, defenderDice);
-                diceFightResultString += "\n" + this.diceFightInfo(attackerDefender);
-                this.displayMessage(diceFightResultString);
-
-                //Checking if another dice fight can happen or not.
-                if (attacker.getTroops() <= 1){
-                    break;
-                } else if (defender.getTroops() <= 0){
-                    //Defender just lost. Territory is given to the attacker. Ask how many troops to move in
-                    this.displayMessage(defender.getTerritoryName() + " has just been conquered!");
-
-                    //Checking if the defender owner is eliminated
-
-                    if (this.takeoverTerritory(aiPlayer, attacker, defender, attackerDice)){
-                        //A player has been eliminated
-                        this.announceElimination(defender.getOwner());
-
-                        //Checking if the player has won. If so,
-                        if(this.hasWinner()){
-                            this.announceWinner();
-                            return;
-                        }
-                    }
-                    break;//No more dice fight for this attackDefender pair after territory takeover
-                }
-            }
-        }
-    }*/
-
-    /**
-     * Runs the fortify phase of an AI players turn
-     *
-     * @param aiPlayer the current AIPlayer
-     */
-    private void AIPlayerFortify(AIPlayer aiPlayer){
-        //Need to check if the AI wants to fortify or not
-        if (aiPlayer.aiWantToFortify() && aiPlayer.getTerritories().size()>2){
-            Territory giver = aiPlayer.findFortifyGiver();
-            Territory receiver = aiPlayer.findFortifyReceiver(giver);
-
-            Random rando = new Random();
-            if (giver != null && receiver != null){
-                int movedTroops = rando.nextInt(giver.getTroops()-1) + 1;
-                giver.changeTroops(-movedTroops);
-                receiver.changeTroops(movedTroops);
-                this.displayMessage("Fortify phase complete: " + movedTroops + " troops moved from " + giver.getTerritoryName() + " to " + receiver.getTerritoryName());
-            }
-
-        }
-    }
-
-    /**
-     * Gets the number of dice to roll form the defending territory's owner
-     *
-     * @param defender The name of the defending territory's owner
-     * @return How many dice the defender wants to roll
-     */
-  /*  private int getDefenderDiceRoll(String defender){
-        int defenderDiceFightChoice=1;
-        if (this.getPlayerFromList(this.getTerritory(defender).getOwner()) instanceof AIPlayer){
-            //Always roll 2 unless down to last troop. Roll 1
-            defenderDiceFightChoice= (this.getTerritory(defender).getTroops() >=2) ? 2 : 1;
-        } else {
-            //Human player is the defender. Ask for how many dice to roll
-            defenderDiceFightChoice = gameView.defenderDiceRoll(this.getTerritory(defender));
-        }
-        //GOTTA ASK DEFENDER HOW MANY DICE TO ROLL IF DEFENDER IS HUMAN
-        //AI DEFENDERS AUTO ROLL 2 UNLESS FORCED TO ROLL 1
-        return defenderDiceFightChoice;
-    }    */
 
     /**
      * Getting the attackable neighbours string array for the specified territory

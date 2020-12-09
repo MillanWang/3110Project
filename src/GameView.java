@@ -94,7 +94,7 @@ public class GameView extends JFrame implements GameObserver{
         menuItemNextTurn = new JMenuItem("Start Next Turn");
         menuItemNextTurn.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         menuItemNextTurn.addActionListener(e -> {
-            //controller.startPlayersTurn();
+            controller.startPlayersTurn();
         });
         menuBar.add(menuItemNextTurn);
 
@@ -131,7 +131,6 @@ public class GameView extends JFrame implements GameObserver{
         gamePanel.add(MapLabel,BorderLayout.CENTER);
     }
 
-
     /**
      * Sets the full game info on the GUI
      */
@@ -162,7 +161,6 @@ public class GameView extends JFrame implements GameObserver{
         pack();
     }
 
-
     /**
      * updates the  current game status on the GUI
      */
@@ -191,7 +189,6 @@ public class GameView extends JFrame implements GameObserver{
         }
         status.revalidate();
     }
-
 
     /**
      * Setting the number of players in the game
@@ -262,10 +259,12 @@ public class GameView extends JFrame implements GameObserver{
     /**
      * Draft phase for a particular territory. Send troops to the selected territory
      *
-     * @param numTroops The maximum number of troops that can be sent
+     * @param numTroopsString The maximum number of troops that can be sent
      * @return StringArray {nameOfSelectedTerritory, numberOfTroopsMovingIn}
      */
-    public String[] startDraft(int numTroops, String[] draftTerritories){
+    public void startDraft(String numTroopsString, String[] draftTerritories){
+
+        int numTroops = Integer.parseInt(numTroopsString);
 
         JPanel draftPanel = new JPanel();//creates panel to show list of draft territories
         draftPanel.add(new JLabel("Select territory to send troops to"));
@@ -286,18 +285,14 @@ public class GameView extends JFrame implements GameObserver{
         JOptionPane.showConfirmDialog(null, troopPanel, "Draft Phase", JOptionPane.DEFAULT_OPTION);
         String troopString = (String) troopComboBox.getItemAt(troopComboBox.getSelectedIndex());
 
-        String[] returnValues = {territoryString,troopString};
-        return returnValues;
+        controller.doDraft(troopString, territoryString);
     }
-
-
 
     /**
      * Asks the player if they want to start an attack or move on to the next phase (ENDS TURN IN MILESTONE 2)
      *
-     * @return Players choice. Start attack or to move on
      */
-    public int attackOrQuitOption(){
+    public void attackOrQuitOption(){
         Object[] options = {"Start Attack",
                 "End Attack"};
         int n = JOptionPane.showOptionDialog(this,
@@ -307,10 +302,11 @@ public class GameView extends JFrame implements GameObserver{
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 options, options[0]);
-        return n;
+
         //0 for starting attack
         //1 for end attack
         // -1 for top right X
+        controller.wantToAttack(n == 0);
     }
 
     /**
@@ -342,6 +338,33 @@ public class GameView extends JFrame implements GameObserver{
 
         String[] attackerDefender = {currentAttackStarter, currentDefender};
         return attackerDefender;
+    }
+    //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^PROBABLY NOT NEEDED. BEHAVIOR MOVED INTO BELOW TWO METHODS
+
+    public void attackStarterSelection(String[] attackStartersStringArray){
+        JPanel attackPanel = new JPanel();//creates panel to show list of attack starters
+        attackPanel.add(new JLabel("Select country to attack from"));
+        JComboBox attackStarters = new JComboBox(attackStartersStringArray);
+        attackPanel.add(attackStarters);
+        JOptionPane.showConfirmDialog(null, attackPanel, "Attack Starters", JOptionPane.DEFAULT_OPTION);
+
+        String currentAttackStarter = (String) attackStarters.getItemAt(attackStarters.getSelectedIndex());
+        // gets the territory that can start an attack
+        controller.attackStarterChoice(currentAttackStarter);
+    }
+
+    public void attackDefenderSelection(String[] defendersStringArray, String currentAttackStarter){
+        //GETTING THE DEFENDER
+
+        JPanel defendPanel = new JPanel();
+        defendPanel.add(new JLabel("Select country to attack from " + currentAttackStarter));
+        JComboBox defenders = new JComboBox(defendersStringArray);
+        defendPanel.add(defenders);
+        JOptionPane.showConfirmDialog(null, defendPanel, "Defenders", JOptionPane.DEFAULT_OPTION);
+        String currentDefender = (String) defenders.getItemAt(defenders.getSelectedIndex());
+        // gets the territory to be attacked
+
+        controller.attackDefenderChoice(currentDefender);
     }
 
     /**
@@ -378,16 +401,57 @@ public class GameView extends JFrame implements GameObserver{
         //0 is roll, 1 is cancel dice fight, -1 is top right red X
         //1 index : number of dice rolled
     }
+    //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^PROBABLY NOT NEEDED. BEHAVIOR MOVED INTO BELOW THREE METHODS
+
+    public void diceFightOrQuit(String attackerCommaDefender){
+        String[] attackerDefender = attackerCommaDefender.split(",");
+
+        Object[] options = {"Start Dice Fight",
+                "Cancel Dice Fight"};
+        int n = JOptionPane.showOptionDialog(this,
+                "Choose to start a dice fight with " + attackerDefender[0] + " attacking " + attackerDefender[1],
+                "Dice Fight Stage",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options, options[0]);
+
+        //0 for starting attack
+        //1 for end attack
+        // -1 for top right X
+        controller.wantToAttack(n == 0);
+    }
+
+    public void attackerDiceRoll(String numOwnerTerritory){
+        String[] numThenOwnerThenTerritory = numOwnerTerritory.split(",");
+
+        String[] diceNumbers = new String[Integer.parseInt(numThenOwnerThenTerritory[0])];
+        for(int i = 0; i<Integer.parseInt(numThenOwnerThenTerritory[0]); i++){
+            diceNumbers[i] = Integer.toString(1+i);
+        }
+
+        Collections.reverse(Arrays.asList(diceNumbers));//This makes 2 first option
+
+        JPanel dicePanel = new JPanel();//creates panel to show list of draft territories
+        dicePanel.add(new JLabel("Player: " + numThenOwnerThenTerritory[1]
+                + " choose number of dice to roll for attacking from " + numThenOwnerThenTerritory[2]));
+
+        JComboBox troopComboBox = new JComboBox(diceNumbers);
+        dicePanel.add(troopComboBox);
+        JOptionPane.showConfirmDialog(null, dicePanel, "Draft Phase", JOptionPane.DEFAULT_OPTION);
+
+        controller.setAttackerDice((String) troopComboBox.getItemAt(troopComboBox.getSelectedIndex()));
+
+    }
 
     /**
      * Asks the defender of the current dice fight how many dice to roll
      *
-     * @param territory Defending territory object
-     * @return The choice of the player
+     * @param numOwnerTerritory Comma separated string of (MaxRoll),(OwnerName),(TerritoryName)
      */
-    public int defenderDiceRoll(Territory territory){
-
-        String[] diceNumbers = territory.getTroops()>=2 ? new String[2] : new String[1];
+    public void defenderDiceRoll(String numOwnerTerritory){
+        String[] numThenOwnerThenTerritory = numOwnerTerritory.split(",");
+        String[] diceNumbers = Integer.parseInt(numThenOwnerThenTerritory[0])>=2 ? new String[2] : new String[1];
         //Options of 1 and 2 when there are more than 1 troops on the terry
         //Can only roll 1 dice if there is only one troop on the terry
 
@@ -397,21 +461,29 @@ public class GameView extends JFrame implements GameObserver{
         Collections.reverse(Arrays.asList(diceNumbers));//This makes 2 first option
 
         JPanel dicePanel = new JPanel();//creates panel to show list of draft territories
-        dicePanel.add(new JLabel("Player: " + territory.getOwner() + " choose number of dice to roll for defending " + territory.getTerritoryName()));
+        dicePanel.add(new JLabel("Player: " + numThenOwnerThenTerritory[1]
+                + " choose number of dice to roll for defending " + numThenOwnerThenTerritory[2]));
+
         JComboBox troopComboBox = new JComboBox(diceNumbers);
         dicePanel.add(troopComboBox);
         JOptionPane.showConfirmDialog(null, dicePanel, "Draft Phase", JOptionPane.DEFAULT_OPTION);
-        return  Integer.parseInt((String) troopComboBox.getItemAt(troopComboBox.getSelectedIndex()));
+
+        controller.setDefenderDice((String) troopComboBox.getItemAt(troopComboBox.getSelectedIndex()));
+
     }
 
     /**
      * Asks the user how many troops to move into the newly conquered territory
      *
-     * @param attackerNumTroops  The number of troops in the attacker's territory
-     * @param diceWonWith   The number of dice rolled on the most recent win
+     * @param minCommaMax Comma separated integers for minimum and maximum number of troops that can move in
      * @return The number of troops moving into the conquered territory
      */
-    public int troopsToMoveIn(int attackerNumTroops, int diceWonWith){
+    public void troopsToMoveIn(String minCommaMax){
+
+        int diceWonWith = Integer.parseInt(minCommaMax.split(",")[0]);
+        int attackerNumTroops = Integer.parseInt(minCommaMax.split(",")[1]);
+
+
         String[] troopNumbers = new String[attackerNumTroops - diceWonWith];
         for(int i = 0; i<attackerNumTroops-diceWonWith; i++){
             troopNumbers[i] = Integer.toString(attackerNumTroops - 1 - i);
@@ -433,7 +505,7 @@ public class GameView extends JFrame implements GameObserver{
                 null,
                 options, options[0]);
         String rollString = (String) troopComboBox.getItemAt(troopComboBox.getSelectedIndex());
-        return Integer.parseInt(rollString);
+        controller.setTakeoverTroops(rollString);
     }
 
     /**
@@ -451,14 +523,31 @@ public class GameView extends JFrame implements GameObserver{
         JOptionPane.showMessageDialog(this, winner + " IS THE ULTIMATE RISK CHAMPION!!!", "GAME OVER!", JOptionPane.WARNING_MESSAGE);
     }
 
+    public void fortifyOrQuitOption(){
+        Object[] options = {"Start Fortify",
+                "End Turn"};
+        int n = JOptionPane.showOptionDialog(this,
+                "Choose to fortify a territory or end the current turn",
+                "Fortify Stage",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options, options[0]);
+
+        //0 for starting attack
+        //1 for end attack
+        // -1 for top right X
+        controller.wantToAttack(n == 0);
+    }
+
     /**
      * Starts the fortify phase of the current players turn. Choose the territory to start the fortify or to end turn
      *
-     * @return String array {Player's choice to end attack or fortify, the chosen territory to start the fortify}
+     * @param fortifyStarterTerritories String array of fortify starters
      */
-    public String[] startFortify(String[] fortifyStarterTerritories){
+    public void chooseFortifyGiver(String[] fortifyStarterTerritories){
 
-        Object[] options = {"Fortify", "End turn"};
+        Object[] options = {"Take troops from this territory"};
 
         JPanel fortifyPanel = new JPanel();//creates panel to show list of draft territories
         fortifyPanel.add(new JLabel("Select territory to take troops from to send to another territory"));
@@ -473,8 +562,7 @@ public class GameView extends JFrame implements GameObserver{
                 options, options[0]);
 
         String territoryString = (String) fortifyComboBox.getItemAt(fortifyComboBox.getSelectedIndex());// gets the territory the player chose
-        String[] results = {Integer.toString(response), territoryString};
-        return results;
+        controller.chooseFortifyGiver(territoryString);
     }
 
     /**
@@ -483,7 +571,7 @@ public class GameView extends JFrame implements GameObserver{
      * @param territories String array of territories that can receive troops in the fortify stage
      * @return The chosen territory to receive troops
      */
-    public String chooseFortified(String[] territories){
+    public void chooseFortifyReceiver(String[] territories){
 
         JPanel fortifyPanel = new JPanel();//creates panel to show list of attack starters
         fortifyPanel.add(new JLabel("Select territory to send troops to"));
@@ -491,7 +579,7 @@ public class GameView extends JFrame implements GameObserver{
         fortifyPanel.add(fortifiables);
         JOptionPane.showConfirmDialog(null, fortifyPanel, "Fortifiables", JOptionPane.DEFAULT_OPTION);
 
-        return (String) fortifiables.getItemAt(fortifiables.getSelectedIndex());
+        controller.chooseFortifyReceiver( (String) fortifiables.getItemAt(fortifiables.getSelectedIndex()));
     }
 
     /**
@@ -500,10 +588,10 @@ public class GameView extends JFrame implements GameObserver{
      * @param maxTroopsToMove maximum number of troops that can be moved
      * @return selected number of troops to move
      */
-    public int numTroopsToFortify(int maxTroopsToMove){
+    public void numTroopsToFortify(String maxTroopsToMove){
 
-        String[] troopNumbers = new String[maxTroopsToMove];
-        for(int i = 0; i<maxTroopsToMove; i++){
+        String[] troopNumbers = new String[Integer.parseInt(maxTroopsToMove)];
+        for(int i = 0; i<Integer.parseInt(maxTroopsToMove); i++){
             troopNumbers[i] = Integer.toString(i+1);
         }
 
@@ -513,7 +601,7 @@ public class GameView extends JFrame implements GameObserver{
         troopPanel.add(troopComboBox);
         JOptionPane.showConfirmDialog(null, troopPanel, "Fortify Phase", JOptionPane.DEFAULT_OPTION);
 
-        return Integer.parseInt( (String) troopComboBox.getItemAt(troopComboBox.getSelectedIndex()));
+        controller.getFortifyTroops( (String) troopComboBox.getItemAt(troopComboBox.getSelectedIndex()));
     }
 
     /**
@@ -528,36 +616,58 @@ public class GameView extends JFrame implements GameObserver{
 
     @Override
     public void handleUpdate(GameEvent event) {
-        if (event.getGameState().equals(Game.GameState.ELIMINATION)) {
-            announceElimination(event.getMessage());
-
-        } else if (event.getGameState().equals(Game.GameState.HASWINNER)) {
-            announceWinner(event.getCurrentPlayer().getName());
+        if (event.getGameState().equals(Game.GameState.MESSAGE)) {
+            displayMessage(event.getMessage());
 
         }else if (event.getGameState().equals(Game.GameState.DRAFT)){
-            startDraft(Integer.parseInt(event.getMessage()), event.getTerritoriesOfInterest());
+            System.out.println(event.getMessage());
+            startDraft(event.getMessage(), event.getTerritoriesOfInterest());
 
-        } else if (!event.getMessage().equals("")) {
+        }else if (event.getGameState().equals(Game.GameState.ATTACKORQUIT)){
+            attackOrQuitOption();
+
+        }else if (event.getGameState().equals(Game.GameState.ATTACKERSELECTION)){
+            attackStarterSelection(event.getTerritoriesOfInterest());
+
+        }else if (event.getGameState().equals(Game.GameState.DEFENDERSELECITON)){
+            attackDefenderSelection(event.getTerritoriesOfInterest(), event.getMessage());
+
+        }else if (event.getGameState().equals(Game.GameState.DICEFIGHTORQUIT)){
+            diceFightOrQuit(event.getMessage());
+
+        }else if (event.getGameState().equals(Game.GameState.DICEFIGHTATTACKERCHOICE)){
+            attackerDiceRoll(event.getMessage());
+
+        }else if (event.getGameState().equals(Game.GameState.DICEFIGHTDEFENDERCHOICE)){
+            defenderDiceRoll(event.getMessage());
+
+        }else if (event.getGameState().equals(Game.GameState.TAKEOVERTERRITORY)){
+            troopsToMoveIn(event.getMessage());
+
+        }else if (event.getGameState().equals(Game.GameState.FORTIFYORQUIT)){
+            fortifyOrQuitOption();
+
+        }else if (event.getGameState().equals(Game.GameState.FORTIFYGIVER)){
+            chooseFortifyGiver(event.getTerritoriesOfInterest());
+
+        }else if (event.getGameState().equals(Game.GameState.FORTIFYRECEIVER)){
+            chooseFortifyReceiver(event.getTerritoriesOfInterest());
+
+        }else if (event.getGameState().equals(Game.GameState.FORTIFYTROOPSTOMOVE)){
+            numTroopsToFortify(event.getMessage());
+
+        }else if (event.getGameState().equals(Game.GameState.ELIMINATION)){
+            announceElimination(event.getMessage());
+
+        }else if (event.getGameState().equals(Game.GameState.HASWINNER)){
+            announceWinner(event.getCurrentPlayer().getName());
+
+        }else if (!event.getMessage().equals("")){
             displayMessage(event.getMessage());
             updateGameStatus(event.getMessage());
         }
-        /*
-
-        ALL OF THESE ENUM CASES MUST BE DEALT WITH INDIVIDUALLY
 
 
-        ATTACKORQUIT,
-        ATTACKERSELECTION,
-        DEFENDERSELECITON,
-        DICEFIGHTORQUIT,
-        DICEFIGHTATTACKERCHOICE,
-        DICEFIGHTDEFENDERCHOICE,
-        TAKEOVERTERRITORY,
-        FORTIFYORQUIT,
-        FORTIFYGIVER,
-        FORTIFYRECEIVER,
-        FORTIFYTROOPSTOMOVE,
-         */
     }
 
 }

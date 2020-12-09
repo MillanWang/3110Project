@@ -4,8 +4,6 @@ import java.awt.*;
 public class FirstView extends JFrame {
     private JButton newGamebtnDefaultMap, newGamebtnCustomMaps, loadGameBtn;
     private JPanel gamePanel,startPage;// the two JPanels that will be used in the game
-    private GameView gameView;
-    private Game game;
 
     public FirstView(){
         createStartPage();
@@ -35,7 +33,7 @@ public class FirstView extends JFrame {
         // when the user click the button, then these methods would be called and the startPage would be removed
         newGamebtnDefaultMap.addActionListener(e-> {
             gamePanel.remove(startPage);
-            game = new Game("/DefaultMap.txt");
+            new Game("/DefaultMap.txt");
             dispose();
         });
 
@@ -48,7 +46,7 @@ public class FirstView extends JFrame {
         newGamebtnCustomMaps.addActionListener(e-> {
             gamePanel.remove(startPage);
             String filePath = chooseFile();
-            game = new Game(filePath);
+            new Game(filePath);
             dispose();
         });
 
@@ -61,7 +59,7 @@ public class FirstView extends JFrame {
         loadGameBtn.addActionListener(e-> {
             try{
                 String fileName = chooseFile();
-                game = Game.loadGame(fileName);
+                Game.loadGame(fileName);
             } catch (Exception event) {
                 event.printStackTrace();
             }

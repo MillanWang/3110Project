@@ -110,12 +110,12 @@ public class AIPlayer extends Player implements Serializable {
      * Returns if the current AIPlayer wants to diceFight right now
      * Only want to dice fight if attacker has more troops than 5 troops
      *
-     * @param attacker The attacker territory
+     * @param attackerCommaDefender Comma separated string of the attacker,defender
      * @return If the AI player wants to continue with the attack or not
      */
     @Override
-    public boolean wantToDiceFight(Game game, String attacker){
-        return this.getTerritory(attacker).getTroops() > 5;
+    public boolean wantToDiceFight(Game game, String attackerCommaDefender){
+        return this.getTerritory(attackerCommaDefender.split(",")[0]).getTroops() > 5;
     }
 
     public int chooseNumDice(Territory territory){
@@ -129,8 +129,8 @@ public class AIPlayer extends Player implements Serializable {
     }
 
     @Override
-    public int getAttackerDice(Game game, String attacker){
-        return this.chooseNumDice(this.getTerritory(attacker));
+    public int getAttackerDice(Game game, Territory territory){
+        return this.chooseNumDice(territory);
     }
 
     @Override
