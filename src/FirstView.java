@@ -59,11 +59,12 @@ public class FirstView extends JFrame {
         loadGameBtn.addActionListener(e-> {
             try{
                 String fileName = chooseFile();
-                (Game.loadGame(fileName)).showView();
+                (Game.loadGame(fileName)).replaceView();
             } catch (Exception event) {
                 event.printStackTrace();
             }
             gamePanel.remove(startPage);
+            dispose();
         });
 
         // Adding game title

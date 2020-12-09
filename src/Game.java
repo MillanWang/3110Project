@@ -2,7 +2,8 @@ import java.io.*;
 import java.util.*;
 
 public class Game implements Serializable {
-    public enum GameState {MESSAGE,
+    public enum GameState {LOAD,
+        MESSAGE,
         DRAFT,
         ATTACKORQUIT,
         ATTACKERSELECTION,
@@ -43,6 +44,12 @@ public class Game implements Serializable {
     }
 
     public void showView(){
+        this.addObserver(GameView.GameViewNewGame(this));
+    }
+
+    public void replaceView(){
+        ((GameView) observers.get(0)).dispose();
+        observers.remove(0);
         this.addObserver(new GameView(this));
     }
 
@@ -286,10 +293,16 @@ public class Game implements Serializable {
             FileInputStream fileInputStream = new FileInputStream(file1);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             game = (Game) objectInputStream.readObject();
+            game.makeGUIVisible();
         }catch (Exception e){
             System.err.println("Error when loading file");
         }
         return game;
+    }
+
+    private void makeGUIVisible(){
+        gameState = GameState.LOAD;
+        notifyObservers();
     }
 
     /**

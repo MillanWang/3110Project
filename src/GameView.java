@@ -32,6 +32,12 @@ public class GameView extends JFrame implements GameObserver, Serializable {
         setVisible(true);
     }
 
+    public static GameView GameViewNewGame(Game game){
+        GameView gameView = new GameView(game);
+        gameView.settingNumberOfPlayer();
+        return gameView;
+    }
+
     /**
      * Displays the game GUI
      */
@@ -40,8 +46,17 @@ public class GameView extends JFrame implements GameObserver, Serializable {
         addMenuItems();
         addMapPicture();
         addMapInfo();
-        settingNumberOfPlayer();
+
         addGameStatus();
+    }
+
+    private void setupNewGame(){
+        settingNumberOfPlayer();
+    }
+
+    private void showGUI(){
+        addMenuItems();
+        setVisible(true);
     }
 
     /**
@@ -82,6 +97,23 @@ public class GameView extends JFrame implements GameObserver, Serializable {
         });
         menuBar.add(menuItemQuit);
 
+        // Add Save button
+        menuItemSaveGame = new JMenuItem("Save");
+        menuItemSaveGame.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+        menuItemSaveGame.addActionListener(e -> {
+            String uniqueFileName = "game session";
+            SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss");
+            uniqueFileName += format.format(new Date());
+
+            System.out.println(uniqueFileName);
+
+            updateGameStatus("Your current game session has been saved in : "+ uniqueFileName + "\n");
+            displayMessage("Your current game session has been saved in : "+ uniqueFileName + "\n" );
+            dispose();
+            controller.saveGame(uniqueFileName + ".txt");
+        });
+        menuBar.add(menuItemSaveGame);
+
         // Add show Turn button
         menuItemCurrentPlayer = new JMenuItem("Current-Player");
         menuItemCurrentPlayer.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
@@ -89,22 +121,6 @@ public class GameView extends JFrame implements GameObserver, Serializable {
             displayMessage(controller.getCurrentPlayerInfo());
         });
         menuBar.add(menuItemCurrentPlayer);
-
-        // Add Save&Quit button
-        menuItemSaveGame = new JMenuItem("Save and Quit");
-        menuItemSaveGame.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
-        menuItemSaveGame.addActionListener(e -> {
-            String uniqueFileName = "game session";
-            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            uniqueFileName += format.format(new Date());
-            controller.saveGame(uniqueFileName);
-            updateGameStatus("Your current game session has been saved in : "+ uniqueFileName + "\n" +
-                    "Thanks for playing. Goodbye");
-            displayMessage("Your current game session has been saved in : "+ uniqueFileName + "\n" +
-                    "Thanks for playing. Goodbye");
-            dispose();
-        });
-        menuBar.add(menuItemSaveGame);
 
         //Menu option to start the next turn. Turns options appear in windows
         menuItemNextTurn = new JMenuItem("Start Next Turn");
@@ -615,7 +631,10 @@ public class GameView extends JFrame implements GameObserver, Serializable {
 
     @Override
     public void handleUpdate(GameEvent event) {
-        if (event.getGameState().equals(Game.GameState.MESSAGE)) {
+        if (event.getGameState().equals(Game.GameState.LOAD)) {
+            showGUI();
+
+        }else if (event.getGameState().equals(Game.GameState.MESSAGE)) {
             displayMessage(event.getMessage());
 
         }else if (event.getGameState().equals(Game.GameState.DRAFT)){

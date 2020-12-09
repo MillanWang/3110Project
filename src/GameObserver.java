@@ -1,3 +1,3 @@
-public interface GameObserver {
+public interface GameObserver{
     void handleUpdate(GameEvent event);
 }

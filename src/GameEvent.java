@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.EventObject;
 import java.util.LinkedList;
 
-public class GameEvent extends EventObject {
+public class GameEvent extends EventObject implements Serializable {
 
     //Fields of interest
     private Player currentPlayer;
