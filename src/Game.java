@@ -45,10 +45,16 @@ public class Game implements Serializable {
         //this.addObserver(new GameView(this));
     }
 
+    /**
+     * Creates a new GUI view object to for the current game.
+     */
     public void showView(){
         this.addObserver(GameView.GameViewNewGame(this));
     }
 
+    /**
+     * Replaces the previous GUI view with a newly generated one. Used when loading games
+     */
     public void replaceView(){
         ((GameView) observers.get(0)).dispose();
         observers.remove(0);
@@ -402,6 +408,9 @@ public class Game implements Serializable {
         currentMessage = "";
     }
 
+    /**
+     * Publishes event to GUI to get the user input for a draft
+     */
     public void draftEvent(){
         gameState = GameState.DRAFT;
         currentMessage = "" + currentPlayer.getNumTroops();
@@ -415,17 +424,28 @@ public class Game implements Serializable {
         System.out.println(currentMessage);
     }
 
+    /**
+     * Publishes event to GUI asking player to start attack or to move on to fortify
+     */
     public void attackOrQuit(){
         gameState = GameState.ATTACKORQUIT;
         notifyObservers();
     }
 
+    /**
+     * Publishes event to GUI asking the player for where to start an attack from
+     */
     public void chooseAttackStarter(){
         gameState = GameState.ATTACKERSELECTION;
         currentTerritoriesOfInterest = Player.getTerritoryStringArray(currentPlayer.getAttackStarters());
         notifyObservers();
     }
 
+    /**
+     * Publishes event to GUI asking the player where to attack
+     *
+     * @param attackStarter Name of territory starting the attack
+     */
     public void chooseAttackDefender(String attackStarter){
         gameState = GameState.DEFENDERSELECITON;
         currentTerritoriesOfInterest = Player.getTerritoryStringArray(currentPlayer.getTerritory(attackStarter).getAttackableNeighbours());
@@ -435,6 +455,11 @@ public class Game implements Serializable {
         currentMessage = "";
     }
 
+    /**
+     * Publishes event to GUI asking user if they want to dice fight or not
+     *
+     * @param attackerCommaDefender String of attacker,defender.
+     */
     public void wantToDiceFight(String attackerCommaDefender){
         gameState = GameState.DICEFIGHTORQUIT;
         currentMessage = attackerCommaDefender;
@@ -442,6 +467,13 @@ public class Game implements Serializable {
         currentMessage = "";
     }
 
+    /**
+     * Publishes event to GUI asking how many dice to roll
+     *
+     * @param maxDice maximum number of dice to roll
+     * @param owner Name of the owner
+     * @param territoryName Name of the attacking territory
+     */
     public void chooseAttackerDice(int maxDice, String owner, String territoryName){
         gameState = GameState.DICEFIGHTATTACKERCHOICE;
         currentMessage = "" + maxDice + "," + owner + "," + territoryName;
@@ -449,6 +481,13 @@ public class Game implements Serializable {
         currentMessage = "";
     }
 
+    /**
+     * Publishes event to GUI asking the defending player how many dice to roll
+     *
+     * @param maxDice maximum number of dice to roll
+     * @param owner Name of the owner of the defending territory
+     * @param territoryName Name of the defending territory
+     */
     public void chooseDefenderDice(int maxDice, String owner, String territoryName){
         gameState = GameState.DICEFIGHTDEFENDERCHOICE;
         currentMessage = "" + maxDice + "," + owner + "," + territoryName;
@@ -457,6 +496,12 @@ public class Game implements Serializable {
 
     }
 
+    /**
+     * Publishes event to GUI asking user how many troops to move into a conquered territory
+     *
+     * @param minMovingIn minimum number of troops moving in
+     * @param maxMovingIn maximum number of troops moving in
+     */
     public void takeoverTerritoryEvent(int minMovingIn, int maxMovingIn){
         gameState = GameState.TAKEOVERTERRITORY;
         currentMessage = minMovingIn + "," + maxMovingIn;
@@ -464,17 +509,28 @@ public class Game implements Serializable {
         currentMessage = "";
     }
 
+    /**
+     * Publishes event to GUI asking the player if they want to fortify or not
+     */
     public void fortifyOrQuit(){
         gameState = GameState.FORTIFYORQUIT;
         notifyObservers();
     }
 
+    /**
+     * Publishes event to GUI asking the player asking where to take troops from during fortify
+     */
     public void chooseFortifyGivers(){
         gameState = GameState.FORTIFYGIVER;
         currentTerritoriesOfInterest = Player.getTerritoryStringArray(currentPlayer.getFortifyGivers());
         notifyObservers();
     }
 
+    /**
+     * Publishes event to GUI asking the player where to sent troops to during fortify
+     *
+     * @param fortifyGiver The troop giver in the fortify stage
+     */
     public void chooseFortifyReceivers(String fortifyGiver){
         gameState = GameState.FORTIFYRECEIVER;
         Territory territory = currentPlayer.getTerritory(fortifyGiver);
@@ -482,6 +538,11 @@ public class Game implements Serializable {
         notifyObservers();
     }
 
+    /**
+     * Publishes event to GUI asking the player how many troops to move between them
+     *
+     * @param maxTroopsToMove maximum number of troops to move
+     */
     public void chooseFortifyTroops(int maxTroopsToMove){
         gameState = GameState.FORTIFYTROOPSTOMOVE;
         currentMessage = "" + maxTroopsToMove;
@@ -490,6 +551,9 @@ public class Game implements Serializable {
         currentMessage = "";
     }
 
+    /**
+     * Conducts the draft process for the current player
+     */
     public void gameDraft(){
         this.displayMessage("Starting the draft phase for player: " + this.getCurrentPlayer());
 
@@ -504,6 +568,9 @@ public class Game implements Serializable {
         this.displayMessage("Draft stage complete, starting the attack phase for player: " + this.getCurrentPlayer());
     }
 
+    /**
+     * Conducts the attack process for the current player
+     */
     public void gameAttack(){
         while (currentPlayer.wantToAttack(this)){
 
@@ -538,6 +605,13 @@ public class Game implements Serializable {
         //Proceed to fortify stage of turn
     }//End gameAttack()
 
+    /**
+     * Checks if another dice fight is possible for the current attacker & defender selection
+     *
+     * @param attackerDefender
+     * @param attackerDice Number of dice rolled
+     * @return if another dice fight is possible
+     */
     public boolean endDiceFight(String[] attackerDefender, int attackerDice){
         //Checking if another dice fight can happen or not.
         if (this.getTerritory(attackerDefender[0]).getTroops() <= 1){
@@ -566,6 +640,9 @@ public class Game implements Serializable {
         return false;
     }
 
+    /**
+     * Conducts the fortify process for the current player
+     */
     public void gameFortify(){
         if (!currentPlayer.wantToFortify(this) || this.hasWinner()) return;
         //Want to fortify if made it to here
@@ -581,24 +658,4 @@ public class Game implements Serializable {
         gameState = GameState.MESSAGE;
     }
 
-
-    /**
-     * Getting a string array of all of the players territories. Used during the draft phase in the view
-     *
-     * @return String array of all the territories that the current player has
-     */
-    public String[] getPlayersTerritories(){
-        return this.getCurrentPlayerObject().getTerritoriesList();
-    }
-
-
-    /**
-     * Getting the attackable neighbours string array for the specified territory
-     *
-     * @param ter The territory object starting the attack
-     * @return  String array of names of territories that can be attacked from ter
-     */
-    public String[] getNeighboursToAttack(Territory ter){
-        return ter.attackableNeighbours();
-    }
 }

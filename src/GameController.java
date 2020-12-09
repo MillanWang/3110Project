@@ -4,7 +4,6 @@ import java.util.LinkedList;
 public class GameController implements Serializable {
     private Game game;
 
-
     /**
      * Constructor for the GameController class
      *
