@@ -279,7 +279,6 @@ public class Player implements Serializable {
     }
 
     public boolean wantToDiceFight(Game game, String attacker){
-
         game.wantToDiceFight();
         //^^This event will change the string in controllerMessage. Empty if no fight. diceFight if want to fight
 

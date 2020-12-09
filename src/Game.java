@@ -573,13 +573,17 @@ public class Game implements Serializable {
         Territory fortifyReceiver = this.getTerritory("");
         int troopsToMove = currentPlayer.getFortifyTroops(this, fortifyGiver);
 
+        fortifyGiver.changeTroops(-troopsToMove);
+        fortifyReceiver.changeTroops(troopsToMove);
 
+        displayMessage("Fortify stage complete");
     }
 
     public void startTurn(){
         gameDraft();
         gameAttack();
         gameFortify();
+        displayMessage("End of " + currentPlayer.getName() + "'s turn!");
     }
 
 
