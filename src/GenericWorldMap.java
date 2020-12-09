@@ -1,9 +1,6 @@
 import org.codehaus.jackson.map.ObjectMapper;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Serializable;
+import java.io.*;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Collections;
@@ -32,7 +29,9 @@ public class GenericWorldMap implements Serializable {
         try {
             //InputStream in = getClass().getResourceAsStream("/TestSmallWorldMap.txt"); //SMALLER MAP FOR EASIER TESTING
             //InputStream in = getClass().getResourceAsStream("/DefaultMap.txt");
-            InputStream in = getClass().getResourceAsStream(mapName);
+
+            File file1 = new File(mapName);
+            InputStream in = getClass().getResourceAsStream(file1.getName());
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             StringBuilder sb = new StringBuilder();
             String line = reader.readLine();
@@ -78,6 +77,7 @@ public class GenericWorldMap implements Serializable {
         }
         //Randomization of the order of territories.
         Collections.shuffle(allTerritories);
+
     }
 
     /**
@@ -199,4 +199,5 @@ public class GenericWorldMap implements Serializable {
     }
 
     public String getImageFileName() { return imageFileName; }
+
 }

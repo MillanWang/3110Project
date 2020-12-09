@@ -33,8 +33,10 @@ public class Game implements Serializable {
     /**
      * Constructor for the class  This will start playing the game
      */
-    public Game(String customMapName){
+    public Game(String customMapName) {
         genericWorldMap = new GenericWorldMap(customMapName);
+
+
         players = new LinkedList<Player>();
         dice = new Dice();
         observers = new LinkedList<>();
@@ -142,8 +144,8 @@ public class Game implements Serializable {
      */
     public String diceFight(String[] attackerDefender, int attackerDice, int defenderDice){
 
-        Territory attacker = genericWorldMap.getTerritory(attackerDefender[0]);
-        Territory defender = genericWorldMap.getTerritory(attackerDefender[1]);
+        Territory attacker = getTerritory(attackerDefender[0]);
+        Territory defender = getTerritory(attackerDefender[1]);
 
 
         //Used to make a list of the different players different dice rolls
@@ -177,6 +179,11 @@ public class Game implements Serializable {
                 defender.changeTroops(-1);
             }
         }
+
+
+        diceFightResultMessage += "\n\n" + "Attacker has " + attacker.getTroops() + " troops remaining";
+        diceFightResultMessage += "\n" + "Defender has " + defender.getTroops() + " troops remaining";
+
         //If the attacker takes over the territory, the number of troops moved in has to be greater or equal to
         //the number of dice rolled on the most recent diceFight
         return diceFightResultMessage;
@@ -300,6 +307,9 @@ public class Game implements Serializable {
         return game;
     }
 
+    /**
+     * Makes the GUI visible. Used for loaded games
+     */
     private void makeGUIVisible(){
         gameState = GameState.LOAD;
         notifyObservers();
@@ -329,6 +339,10 @@ public class Game implements Serializable {
         return true;
     }
 
+    /**
+     * Sets the message field in the current player object. This is to get the results from the GUI
+     * @param controllerMessage
+     */
     public void setPlayerControllerMessage(String controllerMessage){
         currentPlayer.setControllerMessage(controllerMessage);
     }
@@ -336,7 +350,7 @@ public class Game implements Serializable {
     /**
      * Adds an observer object for the current game
      *
-     * @param gameObserver
+     * @param gameObserver The observer to be added
      */
     public void addObserver(GameObserver gameObserver){
         this.observers.add(gameObserver);

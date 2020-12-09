@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 
 public class FirstView extends JFrame {
     private JButton newGamebtnDefaultMap, newGamebtnCustomMaps, loadGameBtn;
@@ -44,11 +45,18 @@ public class FirstView extends JFrame {
         newGamebtnCustomMaps.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         // when the user click the button, then these methods would be called and the startPage would be removed
         newGamebtnCustomMaps.addActionListener(e-> {
-            gamePanel.remove(startPage);
-            String filePath = chooseFile();
-            System.out.println(filePath);
-            (new Game(filePath)).showView();
-            dispose();
+            try{
+                gamePanel.remove(startPage);
+                String filePath = chooseFile();
+                (new Game(filePath)).showView();
+                dispose();
+            } catch (Exception exception){
+                JOptionPane.showMessageDialog(this,"Invalid file was selected!");
+                dispose();
+                new FirstView();
+            }
+
+
         });
 
         loadGameBtn = new JButton("Load Previous Game");
@@ -62,7 +70,10 @@ public class FirstView extends JFrame {
                 String fileName = chooseFile();
                 (Game.loadGame(fileName)).replaceView();
             } catch (Exception event) {
-                event.printStackTrace();
+                //event.printStackTrace();
+                JOptionPane.showMessageDialog(this,"Invalid file was selected!");
+                dispose();
+                new FirstView();
             }
             gamePanel.remove(startPage);
             dispose();
@@ -88,8 +99,11 @@ public class FirstView extends JFrame {
      */
     public String chooseFile(){
         String fileName="";
-        JFileChooser fileChooser = new JFileChooser();
-        StringBuilder sb = new StringBuilder();
+        //so we let the fileChooser open in the current directory of the user
+        String userDirLocation = System.getProperty("user.dir");
+        File userDir = new File(userDirLocation);
+        // default to user directory
+        JFileChooser fileChooser = new JFileChooser(userDir);
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
             //get the file
             fileName = fileChooser.getSelectedFile().getPath();

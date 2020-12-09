@@ -1,4 +1,5 @@
-{"territories" :[
+{"imageFileName" : "TestSmallWorldMap.png",
+"territories" :[
 	{
 		"territoryName" : "Antarctica",
 		"continentName" : "up",
