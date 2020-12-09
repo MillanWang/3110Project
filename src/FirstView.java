@@ -46,7 +46,6 @@ public class FirstView extends JFrame {
         newGamebtnCustomMaps.addActionListener(e-> {
             gamePanel.remove(startPage);
             String filePath = chooseFile();
-            System.out.println(filePath);
             (new Game(filePath)).showView();
             dispose();
         });

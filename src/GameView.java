@@ -8,7 +8,7 @@ public class GameView extends JFrame implements GameObserver, Serializable {
 
     private JMenuBar menuBar;//the menu bar for the game
     private JMenuItem menuItemHelp, menuItemQuit, menuItemReset, menuItemCurrentPlayer, menuItemSaveGame, menuItemNextTurn;// the menuItems for the game
-    private JPanel gamePanel,mapInfo,status;// the two JPanels that will be used in the game
+    private JPanel gamePanel,mapInfo;// the two JPanels that will be used in the game
     private GameController controller;// the controller of the game
     private ImageIcon map;// will store the path for the map picture
 
@@ -46,8 +46,6 @@ public class GameView extends JFrame implements GameObserver, Serializable {
         addMenuItems();
         addMapPicture(controller.getImageFileName());
         addMapInfo();
-
-        addGameStatus();
     }
 
     private void setupNewGame(){
@@ -105,11 +103,8 @@ public class GameView extends JFrame implements GameObserver, Serializable {
             SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss");
             uniqueFileName += format.format(new Date());
 
-            System.out.println(uniqueFileName);
-
-            updateGameStatus("Your current game session has been saved in : "+ uniqueFileName + "\n");
             displayMessage("Your current game session has been saved in : "+ uniqueFileName + "\n" );
-            dispose();
+            //dispose();
             controller.saveGame(uniqueFileName + ".txt");
         });
         menuBar.add(menuItemSaveGame);
@@ -137,9 +132,6 @@ public class GameView extends JFrame implements GameObserver, Serializable {
      * Sets the map image in the GUI
      */
     private void addMapPicture(String imageFileName){
-
-        //NEEEDS A PARAMETER FOR THE PICTURE FILE NAME
-
         map = new ImageIcon(getClass().getResource(imageFileName));
         JLabel MapLabel = new JLabel(map);
         gamePanel.setBackground(Color.LIGHT_GRAY);
@@ -156,23 +148,6 @@ public class GameView extends JFrame implements GameObserver, Serializable {
         updateGameInfo();
         mapInfo.setVisible(true);
         gamePanel.add(mapInfo, BorderLayout.EAST);
-    }
-
-    /**
-     * Sets the current game status on the GUI
-     */
-    private void addGameStatus(){
-        status = new JPanel();
-        status.setBackground(Color.LIGHT_GRAY);
-        status.setBorder(BorderFactory.createLineBorder(Color.green));
-        status.setLayout(new BoxLayout(status, BoxLayout.Y_AXIS));
-        updateGameStatus("Welcome to RISK Global Domination\n"+
-                "The goal of the game is to take control of all territories on the map.\n"+
-                "Players who lose all of their territories are eliminated from the \n" +
-                "The last player standing is the ULTIMATE CHAMPION.\n" +
-                "To start the draft phase, click on the Start Next Turn JMenu Item (Top Right).");
-        status.setVisible(true);
-        gamePanel.add(status, BorderLayout.SOUTH);
         pack();
     }
 
@@ -189,20 +164,6 @@ public class GameView extends JFrame implements GameObserver, Serializable {
             mapInfo.add(text);
         }
         mapInfo.revalidate();
-    }
-
-    /**
-     * updates the current game status on the GUI
-     */
-    private void updateGameStatus(String newStatus){
-        status.removeAll();
-        String[] arr = newStatus.split("\n");
-        for (int i = 0; i<arr.length; i++) {
-            JLabel text = new JLabel(  arr[i]);
-            text.setFont(new Font("Arial", Font.BOLD, 12));
-            status.add(text);
-        }
-        status.revalidate();
     }
 
     /**
@@ -638,7 +599,6 @@ public class GameView extends JFrame implements GameObserver, Serializable {
             displayMessage(event.getMessage());
 
         }else if (event.getGameState().equals(Game.GameState.DRAFT)){
-            System.out.println(event.getMessage());
             startDraft(event.getMessage(), event.getTerritoriesOfInterest());
 
         }else if (event.getGameState().equals(Game.GameState.ATTACKORQUIT)){
@@ -682,10 +642,8 @@ public class GameView extends JFrame implements GameObserver, Serializable {
 
         }else if (!event.getMessage().equals("")){
             displayMessage(event.getMessage());
-            updateGameStatus(event.getMessage());
         }
         updateGameInfo();
-
     }
 
 }
