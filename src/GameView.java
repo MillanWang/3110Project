@@ -1,16 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class GameView extends JFrame implements GameObserver{
     private Game game;// the model of the game
     private JMenuBar menuBar;//the menu bar for the game
-    private JMenuItem menuItemHelp, menuItemQuit, menuItemReset, menuItemCurrentPlayer, menuItemShowTerritories, menuItemNextTurn;// the menuItems for the game
-    private JPanel gamePanel,startPage,mapInfo,status;// the two JPanels that will be used in the game
-    private JButton newGameBtn;// the first button will be appeard to the player	    private JButton newGameBtn;// the first button will be appeared to the player
-    private GameController controller;// the controller of the game    private GameController controller;// the controller of the game
+    private JMenuItem menuItemHelp, menuItemQuit, menuItemReset, menuItemCurrentPlayer, menuItemSaveGame, menuItemNextTurn;// the menuItems for the game
+    private JPanel gamePanel,mapInfo,status;// the two JPanels that will be used in the game
+    private GameController controller;// the controller of the game
     private ImageIcon map;// will store the path for the map picture
 
     /**
@@ -26,7 +24,7 @@ public class GameView extends JFrame implements GameObserver{
         gamePanel = new JPanel(new BorderLayout());
         add(gamePanel);
         displayGame();
-        setSize(800, 580);
+        setSize(1100, 825);
         // i changed resizable to true just in case the player wants it full screen
         setResizable(false);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -34,50 +32,14 @@ public class GameView extends JFrame implements GameObserver{
     }
 
     /**
-     * Creates red start page before starting the game
-     *
-
-    private void createStartPage() {
-        gamePanel = new JPanel(new BorderLayout());
-        add(gamePanel);
-        
-        startPage = new JPanel();
-        startPage.setLayout(null);
-        startPage.setBackground(new Color(204, 0, 24));
-
-        newGameBtn = new JButton("Start a New Game");
-        newGameBtn.setBounds(280, 350, 210, 50);
-        newGameBtn.setFont(new Font("Monospaced", Font.BOLD, 20));
-        newGameBtn.setBackground(Color.WHITE);
-        newGameBtn.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-        // when the user click the button, then these methods would be called and the startPage would be removed
-        newGameBtn.addActionListener(e-> {
-            displayGame();
-            gamePanel.remove(startPage);
-            settingNumberOfPlayer();
-        });
-
-        // Adding game title
-        JLabel title = new JLabel("RISK GAME");
-        title.setFont(new Font("Monospaced", Font.BOLD, 100));
-        title.setBounds(150, 200, 900, 100);
-        title.setForeground(Color.WHITE);
-
-        // Adding all components to panel
-        startPage.add(title);
-        startPage.add(newGameBtn);
-        gamePanel.add(startPage,BorderLayout.CENTER);
-    }
-     */
-    /**
      * Displays the game GUI
      */
     private void displayGame(){
         gamePanel.setVisible(true);
         addMenuItems();
         addMapPicture();
-        settingNumberOfPlayer();
         addMapInfo();
+        settingNumberOfPlayer();
         addGameStatus();
     }
 
@@ -127,14 +89,6 @@ public class GameView extends JFrame implements GameObserver{
         });
         menuBar.add(menuItemCurrentPlayer);
 
-        //Option to show all of the territories with their owners and troops
-        menuItemShowTerritories = new JMenuItem("Show-Territories");
-        menuItemShowTerritories.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
-        menuItemShowTerritories.addActionListener(e-> {
-            displayMessage(game.getGenericWorldMap().getAllTerritoriesString());
-        });
-        menuBar.add(menuItemShowTerritories);
-
 
         //Menu option to start the next turn. Turns options appear in windows
         menuItemNextTurn = new JMenuItem("Start Next Turn");
@@ -143,6 +97,23 @@ public class GameView extends JFrame implements GameObserver{
             //controller.startPlayersTurn();
         });
         menuBar.add(menuItemNextTurn);
+
+        // Add quit button
+        menuItemSaveGame = new JMenuItem("Save and Quit");
+        menuItemSaveGame.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+        menuItemSaveGame.addActionListener(e -> {
+            String uniqueFileName = "Save game ";
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            uniqueFileName += format.format(new Date());
+            System.out.println(uniqueFileName);
+            game.saveGame(uniqueFileName);
+            updateGameStatus("Your current game session has been saved.\n" +
+                    "Thanks for playing. Goodbye");
+            displayMessage("Your current game session has been saved.\n" +
+                    "Thanks for playing. Goodbye");
+            dispose();
+        });
+        menuBar.add(menuItemSaveGame);
 
         gamePanel.add(menuBar, BorderLayout.NORTH);
     }
@@ -165,7 +136,7 @@ public class GameView extends JFrame implements GameObserver{
     private void addMapInfo(){
         mapInfo = new JPanel();
         mapInfo.setBackground(Color.LIGHT_GRAY);
-        mapInfo.setLayout(new BoxLayout(mapInfo, BoxLayout.Y_AXIS));
+        mapInfo.setLayout(new BoxLayout(mapInfo, BoxLayout.PAGE_AXIS));
         updateGameInfo();
         mapInfo.setVisible(true);
         gamePanel.add(mapInfo, BorderLayout.EAST);
@@ -177,6 +148,7 @@ public class GameView extends JFrame implements GameObserver{
     private void addGameStatus(){
         status = new JPanel();
         status.setBackground(Color.LIGHT_GRAY);
+        status.setBorder(BorderFactory.createLineBorder(Color.green));
         status.setLayout(new BoxLayout(status, BoxLayout.Y_AXIS));
         updateGameStatus("Welcome to RISK Global Domination\n"+
                 "The goal of the game is to take control of all territories on the map.\n"+
@@ -190,13 +162,13 @@ public class GameView extends JFrame implements GameObserver{
 
 
     /**
-    * updates the  current game status on the GUI
-    */
+     * updates the  current game status on the GUI
+     */
     private void updateGameInfo(){
         mapInfo.removeAll();
         String[] arr = game.getGenericWorldMap().getAllTerritoriesString().split("\n");
         for (int i = 0; i<arr.length; i++) {
-             JLabel text = new JLabel( arr[i]);
+            JLabel text = new JLabel( arr[i]);
             text.setFont(new Font("Arial", Font.BOLD, 12));
             text.setBorder(BorderFactory.createLineBorder(Color.orange));
             mapInfo.add(text);
@@ -205,8 +177,8 @@ public class GameView extends JFrame implements GameObserver{
     }
 
     /**
-    * updates the current game status on the GUI
-    */
+     * updates the current game status on the GUI
+     */
     private void updateGameStatus(String newStatus){
         status.removeAll();
         String[] arr = newStatus.split("\n");
@@ -219,9 +191,9 @@ public class GameView extends JFrame implements GameObserver{
     }
 
 
-/**
- * Setting the number of players in the game
- */
+    /**
+     * Setting the number of players in the game
+     */
     private void settingNumberOfPlayer(){
         String[] possiblePlayers = { "2","3","4","5","6" };
         JPanel panel = new JPanel();
@@ -316,6 +288,8 @@ public class GameView extends JFrame implements GameObserver{
         return returnValues;
     }
 
+
+
     /**
      * Asks the player if they want to start an attack or move on to the next phase (ENDS TURN IN MILESTONE 2)
      *
@@ -400,7 +374,7 @@ public class GameView extends JFrame implements GameObserver{
         int[] resultRoll = {n, Integer.parseInt(rollString)};
         return resultRoll;
         //0 index : Clicked button
-            //0 is roll, 1 is cancel dice fight, -1 is top right red X
+        //0 is roll, 1 is cancel dice fight, -1 is top right red X
         //1 index : number of dice rolled
     }
 
