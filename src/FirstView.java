@@ -35,7 +35,7 @@ public class FirstView extends JFrame {
         // when the user click the button, then these methods would be called and the startPage would be removed
         newGamebtnDefaultMap.addActionListener(e-> {
             gamePanel.remove(startPage);
-            game = new Game("DefaultMap.txt");
+            game = new Game("/DefaultMap.txt");
             gameView = new GameView(game);
             dispose();
         });
@@ -47,9 +47,10 @@ public class FirstView extends JFrame {
         newGamebtnCustomMaps.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         // when the user click the button, then these methods would be called and the startPage would be removed
         newGamebtnCustomMaps.addActionListener(e-> {
-            //displayGame();
             gamePanel.remove(startPage);
-            //settingNumberOfPlayer();
+            game = new Game("/DefaultMap.txt");
+            gameView = new GameView(game);
+            dispose();
         });
 
         loadGameBtn = new JButton("Load Previous Game");
@@ -60,7 +61,7 @@ public class FirstView extends JFrame {
         // when the user click the button, then these methods would be called and the startPage would be removed
         loadGameBtn.addActionListener(e-> {
             try{
-                chooseFile();
+                String fileName = chooseFile();
             } catch (Exception event) {
                 event.printStackTrace();
             }
@@ -81,6 +82,10 @@ public class FirstView extends JFrame {
         gamePanel.add(startPage,BorderLayout.CENTER);
     }
 
+    /**
+     * Return the choosen file name
+     * @return fileName
+     */
     public String chooseFile(){
         String fileName="";
         JFileChooser fileChooser = new JFileChooser();
