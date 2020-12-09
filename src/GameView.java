@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class GameView extends JFrame implements GameObserver{
-    private Game game;// the model of the game
+
     private JMenuBar menuBar;//the menu bar for the game
     private JMenuItem menuItemHelp, menuItemQuit, menuItemReset, menuItemCurrentPlayer, menuItemSaveGame, menuItemNextTurn;// the menuItems for the game
     private JPanel gamePanel,mapInfo,status;// the two JPanels that will be used in the game
@@ -19,7 +19,7 @@ public class GameView extends JFrame implements GameObserver{
     public GameView(Game game){
         super("RISK: GLOBAL DOMINATION");
         this.setLayout(new BorderLayout());
-        this.game=game;
+
         this.controller = new GameController(game);
         gamePanel = new JPanel(new BorderLayout());
         add(gamePanel);
@@ -68,7 +68,7 @@ public class GameView extends JFrame implements GameObserver{
         menuItemReset.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         menuItemReset.addActionListener(e -> {
             dispose();//causes the JFrame window to be destroyed and cleaned up by the operating system
-            new GameView(new Game("DefaultMap.txt"));//create a new GameVew, so new window
+            new FirstView();//create a new GameVew, so new window
         });
         menuBar.add(menuItemReset);
 
@@ -85,7 +85,7 @@ public class GameView extends JFrame implements GameObserver{
         menuItemCurrentPlayer = new JMenuItem("Current-Player");
         menuItemCurrentPlayer.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         menuItemCurrentPlayer.addActionListener(e-> {
-            displayMessage("Current player: " + game.getCurrentPlayer()+" \n"+ game.getCurrentPlayerObject().getTerritoriesString());
+            displayMessage(controller.getCurrentPlayerInfo());
         });
         menuBar.add(menuItemCurrentPlayer);
 
@@ -105,7 +105,7 @@ public class GameView extends JFrame implements GameObserver{
             String uniqueFileName = "game session";
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             uniqueFileName += format.format(new Date());
-            game.saveGame(uniqueFileName);
+            controller.saveGame(uniqueFileName);
             updateGameStatus("Your current game session has been saved in : "+ uniqueFileName + "\n" +
                     "Thanks for playing. Goodbye");
             displayMessage("Your current game session has been saved in : "+ uniqueFileName + "\n" +
@@ -122,6 +122,9 @@ public class GameView extends JFrame implements GameObserver{
      * Sets the map image in the GUI
      */
     private void addMapPicture(){
+
+        //NEEEDS A PARAMETER FOR THE PICTURE FILE NAME
+
         map = new ImageIcon(getClass().getResource("DefaultWorldMap.jpg"));
         JLabel MapLabel = new JLabel(map);
         gamePanel.setBackground(Color.LIGHT_GRAY);
@@ -165,7 +168,7 @@ public class GameView extends JFrame implements GameObserver{
      */
     private void updateGameInfo(){
         mapInfo.removeAll();
-        String[] arr = game.getGenericWorldMap().getAllTerritoriesString().split("\n");
+        String[] arr = controller.getMapStringArray();
         for (int i = 0; i<arr.length; i++) {
             JLabel text = new JLabel( arr[i]);
             text.setFont(new Font("Arial", Font.BOLD, 12));
@@ -252,7 +255,7 @@ public class GameView extends JFrame implements GameObserver{
             }
         }
 
-        this.game.makePlayers(playerNames);//calling the makePlayers method and create the player in the Model
+        controller.makePlayers(playerNames);//calling the makePlayers method and create the player in the Model
         updateGameInfo(); // updating the game info with updated territory info
     }
 
@@ -315,8 +318,7 @@ public class GameView extends JFrame implements GameObserver{
      *
      * @return StringArray of {attackStarterTerritoryName, defenderTerritoryName}
      */
-    public String[] attackSelection(){
-        String[] attackStartersStringArray = Player.getTerritoryStringArray(game.getCurrentPlayerObject().getAttackStarters());
+    public String[] attackSelection(String[] attackStartersStringArray){
 
         JPanel attackPanel = new JPanel();//creates panel to show list of attack starters
         attackPanel.add(new JLabel("Select country to attack from"));
@@ -537,15 +539,25 @@ public class GameView extends JFrame implements GameObserver{
 
         } else if (!event.getMessage().equals("")) {
             displayMessage(event.getMessage());
+            updateGameStatus(event.getMessage());
         }
-    }
+        /*
+
+        ALL OF THESE ENUM CASES MUST BE DEALT WITH INDIVIDUALLY
 
 
-    /**
-     * Main method of the game. Run to start the GUI
-     * @param args
-     */
-    public static void main(String[] args) {
-        new GameView(new Game("DefaultMap.txt"));//Starts the game
+        ATTACKORQUIT,
+        ATTACKERSELECTION,
+        DEFENDERSELECITON,
+        DICEFIGHTORQUIT,
+        DICEFIGHTATTACKERCHOICE,
+        DICEFIGHTDEFENDERCHOICE,
+        TAKEOVERTERRITORY,
+        FORTIFYORQUIT,
+        FORTIFYGIVER,
+        FORTIFYRECEIVER,
+        FORTIFYTROOPSTOMOVE,
+         */
     }
+
 }

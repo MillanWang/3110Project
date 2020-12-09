@@ -36,7 +36,6 @@ public class FirstView extends JFrame {
         newGamebtnDefaultMap.addActionListener(e-> {
             gamePanel.remove(startPage);
             game = new Game("/DefaultMap.txt");
-            gameView = new GameView(game);
             dispose();
         });
 
@@ -50,7 +49,6 @@ public class FirstView extends JFrame {
             gamePanel.remove(startPage);
             String filePath = chooseFile();
             game = new Game(filePath);
-            gameView = new GameView(game);
             dispose();
         });
 
@@ -63,6 +61,7 @@ public class FirstView extends JFrame {
         loadGameBtn.addActionListener(e-> {
             try{
                 String fileName = chooseFile();
+                game = Game.loadGame(fileName);
             } catch (Exception event) {
                 event.printStackTrace();
             }

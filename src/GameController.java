@@ -1,3 +1,4 @@
+import java.util.LinkedList;
 import java.util.Random;
 
 public class GameController {
@@ -13,8 +14,20 @@ public class GameController {
         this.game = gameModel;
     }
 
+    public void makePlayers(LinkedList<String> playerNames){
+        game.makePlayers(playerNames);
+    }
+
+    public String getCurrentPlayerInfo() {
+        return "Current player: " + game.getCurrentPlayer()+" \n"+ game.getCurrentPlayerObject().getTerritoriesString();
+    }
+
     public void doDraft(String numTroopsToSend, String territoryName){
         game.getCurrentPlayerObject().draftPhase(territoryName, numTroopsToSend);
+    }
+
+    public String[] getMapStringArray(){
+        return game.getGenericWorldMap().getAllTerritoriesString().split("\n");
     }
 
     public void wantToAttack(boolean wantToAttack){
@@ -69,4 +82,6 @@ public class GameController {
     public void getFortifyTroops(String numTroops){
             game.setPlayerControllerMessage(numTroops);
     }
+
+    public void saveGame(String fileName){game.saveGame(fileName);}
 }

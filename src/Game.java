@@ -37,6 +37,8 @@ public class Game implements Serializable {
         players = new LinkedList<Player>();
         dice = new Dice();
         observers = new LinkedList<>();
+
+        this.addObserver(new GameView(this));
     }
 
     /**
