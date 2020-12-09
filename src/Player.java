@@ -8,21 +8,9 @@ public class Player implements Serializable {
     private String name; // The name of the player.
     private LinkedList<Territory> territories; // A list of the territories the player occupies.
     protected int numTroops;
+
+
     private String controllerMessage;
-
-    /*CONTROLLER MESSAGE
-        Controller calls the setter method on controllerMessage
-        ^^^Return this field to the game method that calls it
-        This should hold stuff like wantToAttack, attackStarterChoice, wantToFortify, etc.
-
-    */
-
-
-
-
-
-
-
 
 
     /**

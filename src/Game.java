@@ -302,6 +302,10 @@ public class Game implements Serializable {
         return true;
     }
 
+    public void setPlayerControllerMessage(String controllerMessage){
+        currentPlayer.setControllerMessage(controllerMessage);
+    }
+
     /**
      * Adds an observer object for the current game
      *
