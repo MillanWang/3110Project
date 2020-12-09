@@ -48,7 +48,8 @@ public class FirstView extends JFrame {
         // when the user click the button, then these methods would be called and the startPage would be removed
         newGamebtnCustomMaps.addActionListener(e-> {
             gamePanel.remove(startPage);
-            game = new Game("/DefaultMap.txt");
+            String filePath = chooseFile();
+            game = new Game(filePath);
             gameView = new GameView(game);
             dispose();
         });
@@ -92,7 +93,8 @@ public class FirstView extends JFrame {
         StringBuilder sb = new StringBuilder();
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
             //get the file
-            fileName = fileChooser.getSelectedFile().getName();
+            fileName = fileChooser.getSelectedFile().getPath();
+            System.out.println(fileName);
         }
         else {
             JOptionPane.showMessageDialog(this,"No file was selected!");
