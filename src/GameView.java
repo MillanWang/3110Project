@@ -395,7 +395,7 @@ public class GameView extends JFrame implements GameObserver, Serializable {
         //0 for starting attack
         //1 for end attack
         // -1 for top right X
-        controller.wantToAttack(n == 0);
+        controller.wantToDiceFight(n == 0);
     }
 
     public void attackerDiceRoll(String numOwnerTerritory){
@@ -513,7 +513,7 @@ public class GameView extends JFrame implements GameObserver, Serializable {
         //0 for starting attack
         //1 for end attack
         // -1 for top right X
-        controller.wantToAttack(n == 0);
+        controller.wantToFortify(n == 0);
     }
 
     /**

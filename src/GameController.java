@@ -69,7 +69,7 @@ public class GameController implements Serializable {
     }
 
     public void setDefenderDice(String dice){
-        game.setPlayerControllerMessage(dice);
+        game.setCurrentMessage(dice);
     }
 
     public void setTakeoverTroops(String incomingTroops){

@@ -30,7 +30,6 @@ public class Player implements Serializable {
         return this.name;
     }
 
-
     /**
      * Returns the territory object given the territory name
      *
@@ -85,7 +84,6 @@ public class Player implements Serializable {
      *
      * @param territory the territory to be added
      **/
-
     public void addTerritory(Territory territory) {
         if (territory == null) {
             System.out.println(" Cannot add, invalid territory");
@@ -114,12 +112,6 @@ public class Player implements Serializable {
     }
 
     /**
-     * Calculates the number of troops the player should receive in this turn.
-     * It is based on the number of countries he occupies and any continents he fully controls
-     * and the territories / 3
-     */
-
-    /**
      * Used by controller to get GUI information to the player
      *
      * @param controllerMessage The message from the GUI
@@ -131,7 +123,6 @@ public class Player implements Serializable {
     /**
      * This method increases the number of troops the player has
      * with the appropriate bonus
-     *
      */
     public void bonusTroops() {
         numTroops += continentBonus() + (Math.max((int) Math.floor(this.territories.size() / 3), 3));
@@ -220,7 +211,6 @@ public class Player implements Serializable {
 
         return territoryName + " now has " + getTerritory(territoryName).getTroops() + " troops after adding " + troops;
     }
-
 
     /**
      * Determines the current players draft choice
@@ -337,7 +327,7 @@ public class Player implements Serializable {
         game.chooseDefenderDice(Math.min(territory.getTroops(), 2), territory.getOwner(), territory.getTerritoryName());
         //^^The number of dice that the player wants to roll will be written into controller message
 
-        return Integer.parseInt(controllerMessage);
+        return Integer.parseInt(game.getCurrentMessage());
     }
 
     /**
@@ -363,7 +353,7 @@ public class Player implements Serializable {
      */
     public boolean wantToFortify(Game game){
         //Must have 2 or more territories to fortify
-        if(this.getTerritories().size() < 2){
+        if(this.getFortifyGivers().size() < 2){
             game.displayMessage("No territories available to fortify");
             return false;
         }
@@ -444,7 +434,7 @@ public class Player implements Serializable {
     public LinkedList<Territory> getFortifyGivers(){
         LinkedList<Territory> givers = new LinkedList<>();
         for (Territory t : territories){
-            if (t.getTroops()>1) givers.add(t);
+            if (t.getTroops()>1 && t.hasFriendlyNeighbour()) givers.add(t);
         }
         return !givers.isEmpty()? givers : null;
     }

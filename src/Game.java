@@ -28,21 +28,15 @@ public class Game implements Serializable {
     private String[] currentTerritoriesOfInterest;
     private String currentMessage;
 
-
-
     /**
      * Constructor for the class  This will start playing the game
      */
     public Game(String customMapName) {
         genericWorldMap = new GenericWorldMap(customMapName);
-
-
         players = new LinkedList<Player>();
         dice = new Dice();
         observers = new LinkedList<>();
         gameState = GameState.MESSAGE;
-
-        //this.addObserver(new GameView(this));
     }
 
     /**
@@ -115,16 +109,25 @@ public class Game implements Serializable {
     }
 
     /**
-     * Completes the current players turn (Draft>attack cycle) and sets the current player to the next player in line
+     * Sends the current player to the back of the line and the next player in line becomes current player
      */
     public void nextTurn(){
         players.add(currentPlayer);//Added to the back
         currentPlayer = players.pop();//Pull out the first player in line to go next
     }
 
+    /**
+     * Completes the current players turn (Draft>attack cycle)
+     */
     public void startTurn(){
+        if (hasWinner()){
+            announceWinner();
+            return;
+        }
+
         gameDraft();
         gameAttack();
+        if (hasWinner()) return; //Skipping fortify if the game is won
         gameFortify();
         displayMessage("End of " + currentPlayer.getName() + "'s turn!");
     }
@@ -137,6 +140,18 @@ public class Game implements Serializable {
     public boolean hasWinner(){
         return players.isEmpty();
     }
+
+    /**
+     * Sets the message field in this class. For use in defender diceFight dice selection
+     * @param currentMessage String to occupy the currentMessage field
+     */
+    public void setCurrentMessage(String currentMessage) { this.currentMessage = currentMessage; }
+
+    /**
+     * Getter method for the currentMessage field. Used in defender diceFight dice selection
+     * @return currentMessage field
+     */
+    public String getCurrentMessage() { return currentMessage; }
 
     /**
      * During a player's attack phase, after the attack starter and the defender are chosen,
@@ -414,14 +429,8 @@ public class Game implements Serializable {
     public void draftEvent(){
         gameState = GameState.DRAFT;
         currentMessage = "" + currentPlayer.getNumTroops();
-
-        System.out.println(currentMessage);
-
         currentTerritoriesOfInterest = currentPlayer.getTerritoriesList();
         notifyObservers();
-
-        currentMessage = "";
-        System.out.println(currentMessage);
     }
 
     /**
@@ -492,8 +501,6 @@ public class Game implements Serializable {
         gameState = GameState.DICEFIGHTDEFENDERCHOICE;
         currentMessage = "" + maxDice + "," + owner + "," + territoryName;
         notifyObservers();
-        currentMessage = "";
-
     }
 
     /**
@@ -591,6 +598,7 @@ public class Game implements Serializable {
                 Player defender = this.getPlayerFromList(this.getTerritory(attackerDefender[1]).getOwner());
                 defenderDice = defender.getDefenderDice(this, this.getTerritory(attackerDefender[1]));
 
+
                 //DiceFight results
                 displayMessage(this.diceFight(attackerDefender, attackerDice,defenderDice));
 
@@ -648,7 +656,7 @@ public class Game implements Serializable {
         //Want to fortify if made it to here
 
         Territory fortifyGiver = this.getTerritory(currentPlayer.chooseFortifyGiver(this));
-        Territory fortifyReceiver = this.getTerritory("");
+        Territory fortifyReceiver = this.getTerritory(currentPlayer.chooseFortifyReceiver(this, fortifyGiver.getTerritoryName()));
         int troopsToMove = currentPlayer.getFortifyTroops(this, fortifyGiver);
 
         fortifyGiver.changeTroops(-troopsToMove);
