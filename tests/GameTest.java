@@ -10,7 +10,7 @@ public class GameTest extends TestCase {
     private Game game;
 
     public void setUp() throws Exception {
-        game = new Game("DefaultMap.txt");
+        game = new Game("/DefaultMap.txt");
     }
 
 

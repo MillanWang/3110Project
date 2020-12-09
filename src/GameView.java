@@ -1,9 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class GameView extends JFrame implements GameObserver{
+public class GameView extends JFrame implements GameObserver, Serializable {
 
     private JMenuBar menuBar;//the menu bar for the game
     private JMenuItem menuItemHelp, menuItemQuit, menuItemReset, menuItemCurrentPlayer, menuItemSaveGame, menuItemNextTurn;// the menuItems for the game
@@ -89,16 +90,7 @@ public class GameView extends JFrame implements GameObserver{
         });
         menuBar.add(menuItemCurrentPlayer);
 
-
-        //Menu option to start the next turn. Turns options appear in windows
-        menuItemNextTurn = new JMenuItem("Start Next Turn");
-        menuItemNextTurn.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
-        menuItemNextTurn.addActionListener(e -> {
-            controller.startPlayersTurn();
-        });
-        menuBar.add(menuItemNextTurn);
-
-        // Add quit button
+        // Add Save&Quit button
         menuItemSaveGame = new JMenuItem("Save and Quit");
         menuItemSaveGame.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         menuItemSaveGame.addActionListener(e -> {
@@ -114,6 +106,13 @@ public class GameView extends JFrame implements GameObserver{
         });
         menuBar.add(menuItemSaveGame);
 
+        //Menu option to start the next turn. Turns options appear in windows
+        menuItemNextTurn = new JMenuItem("Start Next Turn");
+        menuItemNextTurn.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+        menuItemNextTurn.addActionListener(e -> {
+            controller.startPlayersTurn();
+        });
+        menuBar.add(menuItemNextTurn);
         gamePanel.add(menuBar, BorderLayout.NORTH);
     }
 
@@ -666,7 +665,7 @@ public class GameView extends JFrame implements GameObserver{
             displayMessage(event.getMessage());
             updateGameStatus(event.getMessage());
         }
-
+        updateGameInfo();
 
     }
 

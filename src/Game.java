@@ -39,6 +39,10 @@ public class Game implements Serializable {
         observers = new LinkedList<>();
         gameState = GameState.MESSAGE;
 
+        //this.addObserver(new GameView(this));
+    }
+
+    public void showView(){
         this.addObserver(new GameView(this));
     }
 
@@ -99,7 +103,6 @@ public class Game implements Serializable {
      * Completes the current players turn (Draft>attack cycle) and sets the current player to the next player in line
      */
     public void nextTurn(){
-        startTurn();
         players.add(currentPlayer);//Added to the back
         currentPlayer = players.pop();//Pull out the first player in line to go next
     }

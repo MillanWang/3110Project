@@ -33,7 +33,7 @@ public class FirstView extends JFrame {
         // when the user click the button, then these methods would be called and the startPage would be removed
         newGamebtnDefaultMap.addActionListener(e-> {
             gamePanel.remove(startPage);
-            new Game("/DefaultMap.txt");
+            (new Game("/DefaultMap.txt")).showView();
             dispose();
         });
 
@@ -46,7 +46,7 @@ public class FirstView extends JFrame {
         newGamebtnCustomMaps.addActionListener(e-> {
             gamePanel.remove(startPage);
             String filePath = chooseFile();
-            new Game(filePath);
+            (new Game(filePath)).showView();
             dispose();
         });
 
@@ -59,7 +59,7 @@ public class FirstView extends JFrame {
         loadGameBtn.addActionListener(e-> {
             try{
                 String fileName = chooseFile();
-                Game.loadGame(fileName);
+                (Game.loadGame(fileName)).showView();
             } catch (Exception event) {
                 event.printStackTrace();
             }

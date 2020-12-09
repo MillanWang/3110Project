@@ -1,7 +1,7 @@
+import java.io.Serializable;
 import java.util.LinkedList;
-import java.util.Random;
 
-public class GameController {
+public class GameController implements Serializable {
     private Game game;
 
 
@@ -15,6 +15,7 @@ public class GameController {
     }
 
     public void startPlayersTurn(){
+        game.startTurn();
         game.nextTurn();
     }
 
