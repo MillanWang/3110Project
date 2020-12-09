@@ -10,9 +10,11 @@ public class Game implements Serializable {
         DICEFIGHTORQUIT,
         DICEFIGHTATTACKERCHOICE,
         DICEFIGHTDEFENDERCHOICE,
+        TAKEOVERTERRITORY,
         FORTIFYORQUIT,
         FORTIFYGIVER,
         FORTIFYRECEIVER,
+        FORTIFYTROOPSTOMOVE,
         ELIMINATION,
         HASWINNER};
 
@@ -300,6 +302,10 @@ public class Game implements Serializable {
         return true;
     }
 
+    public void setPlayerControllerMessage(String controllerMessage){
+        currentPlayer.setControllerMessage(controllerMessage);
+    }
+
     /**
      * Adds an observer object for the current game
      *
@@ -376,10 +382,7 @@ public class Game implements Serializable {
         //Set the field to the string "attack" if wants to attack. Clear the field otherwise
     }
 
-    public void fortifyOrQuit(){
-        gameState = GameState.FORTIFYORQUIT;
-        notifyObservers();
-    }
+
 
     public void chooseAttackStarter(){
         gameState = GameState.ATTACKERSELECTION;
@@ -437,17 +440,46 @@ public class Game implements Serializable {
 
     }
 
+    public void takeoverTerritoryEvent(int minMovingIn, int maxMovingIn){
+        gameState = GameState.TAKEOVERTERRITORY;
+        currentMessage = minMovingIn + "," + maxMovingIn;
+        notifyObservers();
+        currentMessage = "";
+
+        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
+    }
+
+    public void fortifyOrQuit(){
+        gameState = GameState.FORTIFYORQUIT;
+        notifyObservers();
+
+        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
+    }
 
     public void chooseFortifyGivers(){
         gameState = GameState.FORTIFYGIVER;
         currentTerritoriesOfInterest = Player.getTerritoryStringArray(currentPlayer.getFortifyGivers());
         notifyObservers();
+
+        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
     }
 
     public void chooseFortifyReceivers(String fortifyGiver){
         gameState = GameState.FORTIFYRECEIVER;
         Territory territory = currentPlayer.getTerritory(fortifyGiver);
         currentTerritoriesOfInterest = Player.getTerritoryStringArray(currentPlayer.getFortifiableTerritories(territory));
+        notifyObservers();
+
+        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
+    }
+
+    public void chooseFortifyTroops(int maxTroopsToMove){
+        gameState = GameState.FORTIFYTROOPSTOMOVE;
+        currentMessage = "" + maxTroopsToMove;
+
+        notifyObservers();
+
+        //CONTROLLER NEEDS TO CHANGE FIELD INSIDE OF CURRENT PLAYER TO GET THE CHOICE
     }
 
     public void gameDraft(){
@@ -495,6 +527,7 @@ public class Game implements Serializable {
 
 
         }//End wantToAttack
+        //Proceed to fortify stage of turn
     }//End gameAttack()
 
     public boolean endDiceFight(String[] attackerDefender, int attackerDice){
@@ -516,7 +549,7 @@ public class Game implements Serializable {
             //int incomingTroops = gameView.troopsToMoveIn(this.getTerritory(attackerDefender[0]).getTroops(), attackerDice);
 
 
-            int incomingTroops = 0;
+            int incomingTroops = currentPlayer.getTakeoverTroops(this, attackerDice, this.getTerritory(attackerDefender[0]).getTroops());
 
             //Checking if the defender owner is eliminated
             String loserName = this.getTerritory(attackerDefender[1]).getOwner();
@@ -532,15 +565,22 @@ public class Game implements Serializable {
         return false;
     }
 
+    public void gameFortify(){
+        if (!currentPlayer.wantToFortify(this) || this.hasWinner()) return;
+        //Want to fortify if made it to here
 
-public void gameFortify(){
-        String fortifyGiver = currentPlayer.chooseFortifyGiver(this);
-        while(currentPlayer.wantToFortify(this, currentPlayer.getTerritory(fortifyGiver))){
-
-        }
-}
+        Territory fortifyGiver = this.getTerritory(currentPlayer.chooseFortifyGiver(this));
+        Territory fortifyReceiver = this.getTerritory("");
+        int troopsToMove = currentPlayer.getFortifyTroops(this, fortifyGiver);
 
 
+    }
+
+    public void startTurn(){
+        gameDraft();
+        gameAttack();
+        gameFortify();
+    }
 
 
 
@@ -789,7 +829,8 @@ public void gameFortify(){
                 this.displayMessage("Fortify phase complete: " + movedTroops + " troops moved from " + giver.getTerritoryName() + " to " + receiver.getTerritoryName());
             }
 
-        }}
+        }
+    }
 
     /**
      * Gets the number of dice to roll form the defending territory's owner

@@ -58,12 +58,7 @@ public class AIPlayer extends Player implements Serializable {
     }
 
 
-    @Override
-    public boolean wantToFortify(Game game, Territory territory){
-        //BEHAVIOR
-        //Only want to fortify iff the player has a territory that has 1 or 2 troops
-        return this.findFortifyGiver() != null;
-    }
+
 
     /**
      * Returns an AI player's attack starter territory.
@@ -147,6 +142,18 @@ public class AIPlayer extends Player implements Serializable {
         }
     }
 
+    @Override
+    public int getTakeoverTroops(Game game, int attackerDice, int numTroops){
+        return attackerDice;
+    }
+
+    @Override
+    public boolean wantToFortify(Game game){
+        //BEHAVIOR
+        //Only want to fortify iff the player has a territory that has 1 or 2 troops
+        return this.findFortifyGiver() != null;
+    }
+
     /**
      * Determines if the current AI player wants to fortify
      *
@@ -159,6 +166,20 @@ public class AIPlayer extends Player implements Serializable {
             if(t.getTroops() < 3) return true;
         }
         return false;
+    }
+    public String chooseFortifyGiver(Game game){
+        return this.findFortifyGiver().getTerritoryName();
+    }
+
+    @Override
+    public String chooseFortifyReceiver(Game game, String fortifyGiver){
+        return this.findFortifyReceiver(this.getTerritory(fortifyGiver)).getTerritoryName();
+    }
+
+    @Override
+    public int getFortifyTroops(Game game, Territory territory){
+        Random rando = new Random();
+        return rando.nextInt(territory.getTroops()-1) + 1;
     }
 
     /**
