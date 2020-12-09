@@ -102,14 +102,13 @@ public class GameView extends JFrame implements GameObserver{
         menuItemSaveGame = new JMenuItem("Save and Quit");
         menuItemSaveGame.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         menuItemSaveGame.addActionListener(e -> {
-            String uniqueFileName = "Save game ";
+            String uniqueFileName = "game session";
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             uniqueFileName += format.format(new Date());
-            System.out.println(uniqueFileName);
             game.saveGame(uniqueFileName);
-            updateGameStatus("Your current game session has been saved.\n" +
+            updateGameStatus("Your current game session has been saved in : "+ uniqueFileName + "\n" +
                     "Thanks for playing. Goodbye");
-            displayMessage("Your current game session has been saved.\n" +
+            displayMessage("Your current game session has been saved in : "+ uniqueFileName + "\n" +
                     "Thanks for playing. Goodbye");
             dispose();
         });
