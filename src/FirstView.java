@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.File;
 
@@ -46,10 +45,18 @@ public class FirstView extends JFrame {
         newGamebtnCustomMaps.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         // when the user click the button, then these methods would be called and the startPage would be removed
         newGamebtnCustomMaps.addActionListener(e-> {
-            gamePanel.remove(startPage);
-            String filePath = chooseFile();
-            (new Game(filePath)).showView();
-            dispose();
+            try{
+                gamePanel.remove(startPage);
+                String filePath = chooseFile();
+                (new Game(filePath)).showView();
+                dispose();
+            } catch (Exception exception){
+                JOptionPane.showMessageDialog(this,"Invalid file was selected!");
+                dispose();
+                new FirstView();
+            }
+
+
         });
 
         loadGameBtn = new JButton("Load Previous Game");
@@ -63,7 +70,10 @@ public class FirstView extends JFrame {
                 String fileName = chooseFile();
                 (Game.loadGame(fileName)).replaceView();
             } catch (Exception event) {
-                event.printStackTrace();
+                //event.printStackTrace();
+                JOptionPane.showMessageDialog(this,"Invalid file was selected!");
+                dispose();
+                new FirstView();
             }
             gamePanel.remove(startPage);
             dispose();

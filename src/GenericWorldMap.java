@@ -77,6 +77,7 @@ public class GenericWorldMap implements Serializable {
         }
         //Randomization of the order of territories.
         Collections.shuffle(allTerritories);
+
     }
 
     /**
@@ -199,7 +200,4 @@ public class GenericWorldMap implements Serializable {
 
     public String getImageFileName() { return imageFileName; }
 
-    public static void main(String[] args) {
-        GenericWorldMap genericWorldMap = new GenericWorldMap("C:/Users/Milla/OneDrive/Documents/DefaultMap.txt");
-    }
 }
