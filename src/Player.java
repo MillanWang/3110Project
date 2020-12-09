@@ -257,17 +257,6 @@ public class Player implements Serializable {
         return controllerMessage.equals("attack");
     }
 
-
-    public boolean wantToFortify(Game game, Territory rootTerritory){
-        if(this.getFortifiableTerritories(rootTerritory) == null){
-            game.displayMessage("No territories available to fortify");
-            return false;
-        }
-
-        game.fortifyOrQuit();
-        return controllerMessage.equals("fortify");
-    }
-
     /**
      * This method will only be called by the territory class to determine
      * if the player can attack neighbors
@@ -323,12 +312,39 @@ public class Player implements Serializable {
         return Integer.parseInt(controllerMessage);
     }
 
+    public int getTakeoverTroops(Game game, int attackerDice, int numTroops){
+        game.takeoverTerritoryEvent(attackerDice, numTroops);
+        return Integer.parseInt(controllerMessage);
+    }
+
+    public boolean wantToFortify(Game game){
+        //Must have 2 or more territories to fortify
+        if(this.getTerritories().size() < 2){
+            game.displayMessage("No territories available to fortify");
+            return false;
+        }
+
+        game.fortifyOrQuit();
+        return controllerMessage.equals("fortify");
+    }
+
     public String chooseFortifyGiver(Game game){
         game.chooseFortifyGivers();
 
         return this.controllerMessage;
     }
 
+    public String chooseFortifyReceiver(Game game, String fortifyGiver){
+        game.chooseFortifyReceivers(fortifyGiver);
+
+        return this.controllerMessage;
+    }
+
+    public int getFortifyTroops(Game game, Territory territory){
+        game.chooseFortifyTroops(territory.getTroops() - 1);
+
+        return Integer.parseInt(this.controllerMessage);
+    }
 
     /**
      * Returns a LIST/STRINGARRAY of territories that can be fortified from the given territory
