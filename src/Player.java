@@ -257,6 +257,17 @@ public class Player implements Serializable {
         return controllerMessage.equals("attack");
     }
 
+
+    public boolean wantToFortify(Game game, Territory rootTerritory){
+        if(this.getFortifiableTerritories(rootTerritory) == null){
+            game.displayMessage("No territories available to fortify");
+            return false;
+        }
+
+        game.fortifyOrQuit();
+        return controllerMessage.equals("fortify");
+    }
+
     /**
      * This method will only be called by the territory class to determine
      * if the player can attack neighbors
@@ -303,6 +314,19 @@ public class Player implements Serializable {
         //^^The number of dice that the player wants to roll will be written into controller message
 
         return Integer.parseInt(controllerMessage);
+    }
+
+    public int getDefenderDice(Game game, Territory territory){
+        game.chooseDefenderDice(Math.min(territory.getTroops(), 2));
+        //^^The number of dice that the player wants to roll will be written into controller message
+
+        return Integer.parseInt(controllerMessage);
+    }
+
+    public String chooseFortifyGiver(Game game){
+        game.chooseFortifyGivers();
+
+        return this.controllerMessage;
     }
 
 

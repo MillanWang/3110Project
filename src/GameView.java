@@ -26,7 +26,7 @@ public class GameView extends JFrame implements GameObserver{
         gamePanel = new JPanel(new BorderLayout());
         add(gamePanel);
         displayGame();
-        setSize(1000, 580);
+        setSize(800, 580);
         // i changed resizable to true just in case the player wants it full screen
         setResizable(false);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -34,14 +34,50 @@ public class GameView extends JFrame implements GameObserver{
     }
 
     /**
+     * Creates red start page before starting the game
+     *
+
+    private void createStartPage() {
+        gamePanel = new JPanel(new BorderLayout());
+        add(gamePanel);
+        
+        startPage = new JPanel();
+        startPage.setLayout(null);
+        startPage.setBackground(new Color(204, 0, 24));
+
+        newGameBtn = new JButton("Start a New Game");
+        newGameBtn.setBounds(280, 350, 210, 50);
+        newGameBtn.setFont(new Font("Monospaced", Font.BOLD, 20));
+        newGameBtn.setBackground(Color.WHITE);
+        newGameBtn.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        // when the user click the button, then these methods would be called and the startPage would be removed
+        newGameBtn.addActionListener(e-> {
+            displayGame();
+            gamePanel.remove(startPage);
+            settingNumberOfPlayer();
+        });
+
+        // Adding game title
+        JLabel title = new JLabel("RISK GAME");
+        title.setFont(new Font("Monospaced", Font.BOLD, 100));
+        title.setBounds(150, 200, 900, 100);
+        title.setForeground(Color.WHITE);
+
+        // Adding all components to panel
+        startPage.add(title);
+        startPage.add(newGameBtn);
+        gamePanel.add(startPage,BorderLayout.CENTER);
+    }
+     */
+    /**
      * Displays the game GUI
      */
     private void displayGame(){
         gamePanel.setVisible(true);
         addMenuItems();
         addMapPicture();
-        addMapInfo();
         settingNumberOfPlayer();
+        addMapInfo();
         addGameStatus();
     }
 
