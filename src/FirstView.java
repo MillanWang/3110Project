@@ -1,5 +1,7 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
+import java.io.File;
 
 public class FirstView extends JFrame {
     private JButton newGamebtnDefaultMap, newGamebtnCustomMaps, loadGameBtn;
@@ -88,8 +90,11 @@ public class FirstView extends JFrame {
      */
     public String chooseFile(){
         String fileName="";
-        JFileChooser fileChooser = new JFileChooser();
-        StringBuilder sb = new StringBuilder();
+        //so we let the fileChooser open in the current directory of the user
+        String userDirLocation = System.getProperty("user.dir");
+        File userDir = new File(userDirLocation);
+        // default to user directory
+        JFileChooser fileChooser = new JFileChooser(userDir);
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
             //get the file
             fileName = fileChooser.getSelectedFile().getPath();
