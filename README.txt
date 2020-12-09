@@ -1,6 +1,6 @@
 README FILE
 
-SYSC 3110 - Group Project - Milestone 3
+SYSC 3110 - Group Project - Milestone 4
 Group Name: Static
 Members: Joseph Anyia, Favour Olotu, Taher Shabaan, Millan Wang
 TA added to Github repository: Mohamad Zalat
@@ -11,7 +11,10 @@ Included deliverables for Milestone 3
 	-Jar file
 	-src
 		-All source code files
-			-AIPlayer.java (Millan & Taher)
+			-AIPlayer.java (Millan & Taher & Joseph)
+			-FirstView.java (Taher)
+			-GameEvent.java (Millan - Parallel contributions from all)
+			-GameObserver.java (Millan - Parallel contributions from all)
                         -DefaultMap.txt (Millan)
                         -DefaultWorldMap.jpg
                         -Dice.java (Millan & Taher)
@@ -40,20 +43,16 @@ Included deliverables for Milestone 3
 		
 
 Changes since last version:
-	-Applied the received feedback for the Milestone2 submission. 
-	-Implemented the logic behind the AIPlayer, so it can play the game as a real player
-	-Implemented the logic behind the Fortify stage, so now the players can move troops.
+	-Applied the received feedback for the Milestone3 submission. 
+	-Inhanced the logic behind the AIPlayer, so it right now the game treats the AIPlayer as the regular player.
+	-Improved the design of the game by appliying the MVC design pattern
+	-Created the logic behinf the save and load in the game.
+	-Being able to load a custome maps
 	-Thoroughly tested the GUI implementation
 	-Added the extra JUnit tests
 
 KNOWN ISSUES:
-	-The AI Player is unlikely to win against the competent players (Milestone 3)
-	-MVC Pattern is not followed perfectly
+	-Couldn't check if the user loaded the correct file format or not.
 
-FUTURE PLANS:
-	Milestone 4 - December 7th 2020
-		-Applying the received feedback for the Milestone3 submission. 
-		-Implement the save and load features.
-		-Implement the logic behind allowing the user to load his own custome maps 
-		-Thorough testing of the GUI implementation
+	
 		

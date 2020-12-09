@@ -8,8 +8,6 @@ public class Player implements Serializable {
     private String name; // The name of the player.
     private LinkedList<Territory> territories; // A list of the territories the player occupies.
     protected int numTroops;
-
-
     private String controllerMessage;
 
 
@@ -67,6 +65,11 @@ public class Player implements Serializable {
 
     }
 
+    /**
+     * Returns the of player owned territories
+     *
+     * @return The list of all player owned territory
+     */
     public LinkedList<Territory> getTerritories(){ return territories;}
 
     /**
@@ -125,6 +128,11 @@ public class Player implements Serializable {
         this.controllerMessage = controllerMessage;
     }
 
+    /**
+     * This method increases the number of troops the player has
+     * with the appropriate bonus
+     *
+     */
     public void bonusTroops() {
         numTroops += continentBonus() + (Math.max((int) Math.floor(this.territories.size() / 3), 3));
     }
@@ -215,19 +223,16 @@ public class Player implements Serializable {
 
 
     /**
-     * WORK IN PROGRESS
+     * Determines the current players draft choice
      *
      * @param game The game obj to be used to publish events
      */
     public void draftChoice(Game game){
-        //Make an event with the currentPlayer's territories and the numTroops=Message
-        //game.draftEvent
         game.draftEvent();
         game.displayMessage(this.getName() + " currently has " + this.getNumTroops() + " troops left to give");
     }
 
     /**
-     * WORK IN PROGRESS
      * Determines if the current player wants to attack or not. Asks the player directly
      *
      * @return if the player wants to attack or not
@@ -264,6 +269,12 @@ public class Player implements Serializable {
         return attackStarters;
     }
 
+    /**
+     * This method gets an attack starter for the current player.
+     *
+     * @param game the current game
+     * @return returns the name of the territory to start an attack from
+     */
     public String chooseAttackStarter(Game game){
         game.chooseAttackStarter();
         //^^This event will change the string in controller message to the user selected attackStarter
@@ -271,6 +282,13 @@ public class Player implements Serializable {
         return this.controllerMessage;
     }
 
+    /**
+     * This method gets a defender from the other player.
+     *
+     * @param game the current game
+     * @param attackStarter the current attack starter
+     * @return returns the name of the territory to start an attack from
+     */
     public String chooseAttackDefender(Game game, String attackStarter){
         game.chooseAttackDefender(attackStarter);
         //^^This event will change the string in controller message to the user selected attackStarter
@@ -278,6 +296,13 @@ public class Player implements Serializable {
         return this.controllerMessage;
     }
 
+    /**
+     * Returns if the current Player wants to diceFight right now
+     * Only want to dice fight if attacker has more troops than 5 troops
+     *
+     * @param attackerCommaDefender Comma separated string of the attacker,defender
+     * @return If the AI player wants to continue with the attack or not
+     */
     public boolean wantToDiceFight(Game game, String attackerCommaDefender){
         game.wantToDiceFight(attackerCommaDefender);
         //^^This event will change the string in controllerMessage. Empty if no fight. diceFight if want to fight
@@ -285,6 +310,14 @@ public class Player implements Serializable {
         return this.controllerMessage.equals("diceFight");
     }
 
+    /**
+     * This method gets the dice roll for the current player.
+     *
+     * @param territory the current territory
+     * @param game the current game
+     *
+     * @return returns the attacker dice roll
+     */
     public int getAttackerDice(Game game, Territory territory){
         game.chooseAttackerDice(Math.min(3 , territory.getTroops() - 1), territory.getOwner(), territory.getTerritoryName());
         //^^The number of dice that the player wants to roll will be written into controller message
@@ -292,6 +325,14 @@ public class Player implements Serializable {
         return Integer.parseInt(controllerMessage);
     }
 
+    /**
+     * This method gets the defender dice roll.
+     *
+     * @param territory the current territory
+     * @param game the current game
+     *
+     * @return returns the defender dice roll
+     */
     public int getDefenderDice(Game game, Territory territory){
         game.chooseDefenderDice(Math.min(territory.getTroops(), 2), territory.getOwner(), territory.getTerritoryName());
         //^^The number of dice that the player wants to roll will be written into controller message
@@ -299,11 +340,27 @@ public class Player implements Serializable {
         return Integer.parseInt(controllerMessage);
     }
 
+    /**
+     * This method gets the number for troops to take over.
+     *
+     * @param game the current game
+     * @param attackerDice attacker's dice roll
+     * @param numTroops the current number of troops
+     *
+     * @return returns the take over troops
+     */
     public int getTakeoverTroops(Game game, int attackerDice, int numTroops){
         game.takeoverTerritoryEvent(attackerDice, numTroops);
         return Integer.parseInt(controllerMessage);
     }
 
+    /**
+     * This method checks if the current player is able to fortify.
+     *
+     * @param game the current game
+     *
+     * @return returns true or false if the AI player is able to fortify
+     */
     public boolean wantToFortify(Game game){
         //Must have 2 or more territories to fortify
         if(this.getTerritories().size() < 2){
@@ -315,18 +372,40 @@ public class Player implements Serializable {
         return controllerMessage.equals("fortify");
     }
 
+    /**
+     * This method chooses the fortify giver for the current player
+     *
+     * @param game the current game
+     *
+     * @return returns name of the fortify giver
+     */
     public String chooseFortifyGiver(Game game){
         game.chooseFortifyGivers();
 
         return this.controllerMessage;
     }
 
+    /**
+     * This method chooses the fortify receiver for the current player
+     *
+     * @param game the current game
+     *
+     * @return returns the name of the fortify receiver
+     */
     public String chooseFortifyReceiver(Game game, String fortifyGiver){
         game.chooseFortifyReceivers(fortifyGiver);
 
         return this.controllerMessage;
     }
 
+    /**
+     * This method gets the number of troops the current player can fortify with
+     *
+     * @param game the current game
+     * @param territory the current territory
+     *
+     * @return returns the number of troops for the fortify stage
+     */
     public int getFortifyTroops(Game game, Territory territory){
         game.chooseFortifyTroops(territory.getTroops() - 1);
 
@@ -357,6 +436,11 @@ public class Player implements Serializable {
         return fortifiables;
     }
 
+    /**
+     * Returns a list of fortify givers the current player has
+     *
+     * @return A linked list of  fortify givers
+     */
     public LinkedList<Territory> getFortifyGivers(){
         LinkedList<Territory> givers = new LinkedList<>();
         for (Territory t : territories){
@@ -379,6 +463,11 @@ public class Player implements Serializable {
         return stringArray;
     }
 
+    /**
+     * The equals method for the player class
+     *
+     * @return The true or false if the object is equal to this object
+     */
     public boolean equals(Object o){
         Player compared = (Player) o;
 

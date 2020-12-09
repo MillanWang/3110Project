@@ -18,16 +18,18 @@ public class AIPlayer extends Player implements Serializable {
         super(name);
     }
 
+    /**
+     * This method performs all the draft behavior for the ai player.
+     *
+     * @param game the current game
+     */
     @Override
     public void draftChoice(Game game){
-        //Do all the draft behavior. Distribute all troops
-        //game.displayMessage("Whatever happened during the draft phase")
+
         Random rando = new Random();
         LinkedList<Territory> territories = this.getTerritories();
         LinkedList<Territory> drafted = new LinkedList<>();
         Collections.shuffle(territories);
-
-        //this.bonusTroops();
 
         while (super.numTroops > 0){
             int troopToDraft =  rando.nextInt(super.numTroops) + 1;
@@ -52,6 +54,12 @@ public class AIPlayer extends Player implements Serializable {
     }
 
 
+    /**
+     * This method checks if the ai player wants to attack.
+     *
+     * @param game the current game
+     * @return True or false if the AI player has an attack starter
+     */
     @Override
     public boolean wantToAttack(Game game){
         return this.findAttackStarter() != null;
@@ -79,7 +87,7 @@ public class AIPlayer extends Player implements Serializable {
 
     /**
      * Returns the chosen defender territory for a given attacker
-     * The attackable neighbour with the lowest number of troops will be chosen
+     * The attachable neighbour with the lowest number of troops will be chosen
      *
      * @param attacker The territory that starts the attack
      * @return The selected defender of the attack
@@ -96,11 +104,24 @@ public class AIPlayer extends Player implements Serializable {
         return current;
     }
 
+    /**
+     * This method gets an attack starter for the ai player.
+     *
+     * @param game the current game
+     * @return returns the name of the territory to start an attack from
+     */
     @Override
     public String chooseAttackStarter(Game game){
         return this.findAttackStarter().getTerritoryName();
     }
 
+    /**
+     * This method gets a defender from the other player.
+     *
+     * @param game the current game
+     * @param attackStarter the current attack starter
+     * @return returns the name of the territory to start an attack from
+     */
     @Override
     public String chooseAttackDefender(Game game, String attackStarter){
         return this.findAttackDefender(getTerritory(attackStarter)).getTerritoryName();
@@ -118,6 +139,12 @@ public class AIPlayer extends Player implements Serializable {
         return this.getTerritory(attackerCommaDefender.split(",")[0]).getTroops() > 5;
     }
 
+    /**
+     * This method gets the dice roll for the AI player.
+     *
+     * @param territory the current territory
+     * @return returns the name of the territory to start an attack from
+     */
     public int chooseNumDice(Territory territory){
         if (territory.getTroops() >=4 ){
             return 3;
@@ -128,11 +155,27 @@ public class AIPlayer extends Player implements Serializable {
         }
     }
 
+    /**
+     * This method gets the dice roll for the AI player.
+     *
+     * @param territory the current territory
+     * @param game the current game
+     *
+     * @return returns the attacker dice roll
+     */
     @Override
     public int getAttackerDice(Game game, Territory territory){
         return this.chooseNumDice(territory);
     }
 
+    /**
+     * This method gets the defender dice roll.
+     *
+     * @param territory the current territory
+     * @param game the current game
+     *
+     * @return returns the defender dice roll
+     */
     @Override
     public int getDefenderDice(Game game, Territory territory){
         if (territory.getTroops() >= 2){
@@ -142,11 +185,27 @@ public class AIPlayer extends Player implements Serializable {
         }
     }
 
+    /**
+     * This method gets the number for troops to take over.
+     *
+     * @param game the current game
+     * @param attackerDice attacker's dice roll
+     * @param numTroops the current number of troops
+     *
+     * @return returns the take over troops
+     */
     @Override
     public int getTakeoverTroops(Game game, int attackerDice, int numTroops){
         return attackerDice;
     }
 
+    /**
+     * This method checks if the AI player is able to fortify.
+     *
+     * @param game the current game
+     *
+     * @return returns true or false if the AI player is able to fortify
+     */
     @Override
     public boolean wantToFortify(Game game){
         //BEHAVIOR
@@ -167,15 +226,38 @@ public class AIPlayer extends Player implements Serializable {
         }
         return false;
     }
+
+    /**
+     * This method chooses the fortify giver for the AI player
+     *
+     * @param game the current game
+     *
+     * @return returns name of the fortify giver
+     */
     public String chooseFortifyGiver(Game game){
         return this.findFortifyGiver().getTerritoryName();
     }
 
+    /**
+     * This method chooses the fortify reciever for the AI player
+     *
+     * @param game the current game
+     *
+     * @return returns the name of the fortify receiver
+     */
     @Override
     public String chooseFortifyReceiver(Game game, String fortifyGiver){
         return this.findFortifyReceiver(this.getTerritory(fortifyGiver)).getTerritoryName();
     }
 
+    /**
+     * This method gets the number of troops the AI player can fortify with
+     *
+     * @param game the current game
+     * @param territory the current territory
+     *
+     * @return returns the number of troops for the fortify stage
+     */
     @Override
     public int getFortifyTroops(Game game, Territory territory){
         Random rando = new Random();
