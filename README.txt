@@ -5,7 +5,7 @@ Group Name: Static
 Members: Joseph Anyia, Favour Olotu, Taher Shabaan, Millan Wang
 TA added to Github repository: Mohamad Zalat
 
-Included deliverables for Milestone 3
+Included deliverables for Milestone 4
 -zip folder of all contents
 	-README.txt (Millan&Taher&Joseph)
 	-Jar file
@@ -39,20 +39,20 @@ Included deliverables for Milestone 3
 	
 	-UML (Designed by all. Implemented by Favour)
         -UML Sequence Diagram (Designed by all. Implemented by Joseph)
-	-SYSC 3110 - RISK - Milestone3.pdf (Contributions noted inside)
+	-SYSC 3110 - RISK - Milestone4.pdf (Contributions noted inside)
 		
 
 Changes since last version:
-	-Applied the received feedback for the Milestone3 submission. 
-	-Inhanced the logic behind the AIPlayer, so it right now the game treats the AIPlayer as the regular player.
-	-Improved the design of the game by appliying the MVC design pattern
-	-Created the logic behinf the save and load in the game.
-	-Being able to load a custome maps
+	-Applied the received feedback from the Milestone3 submission to improve Milestone4. 
+	-Enhanced the logic behind the AIPlayer, so right now the game treats the AIPlayer as a regular player.
+	-Improved the design of the game by applying the MVC design pattern
+	-Created the logic behind the save and load in the game.
+	-Being able to load custom maps
 	-Thoroughly tested the GUI implementation
 	-Added the extra JUnit tests
 
 KNOWN ISSUES:
-	-Couldn't check if the user loaded the correct file format or not.
+	-None was noticed.
 
 	
 		
