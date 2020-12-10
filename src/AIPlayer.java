@@ -212,7 +212,7 @@ public class AIPlayer extends Player implements Serializable {
     public boolean wantToFortify(Game game){
         //BEHAVIOR
         //Only want to fortify iff the player has a territory that has 1 or 2 troops
-        return this.findFortifyGiver() != null;
+        return this.findFortifyGiver() != null && this.findFortifyReceiver(findFortifyGiver())!=null;
     }
 
     /**
