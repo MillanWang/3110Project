@@ -40,6 +40,24 @@ public class Game implements Serializable {
     }
 
     /**
+     * Alternate constructor for creating Game with a custom map that verifies that the loaded map is good
+     *
+     * @param customMapName Name of the custom map file
+     * @return game object if the custom map is good. Null if the custom map is illegal
+     */
+    public static Game makeGameVerifyMap(String customMapName){
+        Game game = new Game(customMapName);
+
+        if (!game.getGenericWorldMap().verifyMap()){
+            //When the custom loaded map is invalid
+            return null;
+        }else{
+            //Custom map is valid and playable
+            return game;
+        }
+    }
+
+    /**
      * Creates a new GUI view object to for the current game.
      */
     public void showView(){

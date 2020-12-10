@@ -216,20 +216,6 @@ public class AIPlayer extends Player implements Serializable {
     }
 
     /**
-     * Determines if the current AI player wants to fortify
-     *
-     * @return Boolean of if the AI player wants to fortify or not
-     */
-    /*public boolean aiWantToFortify(){
-        //BEHAVIOR
-        //Only want to fortify iff the player has a territory that has 1 or 2 troops
-        for (Territory t : super.getTerritories()){
-            if(t.getTroops() < 3) return true;
-        }
-        return false;
-    }*/
-
-    /**
      * This method chooses the fortify giver for the AI player
      *
      * @param game the current game

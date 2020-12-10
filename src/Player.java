@@ -353,7 +353,12 @@ public class Player implements Serializable {
      */
     public boolean wantToFortify(Game game){
         //Must have 2 or more territories to fortify
-        if(this.getFortifyGivers().size() < 2){
+
+        LinkedList<Territory> fortifyGivers = this.getFortifyGivers();
+
+
+
+        if(fortifyGivers==null || fortifyGivers.size() < 2){
             game.displayMessage("No territories available to fortify");
             return false;
         }

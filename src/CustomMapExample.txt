@@ -1,4 +1,4 @@
-{"imageFileName" : "TestSmallWorldMap.png",
+{"imageFileName" : "CustomMapExampleImage.jpg",
 "territories" :[
 	{
 		"territoryName" : "Antarctica",

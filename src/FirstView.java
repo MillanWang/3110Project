@@ -48,8 +48,17 @@ public class FirstView extends JFrame {
             try{
                 gamePanel.remove(startPage);
                 String filePath = chooseFile();
-                (new Game(filePath)).showView();
-                dispose();
+
+                Game game = Game.makeGameVerifyMap(filePath);
+
+                if (game==null){
+                    //Game will be null if the custom map is invalid
+                    throw new Exception();
+                }else{
+                    //Custom Loaded map is good
+                    game.showView();
+                    dispose();
+                }
             } catch (Exception exception){
                 JOptionPane.showMessageDialog(this,"Invalid file was selected!");
                 dispose();
@@ -70,7 +79,6 @@ public class FirstView extends JFrame {
                 String fileName = chooseFile();
                 (Game.loadGame(fileName)).replaceView();
             } catch (Exception event) {
-                //event.printStackTrace();
                 JOptionPane.showMessageDialog(this,"Invalid file was selected!");
                 dispose();
                 new FirstView();
