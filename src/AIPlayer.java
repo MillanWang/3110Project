@@ -77,8 +77,9 @@ public class AIPlayer extends Player implements Serializable {
     public Territory findAttackStarter(){
         LinkedList<Territory> attackStarters = super.getAttackStarters();
 
-        if (attackStarters!=null && !attackStarters.isEmpty()) Collections.shuffle(attackStarters);
+        if ( attackStarters==null ||attackStarters.isEmpty()) return null;
 
+        Collections.shuffle(attackStarters);
         for (Territory t : attackStarters){
             if (t.getTroops()>=2 ) return t;
         }
@@ -129,14 +130,14 @@ public class AIPlayer extends Player implements Serializable {
 
     /**
      * Returns if the current AIPlayer wants to diceFight right now
-     * Only want to dice fight if attacker has more troops than 5 troops
+     * Only want to dice fight if attacker has more troops than 3 troops
      *
      * @param attackerCommaDefender Comma separated string of the attacker,defender
      * @return If the AI player wants to continue with the attack or not
      */
     @Override
     public boolean wantToDiceFight(Game game, String attackerCommaDefender){
-        return this.getTerritory(attackerCommaDefender.split(",")[0]).getTroops() > 5;
+        return this.getTerritory(attackerCommaDefender.split(",")[0]).getTroops() > 3;
     }
 
     /**
@@ -187,6 +188,7 @@ public class AIPlayer extends Player implements Serializable {
 
     /**
      * This method gets the number for troops to take over.
+     * AI will have the number of troops moving in always equal to the most recent number of rolled dice
      *
      * @param game the current game
      * @param attackerDice attacker's dice roll
@@ -218,14 +220,14 @@ public class AIPlayer extends Player implements Serializable {
      *
      * @return Boolean of if the AI player wants to fortify or not
      */
-    public boolean aiWantToFortify(){
+    /*public boolean aiWantToFortify(){
         //BEHAVIOR
         //Only want to fortify iff the player has a territory that has 1 or 2 troops
         for (Territory t : super.getTerritories()){
             if(t.getTroops() < 3) return true;
         }
         return false;
-    }
+    }*/
 
     /**
      * This method chooses the fortify giver for the AI player

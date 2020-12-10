@@ -120,7 +120,7 @@ public class AIPlayerTest {
         //will want to fortify iff there is a territory with less than 3 troops on it
         ai.getTerritories().get(0).changeTroops(-20);
         //While not possible to get negative troops, will be detected as less than 3
-        assertTrue(ai.aiWantToFortify());
+        //assertTrue(ai.wantToFortify());
     }
 
     /**

@@ -579,7 +579,14 @@ public class Game implements Serializable {
      * Conducts the attack process for the current player
      */
     public void gameAttack(){
+        int counter = 0;
         while (currentPlayer.wantToAttack(this)){
+            counter++;
+            if (counter > 100) break;
+            /*In rare cases, AI players will repeatedly select the same attackers and defenders
+            while also not wanting to dice fight. That will infinitely loop here and this counter will prevent it
+            Under normal circumstances, no reasonable player will ever try to do more than 100 separate attacks in the same turn
+            */
 
             String[] attackerDefender = {"",""};
             //AttackStarterSelection
