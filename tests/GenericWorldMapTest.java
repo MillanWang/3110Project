@@ -9,7 +9,6 @@ public class GenericWorldMapTest {
 
     GenericWorldMap gwm;
 
-
     /**
      * ensures all territories appear on the map by checking the number
      * of territories currently on the map

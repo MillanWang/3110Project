@@ -17,6 +17,7 @@ public class AIPlayerTest {
         aiPlayers.add("AI1[B0T]");
         aiPlayers.add("AI2[B0T]");
         game.makePlayers(aiPlayers);
+
     }
 
     /**
@@ -31,14 +32,14 @@ public class AIPlayerTest {
         int initialTotalTroops = 0;
         for (Territory t: ai.getTerritories()) initialTotalTroops+=t.getTroops();
 
-        //ai.aiDraftPhase();
+        ai.bonusTroops();
+        ai.draftChoice(game);
 
         int finalTotalTroops = 0;
         for (Territory t: ai.getTerritories()) finalTotalTroops+=t.getTroops();
 
         assertEquals(0, ai.getNumTroops());//Ensure no troops left to give
-
-        assertTrue(finalTotalTroops >= initialTotalTroops+3);//Drafting should always distribute at least 3 troops
+        assertTrue(finalTotalTroops > initialTotalTroops);//Drafting should always result in more overall troops
     }
 
     /**
@@ -48,9 +49,10 @@ public class AIPlayerTest {
     public void wantToAttack() {
         setUp();
         AIPlayer ai = (AIPlayer) game.getCurrentPlayerObject();
-        //ai.aiDraftPhase();
+        ai.bonusTroops();
+        ai.draftChoice(game);
 
-        //assertTrue(ai.wantToAttack());//Will want to attack if has an attack starter with more than 2 troops on it
+        assertTrue(ai.wantToAttack(game));//Will want to attack if has an attack starter with more than 2 troops on it
     }
 
     /**
@@ -60,7 +62,8 @@ public class AIPlayerTest {
     public void findAttackStarter() {
         setUp();
         AIPlayer ai = (AIPlayer) game.getCurrentPlayerObject();
-        //ai.aiDraftPhase();
+        ai.bonusTroops();
+        ai.draftChoice(game);
 
         assertTrue(ai.findAttackStarter() != null); //Should be able to find an attack starter initially
     }
@@ -72,7 +75,8 @@ public class AIPlayerTest {
     public void findAttackDefender() {
         setUp();
         AIPlayer ai = (AIPlayer) game.getCurrentPlayerObject();
-        //ai.aiDraftPhase();
+        ai.bonusTroops();
+        ai.draftChoice(game);
 
         assertTrue(ai.findAttackDefender(ai.findAttackStarter()) != null);
         //Attack starters should always find a defender
